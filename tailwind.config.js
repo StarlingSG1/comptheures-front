@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  darkMode: 'class',
   content: [
     "./pages/**/*.{js,ts,jsx,tsx}",
     "./components/**/*.{js,ts,jsx,tsx}",
@@ -9,7 +10,7 @@ module.exports = {
       colors: {
         blue: {
           DEFAULT: "#0B3779",
-          dark: "#072249",
+          "dark": "#072249",
         },
         gray: {
           DEFAULT: "#CCCCCC",
@@ -24,12 +25,15 @@ module.exports = {
         orbitron: ["Orbitron", "sans-serif"],
       },
       fontSize: {
-        medium: "1.5rem",
+        bigger: "1.5rem",
         large: "2rem",
       },
       boxShadow: {
         DEFAULT: "0px 4px 14px 2px rgba(0, 0, 0, 0.15)",
       },
+      margin: {
+        60: "3.75rem",
+      },  
     },
   },
   plugins: [],

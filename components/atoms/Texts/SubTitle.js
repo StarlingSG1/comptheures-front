@@ -1,3 +1,5 @@
-export function SubTitle({ children }) {
-  return <p className="dark:text-blue text-white">{children}</p>;
+import joinClasses from "../../../helpers/joinClasses";
+
+export function SubTitle({ children, className }) {
+  return <p className={joinClasses(className,"dark:text-white text-blue text-bigger")}>{children}</p>;
 }
