@@ -6,7 +6,7 @@ export function OpenInputPassword({ placeholder = "Mot de passe", type = "passwo
     const [isInputOpen, setIsInputOpen] = useState(false)
 
     return (
-        <div className={`flex flex-col border-b border-b-blue ${isInputOpen ? "pb-[30px]" : "pb-0"}`}>
+        <div className={`flex flex-col border-b dark:border-b-white border-b-blue ${isInputOpen ? "pb-[30px]" : "pb-0"}`}>
             <div className={`flex items-center justify-between duration-200 pb-2.5`}>
                 <label className="dark:text-white font-bold text-blue">{placeholder}</label>
                 <Arrow className={`${isInputOpen && "rotate-90"} duration-200`} onClick={() => setIsInputOpen(!isInputOpen)} />
