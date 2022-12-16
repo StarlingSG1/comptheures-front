@@ -63,7 +63,7 @@ export function MobileBurger() {
 
 
     return (
-        <div className={`fixed z-20 top-0 left-0 w-screen h-screen md:dark:bg-blue-dark md:bg-blue dark:bg-blue bg-white py-10 px-[30px] duration-200 ${burgerOpen ? "translate-x-0" : "translate-x-full"} `}>
+        <div className={`fixed md:hidden z-20 top-0 left-0 w-screen h-screen md:dark:bg-blue-dark md:bg-blue dark:bg-blue bg-white py-10 px-[30px] duration-200 ${burgerOpen ? "translate-x-0" : "translate-x-full"} `}>
             <div className='h-full w-full flex flex-col justify-between'>
                 <div>
                     <div className='w-full h-10 flex items-center'>

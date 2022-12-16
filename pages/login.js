@@ -9,7 +9,6 @@ export default function Login() {
 
     useEffect(() => { setBurgerOpen(false) }, [])
 
-
     return (
         <>
             <MobileTemplate>

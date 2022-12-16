@@ -23,6 +23,7 @@ export { SunIcon } from "./Icons/SunIcon";
 export { SystemIcon } from "./Icons/SystemIcon";
 
 // INPUTS
+export { HourInput } from "./Inputs/HourInput";
 export { Input } from "./Inputs/Input";
 export { OpenInput } from "./Inputs/OpenInput";
 export { OpenInputPassword } from "./Inputs/OpenInputPassword";

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { useUserContext } from "../../../context"
 import { useCalendarContext } from "../../../context/calendar"
-import { Arrow, Button, Card, OpenInput, OpenInputPassword, Paragraph, PencilIcon, Plus, ProfileIcon, RealArrow, ReverseParagraph, SubTitle, Title } from "../../atoms"
+import { Arrow, Button, Card, OpenInput, OpenInputPassword, OrbitronTitle, Paragraph, PencilIcon, Plus, ProfileIcon, RealArrow, ReverseParagraph, SubTitle, Title } from "../../atoms"
 import { SmallStraightLogo, StraightLogo, TimeBlock, TimeInput } from "../../molecules"
 import { Calendar } from "../Calendar/Calendar"
 
@@ -47,7 +47,7 @@ export function Profile() {
                     <PencilIcon onClick={() => setIsProfile(true)} className="absolute -right-1/2 top-1/2 -translate-y-1/2 " />
                 </div>
             </div>
-            <Title className="font-orbitron text-large font-bold text-center !font-base md:mt-0 mt-5 md:mb-0 mb-5">{currentDay.getFullYear()}</Title>
+            <OrbitronTitle className="text-center !font-base md:mt-0 mt-5 md:mb-0 mb-5">{currentDay.getFullYear()}</OrbitronTitle>
             <div className="w-full h-10 flex items-center justify-between px-[5px] md:mt-5">
                 <Arrow onClick={() => {
                     setTheDay(false); setCurrentDay(
@@ -93,7 +93,7 @@ export function Profile() {
                 </div>
             </div>
         </div> : <div className="">
-            <Title className="font-orbitron text-center font-normal">Informations personnelles</Title>
+            <OrbitronTitle className="text-center !font-normal">Informations personnelles</OrbitronTitle>
             <div className=" flex mt-10 flex-col">
                 <RealArrow onClick={() => setIsProfile(false)} width={40} height={40} className="cursor-pointer rotate-180" />
                 <div className="flex flex-col mt-10 gap-[30px] wp-full">

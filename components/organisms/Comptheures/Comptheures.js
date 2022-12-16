@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useUserContext } from "../../../context"
-import { Arrow, Button, Paragraph, Plus, ReverseParagraph, SubTitle, Title } from "../../atoms"
+import { Arrow, Button, OrbitronTitle, Paragraph, Plus, ReverseParagraph, SubTitle, Title } from "../../atoms"
 import { SmallStraightLogo } from "../../molecules"
 import { Calendar } from "../Calendar/Calendar"
 import { TimeBlock } from "../../organisms";
@@ -27,7 +27,7 @@ export function Comptheures() {
     return (
         <div>
             <SmallStraightLogo className={"md:hidden"} />
-            <Title className="font-orbitron text-large font-bold text-center !font-base md:mt-0 mt-5 md:mb-0 mb-5">{currentDay.getFullYear()}</Title>
+            <OrbitronTitle className="!text-center  md:mt-0 mt-5 md:mb-0 mb-5">{currentDay.getFullYear()}</OrbitronTitle>
             <div className="w-full h-10 flex items-center justify-between px-[5px] md:mt-5">
                 <Arrow onClick={() => {
                     setTheDay(false); setCurrentDay(
