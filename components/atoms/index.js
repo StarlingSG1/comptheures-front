@@ -1,35 +1,52 @@
-import { Card } from "./Cards/Card";
+// BUTTONS
+export { Button } from "./Buttons/Button";
 
-export { Paragraph } from "./Texts/Paragraph";
-export { SubTitle } from "./Texts/SubTitle";
-export { Title } from "./Texts/Title";
-export { BurgerParagraph } from "./Texts/BurgerParagraph";
-export { ParagraphLink } from "./Texts/ParagraphLink";
-export { ReverseParagraph } from "./Texts/ReverseParagraph";
+// CARDS
+export { BigDesktopCard } from "./Cards/BigDesktopCard";
+export { Card } from "./Cards/Card";
+export { SmallDesktopCard } from "./Cards/SmallDesktopCard";
 
-export { DarkLogo } from "./Logo/DarkLogo";
-export { Logo } from "./Logo/Logo";
+// ICONS
+export { Arrow } from "./Icons/Arrow";
+export { ComptheuresIcon } from "./Icons/ComptheuresIcon";
+export { CrossIcon } from "./Icons/CrossIcon";
+export { House } from "./Icons/House";
+export { LoginIcon } from "./Icons/LoginIcon";
+export { LogoutIcon } from "./Icons/LogoutIcon";
+export { MoonIcon } from "./Icons/MoonIcon";
+export { PencilIcon } from "./Icons/PencilIcon";
+export { Plus } from "./Icons/Plus";
+export { ProfileIcon } from "./Icons/ProfileIcon";
+export { RealArrow } from "./Icons/RealArrow";
+export { RegisterIcon } from "./Icons/RegisterIcon";
+export { SunIcon } from "./Icons/SunIcon";
+export { SystemIcon } from "./Icons/SystemIcon";
 
+// INPUTS
 export { Input } from "./Inputs/Input";
 export { OpenInput } from "./Inputs/OpenInput";
 export { OpenInputPassword } from "./Inputs/OpenInputPassword";
 
-export { Button } from "./Buttons/Button";
+// LOGO
+export { DarkLogo } from "./Logo/DarkLogo";
+export { Logo } from "./Logo/Logo";
 
+// SEPARATORS
 export { BurgerSeparator } from "./Separators/BurgerSeparator";
 
-export { BigDesktopCard } from "./Cards/BigDesktopCard";
-export { SmallDesktopCard } from "./Cards/SmallDesktopCard";
-export { Card } from "./Cards/Card";
-// ICONS
-export { House } from "./Icons/House";
-export { Arrow } from "./Icons/Arrow";
-export { RealArrow } from "./Icons/RealArrow";
-export { LoginIcon } from "./Icons/LoginIcon";
-export { RegisterIcon } from "./Icons/RegisterIcon";
-export { CrossIcon } from "./Icons/CrossIcon";
-export { SystemIcon } from "./Icons/SystemIcon";
-export { Plus } from "./Icons/Plus";
-export { LogoutIcon } from "./Icons/LogoutIcon";
-export { ProfileIcon } from "./Icons/ProfileIcon";
-export { PencilIcon } from "./Icons/PencilIcon";
+// TEXTS
+export { BurgerParagraph } from "./Texts/BurgerParagraph";
+export { OrbitronTitle } from "./Texts/OrbitronTitle";
+export { Paragraph } from "./Texts/Paragraph";
+export { ParagraphLink } from "./Texts/ParagraphLink";
+export { ReverseParagraph } from "./Texts/ReverseParagraph";
+export { SubTitle } from "./Texts/SubTitle";
+export { Title } from "./Texts/Title";
+
+
+
+
+
+
+
+

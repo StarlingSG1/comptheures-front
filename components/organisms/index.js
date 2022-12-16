@@ -1,6 +1,18 @@
+// BURGER
 export { MobileBurger } from './Burger/MobileBurger';
-export { Template } from './Template/Template';
-export { MobileTemplate } from './Template/MobileTemplate';
-export { Comptheures } from './Comptheures/Comptheures';
-export { Profile } from './Profile/Profile';
+
+// CALENDAR
 export { Calendar } from './Calendar/Calendar';
+
+// COMPTHEURES
+export { Comptheures } from './Comptheures/Comptheures';
+
+// PROFILE
+export { Profile } from './Profile/Profile';
+
+// TEMPLATE
+export { MobileTemplate } from './Template/MobileTemplate';
+export { Template } from './Template/Template';
+
+// TIMEBLOCK
+export { TimeBlock } from './TimeBlock/TimeBlock';

@@ -8,11 +8,11 @@ export default function Utils() {
       <ReverseParagraph>ReverseParagraph</ReverseParagraph>
       <BurgerParagraph>Connexion</BurgerParagraph>
       <Button>Enregistrer</Button>
-      <DarkLogo/>
-      <Logo/>
+      <DarkLogo />
+      <Logo />
       <OrbitronTitle>Mon Compt'heures</OrbitronTitle>
-      <Input placeholder="Prénom"/>
-      <BurgerSeparator/>  
+      <Input placeholder="Prénom" />
+      <BurgerSeparator />
     </div>
   );
 }

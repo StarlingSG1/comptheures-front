@@ -1,86 +1,20 @@
 import { useEffect, useState } from "react"
 import { useUserContext } from "../../../context"
-import { Arrow, Button, Card, Paragraph, Plus, RealArrow, ReverseParagraph, SubTitle, Title } from "../../atoms"
-import { SmallStraightLogo, StraightLogo, TimeBlock, TimeInput } from "../../molecules"
+import { Arrow, Button, Paragraph, Plus, ReverseParagraph, SubTitle, Title } from "../../atoms"
+import { SmallStraightLogo } from "../../molecules"
 import { Calendar } from "../Calendar/Calendar"
+import { TimeBlock } from "../../organisms";
+import { useCalendarContext } from "../../../context/calendar"
 
 export function Comptheures() {
 
-    const [days, setDays] = useState(['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'])
-    const [months, setMonths] = useState(['January', 'February', 'March', 'April', 'May', 'June',
-        'July', 'August', 'September', 'October', 'November', 'December'])
-
-    const [frenchDays, setFrenchDays] = useState([
-        { french: "Lundi", abrev: "Lun" },
-        { french: "Mardi", abrev: "Mar" },
-        { french: "Mercredi", abrev: "Mer" },
-        { french: "Jeudi", abrev: "Jeu" },
-        { french: "Vendredi", abrev: "Ven" },
-        { french: "Samedi", abrev: "Sam" },
-        { french: "Dimanche", abrev: "Dim" },
-    ])
-
-    const [frenchMonths, setFrenchMonths] = useState([
-        { french: "Janvier", abrev: "Jan" },
-        { french: "Février", abrev: "Fév" },
-        { french: "Mars", abrev: "Mar" },
-        { french: "Avril", abrev: "Avr" },
-        { french: "Mai", abrev: "Mai" },
-        { french: "Juin", abrev: "Juin" },
-        { french: "Juillet", abrev: "Juil" },
-        { french: "Août", abrev: "Août" },
-        { french: "Septembre", abrev: "Sep" },
-        { french: "Octobre", abrev: "Oct" },
-        { french: "Novembre", abrev: "Nov" },
-        { french: "Décembre", abrev: "Déc" },
-    ])
-
-    const [today, setToday] = useState(months.indexOf(months[new Date().getMonth()]))
-
+    const { frenchDays, getPrevMonth, getMonth, getNextMonth, setTheDay, getMonthByIndex, getDayByIndex, currentDay, setCurrentDay, refresh } = useCalendarContext();
+    const { setBurgerOpen } = useUserContext()
+    
     const [edit, setEdit] = useState(true)
 
-    const { setBurgerOpen } = useUserContext()
+    useEffect(() => { setBurgerOpen(false); refresh() }, [])
 
-    useEffect(() => { setBurgerOpen(false) }, [])
-
-    const getPrevMonth = () => {
-        if (today === 0) {
-            return frenchMonths[11].abrev
-        } else {
-            return frenchMonths[today - 1].abrev
-        }
-    }
-
-    const getMonth = () => {
-        return frenchMonths[today].french
-
-    }
-
-    const getNextMonth = () => {
-        if (today === 11) {
-            return frenchMonths[0].abrev
-        } else {
-            return frenchMonths[today + 1].abrev
-        }
-    }
-
-    const setTheDay = (bool) => {
-        if (bool) {
-            if (today === 11) {
-                setToday(0)
-            } else {
-                setToday(today + 1)
-            }
-        } else {
-            if (today === 0) {
-                setToday(11)
-            } else {
-                setToday(today - 1)
-            }
-        }
-    }
-
-    const [currentDay, setCurrentDay] = useState(new Date())
     const [currentNumber, setCurrentNumber] = useState("")
 
     const changeCurrentDay = (day) => {
@@ -88,14 +22,7 @@ export function Comptheures() {
         setEdit(true)
     }
 
-    const getMonthByIndex = () => {
-        return frenchMonths[currentDay.getMonth()].french
-    }
-
-    const getDayByIndex = () => {
-        return frenchDays[currentDay.getDay()].french
-    }
-
+    
 
     return (
         <div>

@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { UserContextProvider } from '../context'
+import { CalendarContextProvider } from '../context/calendar'
 import '../styles/globals.css'
 
 function MyApp({ Component, pageProps }) {
@@ -16,7 +17,9 @@ function MyApp({ Component, pageProps }) {
 
   return (
     <UserContextProvider>
-      <Component {...pageProps} />
+      <CalendarContextProvider>
+        <Component {...pageProps} />
+      </CalendarContextProvider>
     </UserContextProvider>
   )
 }

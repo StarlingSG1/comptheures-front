@@ -27,22 +27,20 @@ export default function Login() {
                     </div>
                 </div>
             </MobileTemplate>
-            
 
-            {/* MOBILE */}
             <Template>
-            <StraightLogo className={"!mt-0 justify-center"} theme={theme} />
-                    <div className="flex flex-col gap-[15px] mt-10">
-                        <Input type="email" placeholder={"Adresse email"} />
-                        <Input type="password" placeholder={"Mot de passe"} />
-                    </div>
-                    <ParagraphLink className="text-right block mt-[15px]">mot de passe oublié</ParagraphLink>
-                    <Button className="mt-[30px]">Se connecter</Button>
-                    <div className="flex items-center justify-center gap-1.5 mt-[15px]">
-                        <Paragraph>Pas de compte ?</Paragraph>
-                        <ParagraphLink href="/register">S'inscrire</ParagraphLink>
-                    </div>
-               
+                <StraightLogo className={"!mt-0 justify-center"} theme={theme} />
+                <div className="flex flex-col gap-[15px] mt-10">
+                    <Input type="email" placeholder={"Adresse email"} />
+                    <Input type="password" placeholder={"Mot de passe"} />
+                </div>
+                <ParagraphLink className="text-right block mt-[15px]">mot de passe oublié</ParagraphLink>
+                <Button className="mt-[30px]">Se connecter</Button>
+                <div className="flex items-center justify-center gap-1.5 mt-[15px]">
+                    <Paragraph>Pas de compte ?</Paragraph>
+                    <ParagraphLink href="/register">S'inscrire</ParagraphLink>
+                </div>
+
             </Template>
         </>
     )

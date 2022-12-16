@@ -30,8 +30,6 @@ export default function Home() {
 
   useEffect(() => { setHomeOpen(false); setBurgerOpen(false) }, [])
 
-  
-
   return (
     <>
       <MobileTemplate>
@@ -53,9 +51,9 @@ export default function Home() {
       <Template>
         <div className={`flex flex-col relative  h-full duration-200 overflow-hidden ${!homeOpen && "justify-end"}`}>
           <BigLogo theme={theme} />
-          {!user ? <><Button className={homeOpen ? "mt-20 mb-10" : "mt-[100px]"} onClick={() => {!homeOpen ? setHomeOpen(true) : goToRegister() }} >{homeOpen ? "Se créer un compte": "Commencer à compter"}</Button>
-          <Button className={` ${!homeOpen && "absolute -bottom-[40px] translate-y-full"} duration-200 !dark:bg-blue-dark dark:!text-white !bg-blue-dark`} onClick={() => {goToLogin()}}>J'ai déjà un compte</Button></> : 
-          <Button className={homeOpen ? "mt-20 mb-10" : "mt-[100px]"} onClick={() => {goToComptheures() }} >Commencer à compter</Button>}
+          {!user ? <><Button className={homeOpen ? "mt-20 mb-10" : "mt-[100px]"} onClick={() => { !homeOpen ? setHomeOpen(true) : goToRegister() }} >{homeOpen ? "Se créer un compte" : "Commencer à compter"}</Button>
+            <Button className={` ${!homeOpen && "absolute -bottom-[40px] translate-y-full"} duration-200 !dark:bg-blue-dark dark:!text-white !bg-blue-dark`} onClick={() => { goToLogin() }}>J'ai déjà un compte</Button></> :
+            <Button className={homeOpen ? "mt-20 mb-10" : "mt-[100px]"} onClick={() => { goToComptheures() }} >Commencer à compter</Button>}
         </div>
       </Template>
     </>
