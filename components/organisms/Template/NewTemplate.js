@@ -5,7 +5,7 @@ import { BigDesktopCard, CrossIcon, Paragraph, SmallDesktopCard, Title } from ".
 import { Footer } from "../../molecules";
 import { MobileBurger } from "../Burger/MobileBurger";
 
-export function Template({ children, comptheures = false, className = "" }) {
+export function NewTemplate({ children, comptheures = false, className = "" }) {
 
     const { currentClocks, clocks, currentDay } = useCalendarContext()
 
@@ -36,26 +36,21 @@ export function Template({ children, comptheures = false, className = "" }) {
     }, [clocks, currentDay])
 
 
-    
-    return (
-        <div>
-            <div className="md:hidden">
-                <CrossIcon />
-                <MobileBurger />
-                <div className={joinClasses(className,`md:hidden w-screen py-10 flex flex-col justify-between px-[5%] min-h-screen dark:bg-blue md:dark:bg-blue-dark md:bg-blue bg-white`)}>
-                    {children}
-                    <Footer />
-                </div>
-            </div>
 
-            <div className="hidden py-[150px] md:flex dark:bg-blue-dark bg-blue w-screen justify-center items-center min-h-screen">
-                <div className="w-full max-w-[1030px] grid grid-cols-12 gap-[50px] items-start gap-[50px]">
-                    <BigDesktopCard>
+    return (
+        
+
+            <div className="md:py-[150px] md:flex md:dark:bg-blue-dark md:bg-blue md:w-screen md:justify-center md:items-center md:min-h-screen">
+                <div className="md:w-full md:max-w-[1030px] md:grid md:grid-cols-12 md:gap-[50px] md:items-start md:gap-[50px]">
+                <CrossIcon />
+                <MobileBurger className="md:hidden" />
+                    <div className={`w-screen py-10 flex flex-col justify-between px-[5%] min-h-screen dark:bg-blue bg-white    md:w-auto md:block md:col-span-8 md:min-h-[520px] md:h-full md:shadow md:px-[30px] md:rounded-2xl`}>
                         {children}
-                    </BigDesktopCard>
+                        <Footer className="md:hidden"/>
+                    </div>
 
                     {comptheures && (workTotal || breakTotal) ?
-                        <div className="col-span-4 flex gap-10 flex-col">
+                        <div className="hidden col-span-4 md:flex gap-10 flex-col">
                             <SmallDesktopCard />
                             <div className="shadow dark:bg-blue bg-white rounded-2xl py-5 px-[15px] flex flex-col items-center gap-[15px]" >
                                 {workTotal && workTotal !== "0h00" && <div className="flex flex-col items-center">
@@ -71,6 +66,5 @@ export function Template({ children, comptheures = false, className = "" }) {
                         : <SmallDesktopCard />}
                 </div>
             </div>
-        </div>
     )
 }

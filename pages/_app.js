@@ -1,6 +1,8 @@
 import { useEffect } from 'react'
+import { ToastContainer } from 'react-toastify'
 import { UserContextProvider } from '../context'
 import { CalendarContextProvider } from '../context/calendar'
+import "react-toastify/dist/ReactToastify.min.css";
 import '../styles/globals.css'
 
 function MyApp({ Component, pageProps }) {
@@ -19,6 +21,17 @@ function MyApp({ Component, pageProps }) {
     <UserContextProvider>
       <CalendarContextProvider>
         <Component {...pageProps} />
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
       </CalendarContextProvider>
     </UserContextProvider>
   )

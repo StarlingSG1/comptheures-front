@@ -11,8 +11,8 @@ export { Comptheures } from './Comptheures/Comptheures';
 export { Profile } from './Profile/Profile';
 
 // TEMPLATE
-export { MobileTemplate } from './Template/MobileTemplate';
 export { Template } from './Template/Template';
+export { NewTemplate } from './Template/NewTemplate';
 
 // TIMEBLOCK
 export { TimeBlock } from './TimeBlock/TimeBlock';

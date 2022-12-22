@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import React, { useContext, useEffect, useMemo, useState } from "react";
+import { toast } from "react-toastify";
 import { loginUser, verifyToken } from "../api/auth/auth";
 
 const UserContext = React.createContext({ user: null });
@@ -14,20 +15,15 @@ const UserContextProvider = ({ children }) => {
 
   const navigate = useRouter();
 
-  const loginTheUser = async (payload, token) => {
+  const loginTheUser = async (payload) => {
     setLoading(true);
     setStatus("pending");
-    payload.captcha = token
+    // payload.captcha = token
     const user = await loginUser(payload);
     if (!user.error) {
-      localStorage.setItem("vb-bmx-token", user.token);
+      localStorage.setItem("comptheures-token", user.token);
       setUser(user);
       setStatus("connected");
-      setNoLogged(false);
-      setRedirection(false);
-      if (user.role === "ADMIN" || user.role === "SUPERADMIN") {
-        setRedirectionAdmin(false);
-      }
       setLoading(false);
       navigate.push("/");
     } else {
@@ -40,21 +36,24 @@ const UserContextProvider = ({ children }) => {
   const verifyTheToken = async () => {
     setLoading(true);
     const userToken = await verifyToken();
-    if (userToken) {
+    if(userToken.error === true){
+      localStorage.removeItem("comptheures-token");
+      setLoading(false);
+      navigate.push("/login");
+    }
+    else {
       setUser(userToken.user);
-      if (userToken?.user?.role === "ADMIN" || userToken?.user?.role === "SUPERADMIN") {
-        setRedirectionAdmin(false);
-        setRedirection(false);
-        setNoLogged(false);
-      }
-      setNoLogged(false)
       setStatus("connected");
       setLoading(false);
     }
-    else {
-      setLoading(false);
-    }
   }
+
+  const logoutTheUser = () => {
+    localStorage.removeItem("comptheures-token");
+    setUser(null);
+    setStatus("disconnected");
+    navigate.push("/");
+  };
 
   const getLogo = () => {
     const theme = localStorage.getItem("comptheuresTheme");
@@ -71,9 +70,9 @@ const UserContextProvider = ({ children }) => {
     }
   }
 
-  // useEffect(() => {
-  //   verifyTheToken();
-  // }, []);
+  useEffect(() => {
+    verifyTheToken();
+  }, []);
 
   const stateValues = useMemo(
     () => ({
@@ -90,9 +89,9 @@ const UserContextProvider = ({ children }) => {
       setTheme,
       setBurgerOpen,
       getLogo,
-      
+      logoutTheUser,
     }),
-    [user, setUser,  burgerOpen, getLogo, theme, setTheme, setBurgerOpen, loading, setLoading, loginTheUser, status, verifyTheToken, setStatus]
+    [user, setUser, burgerOpen, getLogo, theme, setTheme, setBurgerOpen, loading, setLoading, loginTheUser, status, verifyTheToken, setStatus, logoutTheUser]
   );
 
   return (

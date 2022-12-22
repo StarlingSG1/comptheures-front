@@ -1,6 +1,5 @@
 // BUTTONS
-export { Button } from "./Buttons/Button";
-
+export { Button } from "./Buttons/Button";
 // CARDS
 export { BigDesktopCard } from "./Cards/BigDesktopCard";
 export { Card } from "./Cards/Card";
@@ -8,7 +7,8 @@ export { SmallDesktopCard } from "./Cards/SmallDesktopCard";
 
 // ICONS
 export { Arrow } from "./Icons/Arrow";
-export { ComptheuresIcon } from "./Icons/ComptheuresIcon";
+export { CoffeeIcon } from "./Icons/CoffeeIcon";
+export { ComptheuresIcon } from "./Icons/ComptheuresIcon";
 export { CrossIcon } from "./Icons/CrossIcon";
 export { House } from "./Icons/House";
 export { LoginIcon } from "./Icons/LoginIcon";
@@ -19,12 +19,14 @@ export { Plus } from "./Icons/Plus";
 export { ProfileIcon } from "./Icons/ProfileIcon";
 export { RealArrow } from "./Icons/RealArrow";
 export { RegisterIcon } from "./Icons/RegisterIcon";
-export { SunIcon } from "./Icons/SunIcon";
+export { SunIcon } from "./Icons/SunIcon";
 export { SystemIcon } from "./Icons/SystemIcon";
+export { WorkIcon } from "./Icons/WorkIcon";
 
 // INPUTS
+export { ClockNameInput } from "./Inputs/ClockNameInput";
 export { HourInput } from "./Inputs/HourInput";
-export { Input } from "./Inputs/Input";
+export { Input } from "./Inputs/Input";
 export { OpenInput } from "./Inputs/OpenInput";
 export { OpenInputPassword } from "./Inputs/OpenInputPassword";
 
@@ -38,11 +40,11 @@ export { BurgerSeparator } from "./Separators/BurgerSeparator";
 // TEXTS
 export { BurgerParagraph } from "./Texts/BurgerParagraph";
 export { OrbitronTitle } from "./Texts/OrbitronTitle";
-export { Paragraph } from "./Texts/Paragraph";
+export { Paragraph } from "./Texts/Paragraph";
 export { ParagraphLink } from "./Texts/ParagraphLink";
 export { ReverseParagraph } from "./Texts/ReverseParagraph";
 export { SubTitle } from "./Texts/SubTitle";
-export { Title } from "./Texts/Title";
+export { Title } from "./Texts/Title";
 
 
 

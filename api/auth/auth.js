@@ -9,7 +9,7 @@ export async function loginUser(payload) {
 }
 
 export async function verifyToken() {
-    const token = localStorage.getItem("vb-bmx-token");
+    const token = localStorage.getItem("comptheures-token");
     if (!token) {
         return false;
     }
@@ -19,7 +19,7 @@ export async function verifyToken() {
 }   
 
 export async function logout()  {
-    localStorage.removeItem("vb-bmx-token");
+    localStorage.removeItem("comptheures-token");
 }
 
 export async function registerUser(payload){

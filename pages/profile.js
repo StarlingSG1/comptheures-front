@@ -1,25 +1,39 @@
 import { useEffect, useState } from "react";
-import { Button, Input, Paragraph, ParagraphLink } from "../components/atoms";
-import { BigLogo, StraightLogo } from "../components/molecules";
-import { Comptheures, MobileTemplate, Profile, Template } from "../components/organisms";
+import { getProfileClock } from "../api/clock/clock";
+import { NewTemplate, Profile } from "../components/organisms";
 import { useUserContext } from "../context";
 import { useCalendarContext } from "../context/calendar";
 
-export default function ComptheuresPage() {
-    
-    const {setCurrentDay } = useCalendarContext();
-    const { setBurgerOpen, theme } = useUserContext()
+export default function ProfilePage() {
 
-    useEffect(() => { setBurgerOpen(false); setCurrentDay(new Date()) }, [])
+    const { setCurrentDay, currentDay } = useCalendarContext();
+    const { setBurgerOpen, theme, user } = useUserContext()
+
+    
+    const [clocks, setClocks ] = useState([])
+    const [actualMonth, setActualMonth] = useState(new Date().getMonth())
+
+    useEffect(() => {
+        setBurgerOpen(false);
+        setCurrentDay(new Date())
+        getClockForProfile(new Date())
+    }, [])
+
+    useEffect(() => {
+        getClockForProfile(currentDay)
+    }, [actualMonth])
+
+    const getClockForProfile = async (date) => {
+        const response = await getProfileClock({ year: date.getFullYear(), month: date.getMonth() })
+        if (response.error === false) {
+            setClocks(response.data)
+        }
+    }
 
     return (
-        <>
-            <MobileTemplate>
-                <Profile/>
-            </MobileTemplate>
-            <Template>
-                <Profile/>
-            </Template>
-        </>
+            <NewTemplate>
+                {!user ? "" : <Profile clocks={clocks} setClocks={setClocks} actualMonth={actualMonth} setActualMonth={setActualMonth} /> }
+            </NewTemplate>
+        
     )
 }

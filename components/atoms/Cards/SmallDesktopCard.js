@@ -59,14 +59,17 @@ export function SmallDesktopCard({ children }) {
         }
     }
 
-    return <div className="col-span-4 relative shadow dark:bg-blue bg-white rounded-2xl py-5 px-[15px]">
+    return <div className="hidden md:block col-span-4 relative shadow dark:bg-blue bg-white rounded-2xl py-5 px-[15px]">
         <ThemePicker item={selectTheme} setTheTheme={setTheTheme} className="absolute justify-end right-0 -translate-y-[65px]" />
         <SmallStraightLogo theme={theme} />
         {children}
         <div className='my-5'>
-            <BurgerContent/>
+            <BurgerContent />
         </div>
-        <div className="flex items-center gap-1.5 mb-5"><Paragraph>Made by</Paragraph><ParagraphLink>Jérémie Barrière</ParagraphLink></div>
-        <ParagraphLink>Mentions légales</ParagraphLink>
+        <div className="flex items-center gap-1.5 mb-5">
+            <Paragraph>Made by</Paragraph>
+            <a  href="https://github.com/StarlingSG1" target="_blank" className={`dark:text-white text-blue underline font-noto`}>Jérémie Barrière</a>
+        </div>
+        <ParagraphLink href="/mentions-legales">Mentions légales</ParagraphLink>
     </div>
 }

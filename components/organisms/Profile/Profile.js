@@ -1,73 +1,212 @@
-import { useEffect, useState } from "react"
+import { useRouter } from "next/router"
+import { use, useEffect, useState } from "react"
+import { toast } from "react-toastify"
+import { getProfileClock } from "../../../api/clock/clock"
+import { updateUserProfile } from "../../../api/users/user"
 import { useUserContext } from "../../../context"
 import { useCalendarContext } from "../../../context/calendar"
 import { Arrow, Button, Card, OpenInput, OpenInputPassword, OrbitronTitle, Paragraph, PencilIcon, Plus, ProfileIcon, RealArrow, ReverseParagraph, SubTitle, Title } from "../../atoms"
 import { SmallStraightLogo, StraightLogo, TimeBlock, TimeInput } from "../../molecules"
 import { Calendar } from "../Calendar/Calendar"
 
-export function Profile() {
 
-    const { frenchDays, getPrevMonth, getMonth, getNextMonth, setTheDay, getMonthByIndex, getDayByIndex, currentDay, setCurrentDay, refresh } = useCalendarContext();
-    const { setBurgerOpen } = useUserContext()
+
+export function Profile({ clocks, actualMonth, setActualMonth }) {
+
+    const { setBurgerOpen, user, setUser } = useUserContext()
+    const { frenchDays, frenchMonths, getPrevMonth, getMonth, getNextMonth, setTheDay, getMonthByIndex, getDayByIndex, currentDay, setCurrentDay, refresh, getWeekNumber } = useCalendarContext();
 
     const [edit, setEdit] = useState(true)
-
-    useEffect(() => { setBurgerOpen(false); refresh() }, [])
-
     const [currentNumber, setCurrentNumber] = useState("")
     const [isProfile, setIsProfile] = useState(false)
+    const [currentWeekNumber, setCurrentWeekNumber] = useState(null)
+    const [monthHours, setMonthHours] = useState(0)
+    const [weekHours, setWeekHours] = useState(0)
+    const [weekClocks, setWeekClocks] = useState([])
+    const [workHourToday, setWorkHourToday] = useState(0)
+    const [currentUser, setCurrentUser] = useState({
+        firstName: user?.firstName,
+        lastName: user?.lastName,
+        email: user?.email,
+        password: {
+            old: "",
+            new: "",
+            confirm: ""
+        }
+    })
+
+    const totalWeekHours = () => {
+        let totalH = 0
+        let totalM = 0
+        let hours = []
+        let minutes = []
+        if (weekClocks?.length > 0) {
+            for (let i = 0; i < weekClocks?.length; i++) {
+                const [h, m] = weekClocks[i].stats[0].work.split('h')
+                hours.push(h)
+                minutes.push(m)
+            }
+            for (var h in hours) {
+                totalH += parseInt(hours[h], 10);
+            }
+            // for each in minutes
+            for (var m in minutes) {
+                totalM += parseInt(minutes[m], 10);
+            }
+            // If the minutes exceed 60
+            if (totalM >= 60) {
+                // Divide minutes by 60 and add result to hours
+                totalH += Math.floor(totalM / 60);
+                // Add remainder of totalM / 60 to minutes
+                totalM = totalM % 60;
+            }
+        }
+        setWeekHours(totalH + 'h' + totalM)
+    }
+
+    const validateUpdateUser = async (e) => {
+        console.log(currentUser)
+        e.preventDefault()
+        if (currentUser.firstName === "" || currentUser.lastName === "" || currentUser.email === "") {
+            toast.error("Veuillez remplir tous les champs")
+        }
+        else if (currentUser.password.new !== currentUser.password.confirm) {
+            toast.error("Les mots de passe ne correspondent pas")
+        }
+        else if(currentUser.password.old === currentUser.password.new && currentUser.password.new === currentUser.password.confirm && currentUser.password.old !== "") {
+            toast.error("Le nouveau mot de passe doit être différent de l'ancien")
+        }
+        else {
+            const response = await updateUserProfile(currentUser)
+            console.log(response)
+            if (response.error === false) {
+                setUser(currentUser)
+                toast.success(response.message)
+                const newUser = currentUser
+                setCurrentUser({
+                    firstName: newUser?.firstName,
+                    lastName: newUser?.lastName,
+                    email: newUser?.email,
+                    password: {
+                        old: "",
+                        new: "",
+                        confirm: ""
+                    }
+                })
+            }
+        }
+    }
+
+        
+
+    const totalMonthHours = () => {
+        let totalH = 0
+        let totalM = 0
+        let hours = []
+        let minutes = []
+        if (clocks?.length > 0) {
+            for (let i = 0; i < clocks?.length; i++) {
+                const [h, m] = clocks[i].stats[0].work.split('h')
+                hours.push(h)
+                minutes.push(m)
+            }
+            for (var h in hours) {
+                totalH += parseInt(hours[h], 10);
+            }
+            // for each in minutes
+            for (var m in minutes) {
+                totalM += parseInt(minutes[m], 10);
+            }
+            // If the minutes exceed 60
+            if (totalM >= 60) {
+                // Divide minutes by 60 and add result to hours
+                totalH += Math.floor(totalM / 60);
+                // Add remainder of totalM / 60 to minutes
+                totalM = totalM % 60;
+            }
+        }
+        setMonthHours(totalH + 'h' + totalM)
+    }
+
+    const getClocksOfTheWeek = () => {
+        const weekClocks = clocks.filter(clock => clock.week === currentWeekNumber)
+        setWeekClocks(weekClocks)
+    }
 
     const changeCurrentDay = (day) => {
         setCurrentDay(new Date(day.year, day.month, day.number));
+        if (getWeekNumber((new Date(day.year, day.month, day.number))) !== currentWeekNumber) {
+            setCurrentWeekNumber(getWeekNumber(new Date(day.year, day.month, day.number)));
+        }
         setEdit(true)
     }
 
-    const getWeekNumber = (currentDay) => {
-        let startDate = new Date(currentDay.getFullYear(), 0, 1);
-        var days = Math.floor((currentDay - startDate) /
-            (24 * 60 * 60 * 1000));
-
-        var weekNumber = Math.ceil(days / 7);
-
-        // Display the calculated result       
-        return weekNumber;
+    const getWorkOfTheDay = (day) => {
+        const workOfTheDay = clocks.filter(clock => clock.day === day.getDate() && clock.month === day.getMonth() && clock.year === day.getFullYear())
+        setWorkHourToday(workOfTheDay[0]?.stats[0]?.work || 0)
     }
 
     useEffect(() => {
-        setCurrentDay(new Date())
+        setCurrentWeekNumber(getWeekNumber(new Date()))
+        setActualMonth(frenchMonths[new Date().getMonth()].french)
     }, [])
+
+    useEffect(() => {
+        getWorkOfTheDay(currentDay)
+    }, [currentDay])
+
+    useEffect(() => {
+        getClocksOfTheWeek()
+    }, [currentWeekNumber])
+
+    useEffect(() => {
+        getClocksOfTheWeek(), totalMonthHours(), getWorkOfTheDay(new Date())
+    }, [clocks])
+
+    useEffect(() => {
+        totalWeekHours()
+    }, [weekClocks])
+
+    useEffect(() => {
+        setBurgerOpen(false); refresh()
+    }, [user])
+
+    useEffect(() => {
+        console.log(currentUser)
+    }, [currentUser])
+
 
     return (
         !isProfile ? <div>
             <SmallStraightLogo className={"md:hidden"} />
-            <div className="flex items-center justify-center w-full mb-5">
+            <div className="flex items-center justify-center w-full mb-5 md:mt-0 mt-5">
                 <div className="flex flex-col items-center relative">
-                    <Title className="!font-normal">John</Title>
-                    <Paragraph className="dark:text-gray text-gray">email@email.fr</Paragraph>
+                    <Title className="!font-normal">{user?.firstName}</Title>
+                    <Paragraph className="dark:text-gray text-gray">{user?.email}</Paragraph>
                     <PencilIcon onClick={() => setIsProfile(true)} className="absolute -right-1/2 top-1/2 -translate-y-1/2 " />
                 </div>
             </div>
             <OrbitronTitle className="text-center !font-base md:mt-0 mt-5 md:mb-0 mb-5">{currentDay.getFullYear()}</OrbitronTitle>
             <div className="w-full h-10 flex items-center justify-between px-[5px] md:mt-5">
                 <Arrow onClick={() => {
-                    setTheDay(false); setCurrentDay(
+                    setTheDay(false); setActualMonth(currentDay.getMonth() - 1); setCurrentDay(
                         new Date(currentDay.getFullYear(), currentDay.getMonth() - 1, currentDay.getDate()))
                 }} className="rotate-180" />
                 <div className="flex items-center justify-center gap-6 w-full ">
                     <Paragraph onClick={() => {
-                        setTheDay(false); setCurrentDay(
+                        setTheDay(false); setActualMonth(currentDay.getMonth() - 1); setCurrentDay(
                             new Date(currentDay.getFullYear(), currentDay.getMonth() - 1, currentDay.getDate()))
                     }} className={"!text-gray cursor-pointer"}>{getPrevMonth()}</Paragraph>
                     <div className=" dark:bg-white bg-blue rounded">
                         <ReverseParagraph className={"px-4 z-10 py-2 font-bold"}>{getMonth()}</ReverseParagraph>
                     </div>
                     <Paragraph onClick={() => {
-                        setTheDay(true); setCurrentDay(
+                        setTheDay(true); setActualMonth(currentDay.getMonth() + 1); setCurrentDay(
                             new Date(currentDay.getFullYear(), currentDay.getMonth() + 1, currentDay.getDate()))
                     }} className={"!text-gray cursor-pointer"}>{getNextMonth()}</Paragraph>
                 </div>
                 <Arrow onClick={() => {
-                    setTheDay(true); setCurrentDay(
+                    setTheDay(true); setActualMonth(currentDay.getMonth() + 1); setCurrentDay(
                         new Date(currentDay.getFullYear(), currentDay.getMonth() + 1, currentDay.getDate()));
                 }} />
             </div>
@@ -76,34 +215,35 @@ export function Profile() {
                 <div className="flex flex-col w-full items-center gap-[15px]">
                     <SubTitle>{getMonthByIndex()}</SubTitle>
                     <Card edit={true}>
-                        <ReverseParagraph><strong>23</strong> jours | <strong>170</strong> heures</ReverseParagraph>
+                        <ReverseParagraph><strong>{clocks?.length}</strong> {clocks?.length < 2 ? "jour" : "jours"} | <strong>{monthHours}</strong> travaillées</ReverseParagraph>
                     </Card>
                 </div>
                 <div className="flex flex-col w-full items-center gap-[15px]">
                     <SubTitle>{"Semaine " + getWeekNumber(currentDay)}</SubTitle>
                     <Card edit={true}>
-                        <ReverseParagraph><strong>5</strong> jours | <strong>35</strong> heures</ReverseParagraph>
+                        <ReverseParagraph><strong>{weekClocks.length}</strong> {weekClocks.length < 2 ? "jour" : "jours"} | <strong>{weekClocks.length === 0 ? 0 : weekHours}</strong> {weekClocks.length === 0 && "heure"} travaillées</ReverseParagraph>
                     </Card>
                 </div>
                 <div className="flex flex-col w-full items-center gap-[15px] md:mb-0 mb-60 ">
                     <SubTitle>{getDayByIndex() + " " + currentDay.getDate() + " " + getMonthByIndex()}</SubTitle>
                     <Card edit={true}>
-                        <ReverseParagraph><strong>8</strong> heures travaillés</ReverseParagraph>
+                        <ReverseParagraph><strong>{workHourToday}</strong> {workHourToday === 0 && "heure"} travaillées</ReverseParagraph>
                     </Card>
                 </div>
             </div>
-        </div> : <div className="">
-            <OrbitronTitle className="text-center !font-normal">Informations personnelles</OrbitronTitle>
-            <div className=" flex mt-10 flex-col">
-                <RealArrow onClick={() => setIsProfile(false)} width={40} height={40} className="cursor-pointer rotate-180" />
-                <div className="flex flex-col mt-10 gap-[30px] wp-full">
-                    <OpenInput placeholder="Prénom" />
-                    <OpenInput placeholder="Nom" />
-                    <OpenInput placeholder="Adresse email" />
-                    <OpenInputPassword />
+        </div> :
+            <form onSubmit={validateUpdateUser} className="">
+                <OrbitronTitle className="text-center !font-normal">Informations personnelles</OrbitronTitle>
+                <div className=" flex mt-10 flex-col">
+                    <RealArrow onClick={() => setIsProfile(false)} width={40} height={40} className="cursor-pointer rotate-180" />
+                    <div className="flex flex-col mt-10 gap-[30px] wp-full">
+                        <OpenInput onChange={(e) => setCurrentUser({ ...currentUser, firstName: e.target.value })} defaultValue={user?.firstName} placeholder="Prénom" />
+                        <OpenInput onChange={(e) => setCurrentUser({ ...currentUser, lastName: e.target.value })} defaultValue={user?.lastName} placeholder="Nom" />
+                        <OpenInput onChange={(e) => setCurrentUser({ ...currentUser, email: e.target.value })} defaultValue={user?.email} placeholder="Adresse email" />
+                        <OpenInputPassword currentUser={currentUser} setCurrentUser={setCurrentUser} />
+                    </div>
                 </div>
-            </div>
-            <Button className="mt-60 md:mb-0 mb-60">Enregistrer</Button>
-        </div>
+                <Button type="submit" className="mt-60 md:mb-0 mb-60">Enregistrer</Button>
+            </form>
     )
 }   

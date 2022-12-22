@@ -10,7 +10,7 @@ export function BurgerItem({ children, icon = "home", href = "/" }) {
 
     return (
         <Link href={href} className="flex items-center justify-between group hover:bg-blue dark:hover:bg-white duration-200 first:rounded-t-md last:rounded-b-md pr-[5px]">
-            <div className={`flex items-center gap-5 ${user ? "py-10" : "md:py-[26.75px] py-10"}`}>
+            <div className={`flex items-center gap-5 ${!user ? "py-10" : "md:py-[26.75px] py-10"}`}>
                 <div className="w-6 pl-[5px]">
                     {icon === "home" ? <House className="group-hover:fill-white dark:group-hover:fill-blue duration-200" /> : icon === "login" ? <LoginIcon className="group-hover:fill-white dark:group-hover:fill-blue duration-200" /> : icon === "register" ? <RegisterIcon className="group-hover:fill-white dark:group-hover:fill-blue duration-200" /> : icon === "logout" ? <LogoutIcon className="group-hover:fill-white dark:group-hover:fill-blue duration-200" /> : icon === "profile" ? <ProfileIcon className="group-hover:fill-white dark:group-hover:fill-blue duration-200" /> : icon === "comptheures" && <ComptheuresIcon className="group-hover:fill-white dark:group-hover:fill-blue duration-200" />}
                 </div>

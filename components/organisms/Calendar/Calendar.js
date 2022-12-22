@@ -46,7 +46,7 @@ export function Calendar(props) {
             <tbody className="grid grid-cols-7 gap-y-2.5 w-full">
                 {
                     currentDays.map((day, index) => (
-                        day.currentMonth && <tr style={{ "gridColumnStart": `${day.number === 1 ? props.currentNumber : "auto"}` }} key={index} className={`col-span-1 flex justify-center calendar-day w-auto` + (day.currentMonth ? " current" : "") + (day.selected ? " " : "")}
+                        day.currentMonth && <tr style={{ "gridColumnStart": `${day.number === 1 ? props?.currentNumber : "auto"}` }} key={index} className={`col-span-1 flex justify-center calendar-day w-auto` + (day.currentMonth ? " current" : "") + (day.selected ? " " : "")}
                             onClick={() => props.changeCurrentDay(day)}>
                             <td className={`${day.selected && " dark:bg-white bg-blue rounded-full !text-white dark:!text-blue"} ${day.number > 9 ? "py-1 px-2" : "py-1 px-3"} cursor-pointer text-blue dark:text-white`} >{day.number}</td>
                         </tr>

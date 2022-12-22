@@ -35,7 +35,41 @@ const CalendarContextProvider = ({ children }) => {
 
   const [today, setToday] = useState(months.indexOf(months[new Date().getMonth()]))
 
+  const [clocks, setClocks] = useState([])
+
   const [currentDay, setCurrentDay] = useState(new Date())
+
+  const getWeekNumber = (currentDay) => {
+    let startDate = new Date(currentDay.getFullYear(), 0, 1);
+    var days = Math.floor((currentDay - startDate) /
+      (24 * 60 * 60 * 1000));
+    var weekNumber = Math.ceil((days + 1) / 7);
+    // Display the calculated result       
+    return weekNumber;
+  }
+
+  const [currentClocks, setCurrentClocks] = useState([{
+    name: "Journée de travail",
+    year: currentDay?.getFullYear(),
+    week: getWeekNumber(currentDay),
+    day: currentDay?.getDate(),
+    order: 1,
+    type: "WORK",
+    start: "",
+    end: "",
+  }, {
+    name: "Pause déjeuner",
+    year: currentDay?.getFullYear(),
+    month: currentDay?.getMonth(),
+    week: getWeekNumber(currentDay),
+    day: currentDay?.getDate(),
+    hour: currentDay?.getHours(),
+    order: 2,
+    type: "BREAK",
+    start: "",
+    end: "",
+  }
+  ])
 
   const getPrevMonth = () => {
     if (today === 0) {
@@ -73,12 +107,18 @@ const CalendarContextProvider = ({ children }) => {
     }
   }
 
+
+
   const getMonthByIndex = () => {
     return frenchMonths[currentDay.getMonth()].french
   }
 
   const getDayByIndex = () => {
-    return frenchDays[currentDay.getDay()].french
+    let day = currentDay.getDay() - 1
+    if (day === -1) {
+      day = 6
+    }
+    return frenchDays[day]?.french
   }
 
   const refresh = () => {
@@ -104,9 +144,15 @@ const CalendarContextProvider = ({ children }) => {
       getDayByIndex,
       currentDay,
       setCurrentDay,
-      refresh
+      refresh,
+      getWeekNumber,
+      currentClocks,
+      setCurrentClocks,
+      clocks,
+      setClocks
     }),
-    [frenchDays, frenchMonths, setFrenchDays, setFrenchMonths, months, setMonths, today, setToday, getPrevMonth, getMonth, getNextMonth, setTheDay, getMonthByIndex, getDayByIndex, currentDay, setCurrentDay, refresh]
+    [frenchDays, frenchMonths, setFrenchDays, setFrenchMonths, months, setMonths, today, setToday, getPrevMonth, getMonth, getNextMonth, setTheDay, getMonthByIndex, getDayByIndex, currentDay, setCurrentDay, refresh,
+      getWeekNumber, currentClocks, setCurrentClocks, clocks, setClocks]
   );
 
   return (

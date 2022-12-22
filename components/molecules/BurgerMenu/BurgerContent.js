@@ -5,11 +5,11 @@ import { BurgerItem } from "./BurgerItem";
 
 export function BurgerContent({className = ""}){
 
-    const { user } = useUserContext();
+    const { user, logoutTheUser } = useUserContext();
 
     return (
         <div className={joinClasses(className,`my-5`)}>
-            {user ? <><BurgerItem> Accueil</BurgerItem>
+            {!user ? <><BurgerItem> Accueil</BurgerItem>
                 <BurgerSeparator />
                 <BurgerItem href="/login" icon="login">Connexion</BurgerItem>
                 <BurgerSeparator />

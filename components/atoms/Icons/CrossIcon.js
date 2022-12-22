@@ -14,7 +14,7 @@ export function CrossIcon({onClick}){
 
     return (
                 <div
-                    className={`absolute top-[47px] right-[5%] z-50 block cursor-pointer md:hidden`}
+                    className={`${burgerOpen ? "fixed" : "absolute"} top-[47px] right-[5%] z-50 block cursor-pointer md:hidden`}
                     onClick={() => {closeOpen()}}
                 >
                     <span
