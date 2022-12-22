@@ -28,12 +28,25 @@ export default function Home() {
     router.push('/comptheures')
   }
 
-  useEffect(() => { setHomeOpen(false); setBurgerOpen(false);}, [])
+  useEffect(() => { setHomeOpen(false); setBurgerOpen(false); }, [])
 
   return (
     <>
+      <Head>
+        <title>Comptheures.fr - Compter ses heures en ligne</title>
+        <meta
+          name="description"
+          content="Compter ses heures en ligne, c'est possible avec Comptheures.fr. Créez votre compte et commencez à compter vos heures dès maintenant."
+          key="desc"  
+        />
+        <meta property="og:title" content="Comptheures en ligne" />
+        <meta
+          property="og:description"
+          content="Compter ses heures sur un calendrier en ligne rapidement et gratuitement."
+        />
+      </Head>
       <NewTemplate>
-        
+
         {/* MOBILE */}
         <span className="h-[0px] w-full dark:bg-blue bg-white"></span>
         <div className='block md:hidden h-full flex flex-col justify-between'>

@@ -1,3 +1,4 @@
+import Head from "next/head";
 import { useEffect, useState } from "react";
 import { getProfileClock } from "../api/clock/clock";
 import { NewTemplate, Profile } from "../components/organisms";
@@ -9,8 +10,8 @@ export default function ProfilePage() {
     const { setCurrentDay, currentDay } = useCalendarContext();
     const { setBurgerOpen, theme, user } = useUserContext()
 
-    
-    const [clocks, setClocks ] = useState([])
+
+    const [clocks, setClocks] = useState([])
     const [actualMonth, setActualMonth] = useState(new Date().getMonth())
 
     useEffect(() => {
@@ -31,9 +32,18 @@ export default function ProfilePage() {
     }
 
     return (
+        <>
+            <Head>
+                <title>Profil - Comptheures</title>
+                <meta
+                    name="description"
+                    content="Avoir un récapitulatif de ses heures de travail grâce à un calendrier comptheures en ligne."
+                />
+            </Head>
             <NewTemplate>
-                {!user ? "" : <Profile clocks={clocks} setClocks={setClocks} actualMonth={actualMonth} setActualMonth={setActualMonth} /> }
+                {!user ? "" : <Profile clocks={clocks} setClocks={setClocks} actualMonth={actualMonth} setActualMonth={setActualMonth} />}
             </NewTemplate>
-        
+        </>
+
     )
 }

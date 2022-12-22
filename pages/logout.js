@@ -10,6 +10,13 @@ export default function Logout() {
 
     return (
         <>
+            <Head>
+                <title>Déconnexion - Comptheures</title>
+                <meta
+                    name="description"
+                    content="Déconnexion de Comptheures."
+                />
+            </Head>
             <NewTemplate></NewTemplate>
         </>)
 }

@@ -1,3 +1,4 @@
+import Head from "next/head";
 import { useEffect, useState } from "react";
 import { Button, Input, Paragraph, ParagraphLink } from "../components/atoms";
 import { BigLogo, StraightLogo } from "../components/molecules";
@@ -20,6 +21,13 @@ export default function Login() {
 
     return (
         <>
+            <Head>
+                <title>Connexion - Comptheures</title>
+                <meta
+                    name="description"
+                    content="Se connecter à son compte Comptheures."
+                />
+            </Head>
             <NewTemplate>
                 <form onSubmit={(e) => { login(e, credentials) }} className="w-full h-full mt-20 md:hidden">
                     <BigLogo theme={theme} />

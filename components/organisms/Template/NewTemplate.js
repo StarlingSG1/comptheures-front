@@ -1,3 +1,4 @@
+import Head from "next/head";
 import { useEffect, useState } from "react";
 import { useCalendarContext } from "../../../context/calendar";
 import joinClasses from "../../../helpers/joinClasses";
@@ -38,15 +39,18 @@ export function NewTemplate({ children, comptheures = false, className = "" }) {
 
 
     return (
-        
-
+        <>
+            <Head>
+                <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicon.svg" />
+                <link rel="icon" type="image/png"  href="/assets/img/favicon.svg" />
+            </Head>
             <div className="md:py-[150px] md:flex md:dark:bg-blue-dark md:bg-blue md:w-screen md:justify-center md:items-center md:min-h-screen">
                 <div className="md:w-full md:max-w-[1030px] md:grid md:grid-cols-12 md:gap-[50px] md:items-start md:gap-[50px]">
-                <CrossIcon />
-                <MobileBurger className="md:hidden" />
+                    <CrossIcon />
+                    <MobileBurger className="md:hidden" />
                     <div className={`w-screen py-10 flex flex-col justify-between px-[5%] min-h-screen dark:bg-blue bg-white    md:w-auto md:block md:col-span-8 md:min-h-[520px] md:h-full md:shadow md:px-[30px] md:rounded-2xl`}>
                         {children}
-                        <Footer className="md:hidden"/>
+                        <Footer className="md:hidden" />
                     </div>
 
                     {comptheures && (workTotal || breakTotal) ?
@@ -66,5 +70,6 @@ export function NewTemplate({ children, comptheures = false, className = "" }) {
                         : <SmallDesktopCard />}
                 </div>
             </div>
+        </>
     )
 }

@@ -11,7 +11,7 @@ export function BigLogo({ className, theme }) {
             </Link>
             <div className='flex flex-col items-center'>
                 <SubTitle className={"font-orbitron"}>Mon Compt'heures</SubTitle>
-                <Paragraph>Parce que chaque heure compte</Paragraph>
+                <Paragraph>Compter ses heures en ligne</Paragraph>
             </div>
         </div>
     );

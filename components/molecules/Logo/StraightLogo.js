@@ -10,7 +10,7 @@ export function StraightLogo({ className, theme }) {
             </Link>
             <div className='flex flex-col'>
                 <SubTitle className={"font-orbitron"}>Mon Compt'heures</SubTitle>
-                <Paragraph>Parce que chaque heure compte</Paragraph>
+                <Paragraph>Compter ses heures en ligne</Paragraph>
             </div>
         </div>
     );

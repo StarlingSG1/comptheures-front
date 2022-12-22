@@ -1,3 +1,4 @@
+import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -37,7 +38,13 @@ export default function Register() {
 
     return (
         <>
-
+            <Head>
+                <title>Inscription - Comptheures</title>
+                <meta
+                    name="description"
+                    content="S'inscrire sur Comptheures pour compter ses heures de travail dans un calendrier comptheures en ligne."
+                />
+            </Head>
             <NewTemplate>
                 <form onSubmit={register} className="w-full h-full mt-20 md:hidden">
                     <BigLogo theme={theme} />
