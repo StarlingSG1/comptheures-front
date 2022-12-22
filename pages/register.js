@@ -24,6 +24,7 @@ export default function Register() {
     const router = useRouter()
 
     const register = async (e) => {
+        console.log("test")
         e.preventDefault();
         const response = await registerUser(credentials)
         if (response.error === true) {
@@ -36,16 +37,16 @@ export default function Register() {
 
     return (
         <>
-        
+
             <NewTemplate>
-                <form onClick={register} className="w-full h-full mt-20 md:hidden">
+                <form onSubmit={register} className="w-full h-full mt-20 md:hidden">
                     <BigLogo theme={theme} />
                     <div className="flex flex-col gap-[15px] mt-60">
-                        <Input onChange={(e) => setCredentials({ ...credentials, firstName: e.target.value })} placeholder={"Prénom"} />
-                        <Input onChange={(e) => setCredentials({ ...credentials, lastName: e.target.value })} placeholder={"Nom"} />
-                        <Input onChange={(e) => setCredentials({ ...credentials, email: e.target.value })} type="email" placeholder={"Adresse email"} />
-                        <Input onChange={(e) => setCredentials({ ...credentials, password: e.target.value })} type="password" placeholder={"Mot de passe"} />
-                        <Input onChange={(e) => setCredentials({ ...credentials, confirmPassword: e.target.value })} type="password" placeholder={"Confirmer mot de passe"} />
+                        <Input defaultValue={credentials?.firstName} onChange={(e) => setCredentials({ ...credentials, firstName: e.target.value })} placeholder={"Prénom"} />
+                        <Input defaultValue={credentials?.lastName} onChange={(e) => setCredentials({ ...credentials, lastName: e.target.value })} placeholder={"Nom"} />
+                        <Input defaultValue={credentials?.email} onChange={(e) => setCredentials({ ...credentials, email: e.target.value })} type="email" placeholder={"Adresse email"} />
+                        <Input defaultValue={credentials?.password} onChange={(e) => setCredentials({ ...credentials, password: e.target.value })} type="password" placeholder={"Mot de passe"} />
+                        <Input defaultValue={credentials?.confirmPassword} onChange={(e) => setCredentials({ ...credentials, confirmPassword: e.target.value })} type="password" placeholder={"Confirmer mot de passe"} />
                     </div>
                     <Paragraph className="mt-[15px] mb-[60px]">En m’inscrivant, je consens à la <ParagraphLink>politique de confidentialité</ParagraphLink>. Vos informations ne seront pas partagés à un tiers.</Paragraph>
                     <Button type="submit">S'inscrire</Button>
@@ -55,17 +56,17 @@ export default function Register() {
                     </div>
                 </form>
 
-                <form className="hidden md:block">
+                <form onSubmit={register} className="hidden md:block">
                     <StraightLogo className={"!mt-0 justify-center"} theme={theme} />
                     <div className="flex flex-col gap-[15px] mt-10">
-                        <Input placeholder={"Prénom"} />
-                        <Input placeholder={"Nom"} />
-                        <Input type="email" placeholder={"Adresse email"} />
-                        <Input type="password" placeholder={"Mot de passe"} />
-                        <Input type="password" placeholder={"Confirmer mot de passe"} />
+                        <Input defaultValue={credentials?.firstName} onChange={(e) => setCredentials({ ...credentials, firstName: e.target.value })} placeholder={"Prénom"} />
+                        <Input defaultValue={credentials?.lastName} onChange={(e) => setCredentials({ ...credentials, lastName: e.target.value })} placeholder={"Nom"} />
+                        <Input defaultValue={credentials?.email} onChange={(e) => setCredentials({ ...credentials, email: e.target.value })} type="email" placeholder={"Adresse email"} />
+                        <Input defaultValue={credentials?.password} onChange={(e) => setCredentials({ ...credentials, password: e.target.value })} type="password" placeholder={"Mot de passe"} />
+                        <Input defaultValue={credentials?.confirmPassword} onChange={(e) => setCredentials({ ...credentials, confirmPassword: e.target.value })} type="password" placeholder={"Confirmer mot de passe"} />
                     </div>
                     <Paragraph className="mt-[15px] mb-10">En m’inscrivant, je consens à la <ParagraphLink>politique de confidentialité</ParagraphLink>. Vos informations ne seront pas partagés à un tiers.</Paragraph>
-                    <Button>S'inscrire</Button>
+                    <Button type="submit">S'inscrire</Button>
                     <div className="flex items-center justify-center gap-1.5 mt-[15px]">
                         <Paragraph>Déjà un compte ?</Paragraph>
                         <ParagraphLink href="/login">Se connecter</ParagraphLink>
