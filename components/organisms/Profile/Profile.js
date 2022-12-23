@@ -65,7 +65,6 @@ export function Profile({ clocks, actualMonth, setActualMonth }) {
     }
 
     const validateUpdateUser = async (e) => {
-        console.log(currentUser)
         e.preventDefault()
         if (currentUser.firstName === "" || currentUser.lastName === "" || currentUser.email === "") {
             toast.error("Veuillez remplir tous les champs")
@@ -78,7 +77,6 @@ export function Profile({ clocks, actualMonth, setActualMonth }) {
         }
         else {
             const response = await updateUserProfile(currentUser)
-            console.log(response)
             if (response.error === false) {
                 setUser(currentUser)
                 toast.success(response.message)
@@ -93,8 +91,10 @@ export function Profile({ clocks, actualMonth, setActualMonth }) {
                         confirm: ""
                     }
                 })
+                setIsProfile(false)
             }
         }
+        console.log(clocks)
     }
 
         
@@ -168,13 +168,8 @@ export function Profile({ clocks, actualMonth, setActualMonth }) {
     }, [weekClocks])
 
     useEffect(() => {
-        setBurgerOpen(false); refresh()
+        setBurgerOpen(false);
     }, [user])
-
-    useEffect(() => {
-        console.log(currentUser)
-    }, [currentUser])
-
 
     return (
         !isProfile ? <div>
