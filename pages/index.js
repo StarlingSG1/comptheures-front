@@ -39,6 +39,7 @@ export default function Home() {
           content="Compter ses heures en ligne, c'est possible avec Comptheures.fr. Créez votre compte et commencez à compter vos heures dès maintenant."
           key="desc"  
         />
+        <link rel="canonical" href="https://comptheures.fr/" />
         <meta property="og:title" content="Comptheures en ligne" />
         <meta
           property="og:description"
