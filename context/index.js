@@ -25,7 +25,7 @@ const UserContextProvider = ({ children }) => {
       setUser(user);
       setStatus("connected");
       setLoading(false);
-      navigate.push("/");
+      navigate.push("/comptheures");
     } else {
       toast.error(user.message);
       setStatus("error");

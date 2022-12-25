@@ -94,7 +94,7 @@ export function Profile({ clocks, actualMonth, setActualMonth }) {
                 setIsProfile(false)
             }
         }
-        console.log(clocks)
+        (clocks)
     }
 
         

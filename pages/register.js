@@ -25,13 +25,12 @@ export default function Register() {
     const router = useRouter()
 
     const register = async (e) => {
-        console.log("test")
         e.preventDefault();
         const response = await registerUser(credentials)
         if (response.error === true) {
             toast.error(response.message)
         } else {
-            toast.success("Inscription réussie !")
+            toast.success(response.message)
             router.push("/login")
         }
     }
