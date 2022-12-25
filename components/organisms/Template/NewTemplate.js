@@ -8,10 +8,9 @@ import { MobileBurger } from "../Burger/MobileBurger";
 
 export function NewTemplate({ children, comptheures = false, className = "" }) {
 
-    const { currentClocks, clocks, currentDay } = useCalendarContext()
+    const { currentClocks, clocks, currentDay, workTotal, setWorkTotal, breakTotal, setBreakTotal } = useCalendarContext()
 
-    const [workTotal, setWorkTotal] = useState(null)
-    const [breakTotal, setBreakTotal] = useState(null)
+    
     const [canUpdate, setCanUpdate] = useState(false)
 
     const getClocksTotal = () => {

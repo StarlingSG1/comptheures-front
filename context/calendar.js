@@ -126,6 +126,9 @@ const CalendarContextProvider = ({ children }) => {
     setToday(months.indexOf(months[new Date().getMonth()]))
   }
 
+  const [workTotal, setWorkTotal] = useState(null)
+    const [breakTotal, setBreakTotal] = useState(null)
+
   const stateValues = useMemo(
     () => ({
       frenchDays,
@@ -149,10 +152,14 @@ const CalendarContextProvider = ({ children }) => {
       currentClocks,
       setCurrentClocks,
       clocks,
-      setClocks
+      setClocks,
+      workTotal,
+      setWorkTotal,
+      breakTotal,
+      setBreakTotal
     }),
     [frenchDays, frenchMonths, setFrenchDays, setFrenchMonths, months, setMonths, today, setToday, getPrevMonth, getMonth, getNextMonth, setTheDay, getMonthByIndex, getDayByIndex, currentDay, setCurrentDay, refresh,
-      getWeekNumber, currentClocks, setCurrentClocks, clocks, setClocks]
+      getWeekNumber, currentClocks, setCurrentClocks, clocks, setClocks, workTotal, setWorkTotal, breakTotal, setBreakTotal]
   );
 
   return (

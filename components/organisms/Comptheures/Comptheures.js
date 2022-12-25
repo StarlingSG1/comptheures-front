@@ -10,23 +10,23 @@ import { toast } from "react-toastify"
 
 export function Comptheures() {
 
-    const { frenchDays, getMonth, setTheDay, getPrevMonth, getNextMonth, getMonthByIndex, getDayByIndex, currentDay, setCurrentDay, refresh, getWeekNumber, currentClocks, setCurrentClocks, clocks, setClocks } = useCalendarContext();
+    const { frenchDays, getMonth, setTheDay, getPrevMonth, getNextMonth, getMonthByIndex, getDayByIndex, currentDay, setCurrentDay, refresh, getWeekNumber, currentClocks, setCurrentClocks, clocks, setClocks, workTotal, breakTotal } = useCalendarContext();
     const { setBurgerOpen } = useUserContext()
     const [edit, setEdit] = useState(true)
     const [test, setTest] = useState(false)
-    
-    
+
+
     const [currentNumber, setCurrentNumber] = useState("")
-    
+
     const changeCurrentDay = (day) => {
         setCurrentDay(new Date(day.year, day.month, day.number));
         goodActualClock(new Date(day.year, day.month, day.number))
     }
-    
+
     useEffect(() => {
-        setBurgerOpen(false); refresh(); getUserClocks(); 
+        setBurgerOpen(false); refresh(); getUserClocks();
     }, [])
-    
+
     useEffect(() => {
         goodActualClock(currentDay);
     }, [clocks])
@@ -118,7 +118,7 @@ export function Comptheures() {
     }
 
     const addClock = () => {
-         const newClock = [...currentClocks]
+        const newClock = [...currentClocks]
         newClock.push({
             name: "Travail supplémentaire",
             year: currentDay?.getFullYear(),
@@ -202,8 +202,18 @@ export function Comptheures() {
                     </div>
                 ))}
                 {edit && displayAddOneClockButton() && <div onClick={addClock} className="dark:bg-white bg-blue cursor-pointer rounded-full flex justify-center items-center w-10 h-10"><Plus /></div>}
-                <Button className="md:mb-0 mb-[60px]" onClick={() => { validateClocks() }}>{edit ? "Enregistrer" : "Modifier"}</Button>
+                <Button className="md:mb-0 mb-10" onClick={() => { validateClocks() }}>{edit ? "Enregistrer" : "Modifier"}</Button>
             </div>
+            {(workTotal || breakTotal) && <div className="w-screen -ml-[5.5%] md:hidden gap-10 border-y-blue flex flex-col py-10 border-y md:mb-0 mb-[60px]">
+                {workTotal && workTotal !== "0h00" && <div className="flex flex-col items-center">
+                    <Title>{workTotal}</Title>
+                    <Paragraph>de travail</Paragraph>
+                </div>}
+                {breakTotal && breakTotal !== "0h00" && <div className="flex flex-col items-center">
+                    <Title>{breakTotal}</Title>
+                    <Paragraph>de pause</Paragraph>
+                </div>}
+            </div>}
         </div>
     )
 }
