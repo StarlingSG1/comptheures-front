@@ -9,8 +9,8 @@ export function StraightLogo({ className, theme }) {
                 {theme ? <DarkLogo /> : <Logo />}
             </Link>
             <div className='flex flex-col'>
-                <SubTitle className={"font-orbitron"}>Mon Compt'heures</SubTitle>
-                <Paragraph>Compter ses heures en ligne</Paragraph>
+            <h1 className="dark:text-white text-blue text-bigger font-orbitron">Mon Compt'heures</h1>
+                <h2 className="dark:text-white text-blue font-noto">Compter ses heures en ligne</h2>
             </div>
         </div>
     );

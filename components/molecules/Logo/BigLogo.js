@@ -10,7 +10,7 @@ export function BigLogo({ className, theme }) {
                 {theme ? <DarkLogo height={133} width={133} /> : <Logo height={133} width={133} />}
             </Link>
             <div className='flex flex-col items-center'>
-                <h1 className="dark:text-white text-blue text-bigger">Mon Compt'heures</h1>
+                <h1 className="dark:text-white text-blue text-bigger font-orbitron">Mon Compt'heures</h1>
                 <h2 className="dark:text-white text-blue font-noto">Compter ses heures en ligne</h2>
             </div>
         </div>
