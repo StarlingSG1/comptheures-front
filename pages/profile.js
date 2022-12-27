@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import { getProfileClock } from "../api/clock/clock";
-import { NewTemplate, Profile } from "../components/organisms";
+import { NewTemplate, Profile, Redirect } from "../components/organisms";
 import { useUserContext } from "../context";
 import { useCalendarContext } from "../context/calendar";
 
@@ -41,7 +41,7 @@ export default function ProfilePage() {
                 />
             </Head>
             <NewTemplate>
-                {!user ? "" : <Profile clocks={clocks} setClocks={setClocks} actualMonth={actualMonth} setActualMonth={setActualMonth} />}
+                {!user ? <Redirect/> : <Profile clocks={clocks} setClocks={setClocks} actualMonth={actualMonth} setActualMonth={setActualMonth} />}
             </NewTemplate>
         </>
 

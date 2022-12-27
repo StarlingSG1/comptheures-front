@@ -10,6 +10,9 @@ export { Comptheures } from './Comptheures/Comptheures';
 // PROFILE
 export { Profile } from './Profile/Profile';
 
+// REDICRECT
+export { Redirect } from './Redirect/Redirect';
+
 // TEMPLATE
 export { Template } from './Template/Template';
 export { NewTemplate } from './Template/NewTemplate';
