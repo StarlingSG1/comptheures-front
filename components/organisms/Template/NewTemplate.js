@@ -39,12 +39,7 @@ export function NewTemplate({ children, comptheures = false, className = "" }) {
 
     return (
         <>
-            <Head>
-            <link rel="apple-touch-icon" sizes="180x180" href="/favicon.png" />
-                <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
-                <link rel="icon" type="image/png" sizes="16x16" href="/favicon.png" />
-                <link rel="icon" type="image/png" href="/favicon.png" />
-            </Head>
+            
             <div className="md:py-[150px] md:flex md:dark:bg-blue-dark md:bg-blue md:w-screen md:justify-center md:items-center md:min-h-screen">
                 <div className="md:w-full md:max-w-[1030px] md:grid md:grid-cols-12 md:gap-[50px] md:items-start md:gap-[50px]">
                     <CrossIcon />
