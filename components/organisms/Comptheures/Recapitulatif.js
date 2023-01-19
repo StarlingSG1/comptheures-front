@@ -107,22 +107,22 @@ export function Recapitulatif(){
     return (
          <div>
             <div className="flex flex-col w-full items-center mt-10 gap-10">
-                <div className="flex flex-col w-full items-center gap-[15px]">
-                    <SubTitle>{getMonthByIndex()}</SubTitle>
+                <div className="flex flex-col w-full items-center gap-[15px] ">
+                    <SubTitle className="font-orbitron">{getDayByIndex() + " " + currentDay.getDate() + " " + getMonthByIndex()}</SubTitle>
                     <Card edit={true}>
-                        <ReverseParagraph><strong>{clocks?.length}</strong> {clocks?.length < 2 ? "jour" : "jours"} | <strong>{monthHours}</strong> travaillées</ReverseParagraph>
+                        <ReverseParagraph><strong>{workHourToday}</strong> {workHourToday === 0 && "heure"} travaillées</ReverseParagraph>
                     </Card>
                 </div>
-                <div className="flex flex-col w-full items-center gap-[15px]">
-                    <SubTitle>{"Semaine " + getWeekNumber(currentDay)}</SubTitle>
+                <div className="flex flex-col w-full items-center gap-[15px] ">
+                    <SubTitle className="font-orbitron">{"Semaine " + getWeekNumber(currentDay)}</SubTitle>
                     <Card edit={true}>
                         <ReverseParagraph><strong>{weekClocks.length}</strong> {weekClocks.length < 2 ? "jour" : "jours"} | <strong>{weekClocks.length === 0 ? 0 : weekHours}</strong> {weekClocks.length === 0 && "heure"} travaillées</ReverseParagraph>
                     </Card>
                 </div>
-                <div className="flex flex-col w-full items-center gap-[15px] md:mb-0 mb-60 ">
-                    <SubTitle>{getDayByIndex() + " " + currentDay.getDate() + " " + getMonthByIndex()}</SubTitle>
+                <div className="flex flex-col w-full items-center gap-[15px] md:mb-0 mb-60">
+                    <SubTitle className="font-orbitron">{getMonthByIndex()}</SubTitle>
                     <Card edit={true}>
-                        <ReverseParagraph><strong>{workHourToday}</strong> {workHourToday === 0 && "heure"} travaillées</ReverseParagraph>
+                        <ReverseParagraph><strong>{clocks?.length}</strong> {clocks?.length < 2 ? "jour" : "jours"} | <strong>{monthHours}</strong> travaillées</ReverseParagraph>
                     </Card>
                 </div>
             </div>

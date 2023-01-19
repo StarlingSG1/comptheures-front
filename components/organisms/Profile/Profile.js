@@ -14,16 +14,9 @@ import { Calendar } from "../Calendar/Calendar"
 export function Profile({ clocks, actualMonth, setActualMonth }) {
 
     const { setBurgerOpen, user, setUser } = useUserContext()
-    const { frenchDays, frenchMonths, getPrevMonth, getMonth, getNextMonth, setTheDay, getMonthByIndex, getDayByIndex, currentDay, setCurrentDay, refresh, getWeekNumber } = useCalendarContext();
 
     const [edit, setEdit] = useState(true)
-    const [currentNumber, setCurrentNumber] = useState("")
     const [isProfile, setIsProfile] = useState(false)
-    const [currentWeekNumber, setCurrentWeekNumber] = useState(null)
-    const [monthHours, setMonthHours] = useState(0)
-    const [weekHours, setWeekHours] = useState(0)
-    const [weekClocks, setWeekClocks] = useState([])
-    const [workHourToday, setWorkHourToday] = useState(0)
     const [currentUser, setCurrentUser] = useState({
         firstName: user?.firstName,
         lastName: user?.lastName,
@@ -35,34 +28,7 @@ export function Profile({ clocks, actualMonth, setActualMonth }) {
         }
     })
 
-    const totalWeekHours = () => {
-        let totalH = 0
-        let totalM = 0
-        let hours = []
-        let minutes = []
-        if (weekClocks?.length > 0) {
-            for (let i = 0; i < weekClocks?.length; i++) {
-                const [h, m] = weekClocks[i].stats[0].work.split('h')
-                hours.push(h)
-                minutes.push(m)
-            }
-            for (var h in hours) {
-                totalH += parseInt(hours[h], 10);
-            }
-            // for each in minutes
-            for (var m in minutes) {
-                totalM += parseInt(minutes[m], 10);
-            }
-            // If the minutes exceed 60
-            if (totalM >= 60) {
-                // Divide minutes by 60 and add result to hours
-                totalH += Math.floor(totalM / 60);
-                // Add remainder of totalM / 60 to minutes
-                totalM = totalM % 60;
-            }
-        }
-        setWeekHours(totalH + 'h' + totalM)
-    }
+    
 
     const validateUpdateUser = async (e) => {
         e.preventDefault()
@@ -97,26 +63,6 @@ export function Profile({ clocks, actualMonth, setActualMonth }) {
         (clocks)
     }
 
-        
-
-    
-
-
-    useEffect(() => {
-        getWorkOfTheDay(currentDay)
-    }, [currentDay])
-
-    useEffect(() => {
-        getClocksOfTheWeek()
-    }, [currentWeekNumber])
-
-    useEffect(() => {
-        getClocksOfTheWeek(), totalMonthHours(), getWorkOfTheDay(new Date())
-    }, [clocks])
-
-    useEffect(() => {
-        totalWeekHours()
-    }, [weekClocks])
 
     useEffect(() => {
         setBurgerOpen(false);
@@ -183,8 +129,8 @@ export function Profile({ clocks, actualMonth, setActualMonth }) {
                     <div className="flex flex-col mt-10 gap-[30px] wp-full">
                         <OpenInput onChange={(e) => setCurrentUser({ ...currentUser, firstName: e.target.value })} defaultValue={user?.firstName} placeholder="Prénom" />
                         <OpenInput onChange={(e) => setCurrentUser({ ...currentUser, lastName: e.target.value })} defaultValue={user?.lastName} placeholder="Nom" />
-                        <OpenInput onChange={(e) => {}} defaultValue={"Maison de la Barbe à Papa"} placeholder="Entreprise" />
-                        <OpenInput onChange={(e) => setCurrentUser({ ...currentUser, email: e.target.value })} defaultValue={user?.email} placeholder="Adresse email" />
+                        <OpenInput editable={false} onChange={(e) => {}} defaultValue={"Maison de la Barbe à Papa"} placeholder="Entreprise" />
+                        <OpenInput editable={false} onChange={(e) => setCurrentUser({ ...currentUser, email: e.target.value })} defaultValue={user?.email} placeholder="Adresse email" />
                         <OpenInputPassword currentUser={currentUser} setCurrentUser={setCurrentUser} />
                     </div>
                 <Button type="submit" className="mt-60 md:mb-0 mb-60">Enregistrer</Button>

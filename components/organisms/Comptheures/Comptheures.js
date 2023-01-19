@@ -183,7 +183,7 @@ export function Comptheures() {
         <div>
             {modal &&
                 <div className="absolute w-full h-full top-0 left-0 bottom-O right-0 bg-black/[0.3] flex justify-center items-end rounded-2xl z-20">
-                    <div className="h-[240px] w-[70%] bg-white mb-80 rounded-xl flex flex-col justify-between p-5">
+                    <div className="h-[240px] w-[70%] bg-white dark:bg-blue mb-80 rounded-xl flex flex-col justify-between p-5">
                         <Paragraph onClick={() => setModal(false)}>X</Paragraph>
                         <Paragraph className="text-center">Vos horaires pour ce jour seront envoyés à un administrateur de l’entreprise pour validation.</Paragraph>
                         <div className="flex flex-col gap-2.5">
@@ -223,12 +223,12 @@ export function Comptheures() {
             </div>
             <Calendar frenchDays={frenchDays} setCurrentNumber={setCurrentNumber} day={currentDay} currentNumber={currentNumber} changeCurrentDay={changeCurrentDay} />
             <ComptheuresSwitch comptheuresSwitch={comptheuresSwitch} setComptheuresSwitch={setComptheuresSwitch} />
-            <SubTitle className={`text-center font-orbitron underline capitalize  ${customSelected ? "mt-10 mb-5" : "my-10"}`}>{getDayByIndex() + " " + currentDay.getDate() + " " + getMonthByIndex()}</SubTitle>
             {comptheuresSwitch ?
                 <Recapitulatif />
                 :
                 customSelected ?
                     <>
+                        <SubTitle className={`text-center font-orbitron underline capitalize  ${customSelected ? "mt-10 mb-5" : "my-10"}`}>{getDayByIndex() + " " + currentDay.getDate() + " " + getMonthByIndex()}</SubTitle>
                         <div onClick={() => { setCustomSelected(false) }} className="flex items-center gap-1.5 mb-5 cursor-pointer">
                             <RealArrow className="min-w-[30px] rotate-180 min-h-[30px]" card={true} />
                             <Paragraph className="uppercase font-bold">Retour</Paragraph>
@@ -274,24 +274,29 @@ export function Comptheures() {
                         </div>}
                     </>
                     :
-                    <div className="w-full flex flex-col items-center gap-[30px] md:mb-0 mb-20">
-                        <Paragraph className="font-bold uppercase">
-                            Choisir une notation
-                        </Paragraph>
-                        <Button className={autoSelected && "!bg-blue-selected !text-white"} onClick={() => { pickAutoNotation() }}>Automatique</Button>
-                        <BorderedButton className={customSelected && "!bg-blue-selected"} onClick={() => { pickCustomNotation() }}>Personnalisé</BorderedButton>
-                        <Paragraph className="font-bold uppercase">
-                            Ou
-                        </Paragraph>
-                        <div className="flex w-full justify-center ">
-                            <div className="grid grid-cols-3 gap-[75px]">
-                                {specialDays.map((day, index) => (
-                                    <SpecialDayButton pickSpecialNotation={pickSpecialNotation} day={day} specialSelected={specialSelected} >{day.name}</SpecialDayButton>
-                                ))}
+                    <>
+                        <SubTitle className={`text-center font-orbitron underline capitalize  ${customSelected ? "mt-10 mb-5" : "my-10"}`}>{getDayByIndex() + " " + currentDay.getDate() + " " + getMonthByIndex()}</SubTitle>
+
+                        <div className="w-full flex flex-col items-center gap-[30px] md:mb-0 mb-20">
+                            <Paragraph className="font-bold uppercase">
+                                Choisir une notation
+                            </Paragraph>
+                            <Button className={autoSelected && "!bg-blue-selected !text-white"} onClick={() => { pickAutoNotation() }}>Automatique</Button>
+                            <BorderedButton className={customSelected && "!bg-blue-selected"} onClick={() => { pickCustomNotation() }}>Personnalisé</BorderedButton>
+                            <Paragraph className="font-bold uppercase">
+                                Ou
+                            </Paragraph>
+                            <div className="flex w-full justify-center ">
+                                <div className="grid grid-cols-3 gap-[75px]">
+                                    {specialDays.map((day, index) => (
+                                        <SpecialDayButton pickSpecialNotation={pickSpecialNotation} day={day} specialSelected={specialSelected} >{day.name}</SpecialDayButton>
+                                    ))}
+                                </div>
                             </div>
+                            {(autoSelected || customSelected || specialSelected) && <Button onClick={() => setModal(true)}>Enregistrer</Button>}
                         </div>
-                        {(autoSelected || customSelected || specialSelected) && <Button onClick={() => setModal(true)}>Enregistrer</Button>}
-                    </div>}
+                    </>
+            }
         </div>
     )
 }
