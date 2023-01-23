@@ -8,6 +8,7 @@ import { useCalendarContext } from "../../../context/calendar"
 import { addClocks, getClocks } from "../../../api/clock/clock";
 import { toast } from "react-toastify"
 import { Recapitulatif } from "../../organisms"
+import { Notations } from "./Notations"
 
 export function Comptheures() {
 
@@ -15,7 +16,7 @@ export function Comptheures() {
     const { setBurgerOpen } = useUserContext()
     const [edit, setEdit] = useState(true)
     const [test, setTest] = useState(false)
-    const [comptheuresSwitch, setComptheuresSwitch] = useState(false)
+    const [comptheuresSwitchState, setComptheuresSwitchState] = useState(false)
     const [modal, setModal] = useState(false)
 
     // selected item in blue
@@ -222,8 +223,8 @@ export function Comptheures() {
                 }} />
             </div>
             <Calendar frenchDays={frenchDays} setCurrentNumber={setCurrentNumber} day={currentDay} currentNumber={currentNumber} changeCurrentDay={changeCurrentDay} />
-            <ComptheuresSwitch comptheuresSwitch={comptheuresSwitch} setComptheuresSwitch={setComptheuresSwitch} />
-            {comptheuresSwitch ?
+            <ComptheuresSwitch comptheuresSwitchState={comptheuresSwitchState} setComptheuresSwitchState={setComptheuresSwitchState} />
+            {comptheuresSwitchState ?
                 <Recapitulatif />
                 :
                 customSelected ?
@@ -274,28 +275,7 @@ export function Comptheures() {
                         </div>}
                     </>
                     :
-                    <>
-                        <SubTitle className={`text-center font-orbitron underline capitalize  ${customSelected ? "mt-10 mb-5" : "my-10"}`}>{getDayByIndex() + " " + currentDay.getDate() + " " + getMonthByIndex()}</SubTitle>
-
-                        <div className="w-full flex flex-col items-center gap-[30px] md:mb-0 mb-20">
-                            <Paragraph className="font-bold uppercase">
-                                Choisir une notation
-                            </Paragraph>
-                            <Button className={autoSelected && "!bg-blue-selected !text-white"} onClick={() => { pickAutoNotation() }}>Automatique</Button>
-                            <BorderedButton className={customSelected && "!bg-blue-selected"} onClick={() => { pickCustomNotation() }}>Personnalisé</BorderedButton>
-                            <Paragraph className="font-bold uppercase">
-                                Ou
-                            </Paragraph>
-                            <div className="flex w-full justify-center ">
-                                <div className="grid grid-cols-3 gap-[75px]">
-                                    {specialDays.map((day, index) => (
-                                        <SpecialDayButton pickSpecialNotation={pickSpecialNotation} day={day} specialSelected={specialSelected} >{day.name}</SpecialDayButton>
-                                    ))}
-                                </div>
-                            </div>
-                            {(autoSelected || customSelected || specialSelected) && <Button onClick={() => setModal(true)}>Enregistrer</Button>}
-                        </div>
-                    </>
+                    <Notations pickAutoNotation={pickAutoNotation} pickCustomNotation={pickCustomNotation} autoSelected={autoSelected} customSelected={customSelected} specialSelected={specialSelected} setModal={setModal} specialDays={specialDays} pickSpecialNotation={pickSpecialNotation} />
             }
         </div>
     )

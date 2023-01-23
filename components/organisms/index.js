@@ -6,6 +6,7 @@ export { Calendar } from './Calendar/Calendar';
 
 // COMPTHEURES
 export { Comptheures } from './Comptheures/Comptheures';
+export { Notations } from './Comptheures/Notations';
 export { Recapitulatif } from './Comptheures/Recapitulatif';
 
 // PROFILE
