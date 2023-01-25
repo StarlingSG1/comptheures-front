@@ -16,6 +16,9 @@ export { ThemePicker } from "./Theme/ThemePicker";
 // TIMEINPUT
 export { TimeInput } from './TimeInput/TimeInput';
 
+// BACKTITLE
+export { BackTitle } from './BackTitle';
+
 
 
 

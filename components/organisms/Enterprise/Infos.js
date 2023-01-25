@@ -6,7 +6,7 @@ import { updateUserProfile } from "../../../api/users/user"
 import { useUserContext } from "../../../context"
 import { useCalendarContext } from "../../../context/calendar"
 import { Arrow, Button, Card, OpenInput, OpenInputPassword, OrbitronTitle, Paragraph, PencilIcon, Plus, ProfileIcon, RealArrow, ReverseParagraph, SubTitle, Title } from "../../atoms"
-import { SmallStraightLogo, StraightLogo, TimeBlock, TimeInput } from "../../molecules"
+import { BackTitle, SmallStraightLogo, StraightLogo, TimeBlock, TimeInput } from "../../molecules"
 import { Calendar } from "../Calendar/Calendar"
 
 export function Infos({ }) {
@@ -77,8 +77,7 @@ export function Infos({ }) {
     return (
         <form onSubmit={validateUpdateUser} className="">
             <OrbitronTitle className="text-center !font-normal">{enterprise?.name}</OrbitronTitle>
-            <div className=" flex mt-10 flex-col">
-                <RealArrow onClick={() => router.push("/enterprise")} width={40} height={40} className="cursor-pointer rotate-180" />
+            <BackTitle>Informations de l'entreprise</BackTitle>
                     <div className="flex flex-col mt-10 gap-[30px] wp-full">
                         <OpenInput onChange={(e) => setEnterpriseInfo({ ...enterpriseInfo, adminName: e.target.value })} defaultValue={enterprise?.adminName} placeholder="Administrateur" />
                         <OpenInput onChange={(e) => setEnterpriseInfo({ ...enterpriseInfo, adress: e.target.value })} defaultValue={enterprise?.adress} placeholder="Adresse" />
@@ -86,7 +85,6 @@ export function Infos({ }) {
                         <OpenInput onChange={(e) => setEnterpriseInfo({ ...enterpriseInfo, phone: e.target.value })} defaultValue={enterprise?.phone} placeholder="Téléphone" />
                         <OpenInput onChange={(e) => setEnterpriseInfo({ ...enterpriseInfo, website: e.target.value })} defaultValue={enterprise?.website} placeholder="Site web" />
                     </div>
-            </div>
             <Button type="submit" className="mt-60 md:mb-0 mb-60">Enregistrer</Button>
         </form>
     )

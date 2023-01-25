@@ -15,9 +15,9 @@ export default function Enterprise() {
     const [pages, setPages] = useState([
         { name: "Configuration de l’entreprise", link: "/enterprise/config" },
         { name: "Info entreprise", link: "/enterprise/info" },
-        { name: "Horaires à valider", link: "/" },
-        { name: "Statistiques / Export des données", link: "/" },
-        { name: "Liste des utilisateurs", link: "/" },
+        { name: "Horaires à valider", link: "/enterprise/clocks/validation" },
+        { name: "Statistiques / Export des données", link: "/enterprise/clocks/data" },
+        { name: "Liste des utilisateurs", link: "/enterprise/users" },
     ]);
 
     useEffect(() => {
