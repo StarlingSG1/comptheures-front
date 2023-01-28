@@ -17,7 +17,7 @@ export function BurgerContent({ className = "" }) {
                 <>
                     <BurgerItem href="/comptheures" icon="comptheures">Comptheures</BurgerItem>
                     <BurgerSeparator />
-                    <BurgerItem href="/enterprise" icon="comptheures">Entreprise</BurgerItem>
+                    <BurgerItem href="/enterprise">Entreprise</BurgerItem>
                     <BurgerSeparator />
                     <BurgerItem href="/profile" icon="profile">Profile</BurgerItem>
                     <BurgerSeparator />
