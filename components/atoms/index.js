@@ -1,5 +1,8 @@
 // BUTTONS
 export { Button } from "./Buttons/Button";
+export { BorderedButton } from "./Buttons/BorderedButton";
+export { SpecialDayButton } from "./Buttons/SpecialDayButton";
+
 // CARDS
 export { BigDesktopCard } from "./Cards/BigDesktopCard";
 export { Card } from "./Cards/Card";
@@ -36,6 +39,9 @@ export { Logo } from "./Logo/Logo";
 
 // SEPARATORS
 export { BurgerSeparator } from "./Separators/BurgerSeparator";
+
+// SWITCH
+export { ComptheuresSwitch } from "./Switch/ComptheuresSwitch";
 
 // TEXTS
 export { BurgerParagraph } from "./Texts/BurgerParagraph";

@@ -9,6 +9,8 @@ export { Comptheures } from "./Comptheures/Comptheures";
 
 // ENTERPRISE
 export { Infos } from "./Enterprise/Infos";
+export { Notations } from './Comptheures/Notations';
+export { Recapitulatif } from './Comptheures/Recapitulatif';
 
 // PROFILE
 export { Profile } from "./Profile/Profile";

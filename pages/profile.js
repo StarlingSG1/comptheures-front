@@ -41,7 +41,7 @@ export default function ProfilePage() {
                 />
             </Head>
             <NewTemplate>
-                {!user ? <Redirect/> : <Profile clocks={clocks} setClocks={setClocks} actualMonth={actualMonth} setActualMonth={setActualMonth} />}
+                {!user ? <Redirect/> : <Profile clocks={clocks} setClocks={setClocks} />}
             </NewTemplate>
         </>
 

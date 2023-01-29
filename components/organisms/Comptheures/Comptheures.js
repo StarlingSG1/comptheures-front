@@ -1,12 +1,14 @@
 import { use, useEffect, useState } from "react"
 import { useUserContext } from "../../../context"
-import { Arrow, Button, Card, CoffeeIcon, OrbitronTitle, Paragraph, Plus, RealArrow, ReverseParagraph, SubTitle, Title, WorkIcon } from "../../atoms"
+import { Arrow, BorderedButton, Button, Card, CoffeeIcon, ComptheuresSwitch, OrbitronTitle, Paragraph, Plus, RealArrow, ReverseParagraph, SpecialDayButton, SubTitle, Title, WorkIcon } from "../../atoms"
 import { SmallStraightLogo, TimeInput } from "../../molecules"
 import { Calendar } from "../Calendar/Calendar"
 import { TimeBlock } from "../../organisms";
 import { useCalendarContext } from "../../../context/calendar"
 import { addClocks, getClocks } from "../../../api/clock/clock";
 import { toast } from "react-toastify"
+import { Recapitulatif } from "../../organisms"
+import { Notations } from "./Notations"
 
 export function Comptheures() {
 
@@ -14,13 +16,42 @@ export function Comptheures() {
     const { setBurgerOpen } = useUserContext()
     const [edit, setEdit] = useState(true)
     const [test, setTest] = useState(false)
+    const [comptheuresSwitchState, setComptheuresSwitchState] = useState(false)
+    const [modal, setModal] = useState(false)
 
-
+    // selected item in blue
+    const [autoSelected, setAutoSelected] = useState(false)
+    const [customSelected, setCustomSelected] = useState(false)
+    const [specialSelected, setSpecialSelected] = useState(null)
     const [currentNumber, setCurrentNumber] = useState("")
 
+    const [specialDays, setSpecialDays] = useState([
+        { id: 1, name: "Recup" },
+        { id: 2, name: "Congé" },
+        { id: 3, name: "Maladie" },
+    ])
     const changeCurrentDay = (day) => {
         setCurrentDay(new Date(day.year, day.month, day.number));
         goodActualClock(new Date(day.year, day.month, day.number))
+    }
+
+    const pickAutoNotation = () => {
+        setAutoSelected(!autoSelected)
+        setCustomSelected(false)
+        setSpecialSelected(null)
+    }
+
+    const pickCustomNotation = () => {
+        setCustomSelected(!customSelected)
+        setAutoSelected(false)
+        setSpecialSelected(null)
+    }
+
+    const pickSpecialNotation = (index) => {
+        specialSelected === index ? setSpecialSelected(null) :
+            setSpecialSelected(index)
+        setAutoSelected(false)
+        setCustomSelected(false)
     }
 
     useEffect(() => {
@@ -146,8 +177,26 @@ export function Comptheures() {
         }
     }
 
+
+
     return (
+
         <div>
+            {modal &&
+                <div className="absolute w-full h-full top-0 left-0 bottom-O right-0 bg-black/[0.3] flex justify-center items-end rounded-2xl z-20">
+                    <div className="h-[240px] w-[70%] bg-white dark:bg-blue mb-80 rounded-xl flex flex-col justify-between p-5">
+                        <Paragraph onClick={() => setModal(false)}>X</Paragraph>
+                        <Paragraph className="text-center">Vos horaires pour ce jour seront envoyés à un administrateur de l’entreprise pour validation.</Paragraph>
+                        <div className="flex flex-col gap-2.5">
+                            <div className="flex gap-2.5">
+                                <input type="checkbox" />
+                                <Paragraph>Ne plus me demander</Paragraph>
+                            </div>
+                            <Button onClick={() => setModal(false)}>Oui, enregistrer</Button>
+                        </div>
+                    </div>
+                </div>
+            }
             <SmallStraightLogo className={"md:hidden"} />
             <OrbitronTitle className="!text-center  md:mt-0 mt-5 md:mb-0 mb-5">{currentDay.getFullYear()}</OrbitronTitle>
             <div className="w-full h-10 flex items-center justify-between px-[5px] md:mt-5">
@@ -174,46 +223,60 @@ export function Comptheures() {
                 }} />
             </div>
             <Calendar frenchDays={frenchDays} setCurrentNumber={setCurrentNumber} day={currentDay} currentNumber={currentNumber} changeCurrentDay={changeCurrentDay} />
-            <SubTitle className="text-center underline capitalize my-10">{getDayByIndex() + " " + currentDay.getDate() + " " + getMonthByIndex()}</SubTitle>
-            <div className="flex flex-col w-full items-center gap-10">
-                {currentClocks?.sort((a, b) => a.order > b.order ? 1 : -1).map((clock, index) => (
-                    ((!edit && clock?.start.length > 0) || edit) && <div key={index} className={`flex flex-col w-full items-center gap-[15px]`}>
-                        <div className="flex w-full items-center justify-center gap-2.5">
-                            {clock.type === "WORK" ? <WorkIcon className={edit && "cursor-pointer"} onClick={() => edit && changeClockType(index, clock.type)} /> : clock.type === "BREAK" ? <CoffeeIcon className={edit && "cursor-pointer"} onClick={() => edit && changeClockType(index, clock.type)} /> : <WorkIcon onClick={() => changeClockType(key, clock.type)} />}
-                            {edit ? <input id="txt" type="text" defaultValue={clock.name} className="bg-transparent font-bold outline-none text-center text-blue dark:text-white w-[55px]" onChange={(e) =>
-                                setCurrentClocks(currentClocks.map((clock, i) =>
-                                    i === index ? { ...clock, name: e.target.value } : clock
-                                ))}
-                                style={{ width: ((clock.name.length + 3) * 8) + 'px' }}
-                            /> : <Paragraph className={"font-bold"}>{clock.name}</Paragraph>
-                            }
+            <ComptheuresSwitch comptheuresSwitchState={comptheuresSwitchState} setComptheuresSwitchState={setComptheuresSwitchState} />
+            {comptheuresSwitchState ?
+                <Recapitulatif />
+                :
+                customSelected ?
+                    <>
+                        <SubTitle className={`text-center font-orbitron underline capitalize  ${customSelected ? "mt-10 mb-5" : "my-10"}`}>{getDayByIndex() + " " + currentDay.getDate() + " " + getMonthByIndex()}</SubTitle>
+                        <div onClick={() => { setCustomSelected(false) }} className="flex items-center gap-1.5 mb-5 cursor-pointer">
+                            <RealArrow className="min-w-[30px] rotate-180 min-h-[30px]" card={true} />
+                            <Paragraph className="uppercase font-bold">Retour</Paragraph>
                         </div>
-                        <Card edit={edit} className="">
-                            <TimeInput index={index} defaultValue={clock.start} edit={edit}>{clock.start}</TimeInput>
-                            <div className={`h-full flex-col py-[5px] flex ${edit ? "justify-between" : "justify-center"} items-center`}>
-                                {edit && <span className="w-[2px] rounded-full bg-white dark:bg-blue h-full ">
-                                </span>}
-                                <RealArrow edit={edit} className="min-w-[22px] min-h-[22px]" card={true} />
-                                {edit && <span className="w-[2px] rounded-full bg-white dark:bg-blue h-full ">
-                                </span>}
-                            </div>
-                            <TimeInput index={index} defaultValue={clock.end} edit={edit} end={true}>{clock.end}</TimeInput>
-                        </Card>
-                    </div>
-                ))}
-                {edit && displayAddOneClockButton() && <div onClick={addClock} className="dark:bg-white bg-blue cursor-pointer rounded-full flex justify-center items-center w-10 h-10"><Plus /></div>}
-                <Button className="md:mb-0 mb-10" onClick={() => { validateClocks() }}>{edit ? "Enregistrer" : "Modifier"}</Button>
-            </div>
-            {(workTotal || breakTotal) && <div className="w-screen -ml-[5.5%] md:hidden gap-10 border-y-blue flex flex-col py-10 border-y md:mb-0 mb-[60px]">
-                {workTotal && workTotal !== "0h00" && <div className="flex flex-col items-center">
-                    <Title>{workTotal}</Title>
-                    <Paragraph>de travail</Paragraph>
-                </div>}
-                {breakTotal && breakTotal !== "0h00" && <div className="flex flex-col items-center">
-                    <Title>{breakTotal}</Title>
-                    <Paragraph>de pause</Paragraph>
-                </div>}
-            </div>}
+                        <div className="flex flex-col w-full items-center gap-10">
+                            {currentClocks?.sort((a, b) => a.order > b.order ? 1 : -1).map((clock, index) => (
+                                ((!edit && clock?.start.length > 0) || edit) && <div key={index} className={`flex flex-col w-full items-center gap-[15px]`}>
+                                    <div className="flex w-full items-center justify-center gap-2.5">
+                                        {clock.type === "WORK" ? <WorkIcon className={edit && "cursor-pointer"} onClick={() => edit && changeClockType(index, clock.type)} /> : clock.type === "BREAK" ? <CoffeeIcon className={edit && "cursor-pointer"} onClick={() => edit && changeClockType(index, clock.type)} /> : <WorkIcon onClick={() => changeClockType(key, clock.type)} />}
+                                        {edit ? <input id="txt" type="text" defaultValue={clock.name} className="bg-transparent font-bold outline-none text-center text-blue dark:text-white w-[55px]" onChange={(e) =>
+                                            setCurrentClocks(currentClocks.map((clock, i) =>
+                                                i === index ? { ...clock, name: e.target.value } : clock
+                                            ))}
+                                            style={{ width: ((clock.name.length + 3) * 8) + 'px' }}
+                                        /> : <Paragraph className={"font-bold"}>{clock.name}</Paragraph>
+                                        }
+                                    </div>
+                                    <Card edit={edit} className="">
+                                        <TimeInput index={index} defaultValue={clock.start} edit={edit}>{clock.start}</TimeInput>
+                                        <div className={`h-full flex-col py-[5px] flex ${edit ? "justify-between" : "justify-center"} items-center`}>
+                                            {edit && <span className="w-[2px] rounded-full bg-white dark:bg-blue h-full ">
+                                            </span>}
+                                            <RealArrow edit={edit} className="min-w-[22px] min-h-[22px]" card={true} />
+                                            {edit && <span className="w-[2px] rounded-full bg-white dark:bg-blue h-full ">
+                                            </span>}
+                                        </div>
+                                        <TimeInput index={index} defaultValue={clock.end} edit={edit} end={true}>{clock.end}</TimeInput>
+                                    </Card>
+                                </div>
+                            ))}
+                            {edit && displayAddOneClockButton() && <div onClick={addClock} className="dark:bg-white bg-blue cursor-pointer rounded-full flex justify-center items-center w-10 h-10"><Plus /></div>}
+                            <Button className="md:mb-0 mb-10" onClick={() => { validateClocks() }}>{edit ? "Enregistrer" : "Modifier"}</Button>
+                        </div>
+                        {(workTotal || breakTotal) && <div className="w-screen -ml-[5.5%] md:hidden gap-10 border-y-blue flex flex-col py-10 border-y md:mb-0 mb-[60px]">
+                            {workTotal && workTotal !== "0h00" && <div className="flex flex-col items-center">
+                                <Title>{workTotal}</Title>
+                                <Paragraph>de travail</Paragraph>
+                            </div>}
+                            {breakTotal && breakTotal !== "0h00" && <div className="flex flex-col items-center">
+                                <Title>{breakTotal}</Title>
+                                <Paragraph>de pause</Paragraph>
+                            </div>}
+                        </div>}
+                    </>
+                    :
+                    <Notations pickAutoNotation={pickAutoNotation} pickCustomNotation={pickCustomNotation} autoSelected={autoSelected} customSelected={customSelected} specialSelected={specialSelected} setModal={setModal} specialDays={specialDays} pickSpecialNotation={pickSpecialNotation} />
+            }
         </div>
     )
 }
