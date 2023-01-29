@@ -11,6 +11,10 @@ export default function Page404() {
 
     const router = useRouter();
 
+    const goToComptheures = () => {
+        router.push("/comptheures");
+      };
+      
     return (
         <>
             <Head>
