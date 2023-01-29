@@ -107,10 +107,10 @@ export default function enterpriseValidation() {
                                         <tr key={index} className="dark:hover:text-white dark:even:bg-blue-dark even:bg-blue odd:bg-transparent even:text-white dark:odd:text-white h-10 ">
                                             {item.realisationStatus === "IN_VALIDATION" &&
                                                 <>
-                                                    <td className="pl-2.5">{item.day}</td>
+                                                    <td className="pl-2.5">{item.day}/{item.month + 1}/{item.year}</td>
                                                     <td className="pl-2.5">{item.work}</td>
                                                     <td className="pl-2.5">{item?.CustomTime?.length > 0 ? "Personnalisé" : "Special"}</td>
-                                                    <td className="pl-2.5">{item.week}</td>
+                                                    <td className="pl-2.5">action</td>
                                                 </>}
                                         </tr>
                                     ))}

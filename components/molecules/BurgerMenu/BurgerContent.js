@@ -17,11 +17,12 @@ export function BurgerContent({ className = "" }) {
                 <>
                     <BurgerItem href="/comptheures" icon="comptheures">Comptheures</BurgerItem>
                     <BurgerSeparator />
-                    <BurgerItem href="/enterprise">Entreprise</BurgerItem>
-                    <BurgerSeparator />
+                    {(user?.userEnterprise?.role?.isAdmin === 1 || user?.userEnterprise?.role?.isAdmin === 2) && <> <BurgerItem href="/enterprise">Entreprise</BurgerItem>
+                        <BurgerSeparator /></>}
                     <BurgerItem href="/profile" icon="profile">Profile</BurgerItem>
                     <BurgerSeparator />
-                    <BurgerItem href="/logout" icon="logout">Se deconnecter</BurgerItem></>
+                    <BurgerItem href="/logout" icon="logout">Se deconnecter</BurgerItem>
+                </>
             }
         </div>
     )
