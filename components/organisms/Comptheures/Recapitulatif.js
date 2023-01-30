@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useCalendarContext } from "../../../context/calendar";
 import { Card, ReverseParagraph, SubTitle } from "../../atoms";
 
-export function Recapitulatif(){
+export function Recapitulatif({myStats}){
 
     const { frenchDays, frenchMonths, getPrevMonth, getMonth, getNextMonth, clocks, getMonthByIndex, getDayByIndex, currentDay, setCurrentDay, refresh, getWeekNumber } = useCalendarContext();
 
@@ -13,6 +13,7 @@ export function Recapitulatif(){
     const [weekClocks, setWeekClocks] = useState([])
     const [workHourToday, setWorkHourToday] = useState(0)
     const [actualMonth, setActualMonth] = useState(new Date().getMonth())
+
 
 
     const totalWeekHours = () => {
@@ -79,8 +80,8 @@ export function Recapitulatif(){
     }
 
     const getWorkOfTheDay = (day) => {
-        const workOfTheDay = clocks.filter(clock => clock.day === day.getDate() && clock.month === day.getMonth() && clock.year === day.getFullYear())
-        setWorkHourToday(workOfTheDay[0]?.stats[0]?.work || 0)
+        const workOfTheDay = myStats.filter(clock => clock.day === day.getDate() && clock.month === day.getMonth() && clock.year === day.getFullYear())
+        setWorkHourToday(workOfTheDay[0]?.work || 0)
     }
 
     useEffect(() => {

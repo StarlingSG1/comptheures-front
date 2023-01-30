@@ -13,8 +13,8 @@ import { createTime, statsList } from "../../../api/time/time"
 
 export function Comptheures() {
 
-    const { frenchDays, getMonth, setTheDay, getPrevMonth, getNextMonth, getMonthByIndex, getDayByIndex, currentDay, setCurrentDay, refresh, getWeekNumber, currentClocks, setCurrentClocks, clocks, setClocks, workTotal, breakTotal } = useCalendarContext();
-    const { setBurgerOpen, user } = useUserContext()
+    const { frenchDays, getMonth, setTheDay, getPrevMonth, getNextMonth, getMonthByIndex, getDayByIndex, currentDay, setCurrentDay, refresh, getWeekNumber, currentCustomTimes, setCurrentCustomTimes, clocks, setClocks, workTotal, breakTotal } = useCalendarContext();
+    const { setBurgerOpen, user, setUser } = useUserContext()
     const [edit, setEdit] = useState(true)
     const [comptheuresSwitchState, setComptheuresSwitchState] = useState(false)
     const [modal, setModal] = useState(false)
@@ -27,6 +27,7 @@ export function Comptheures() {
     const [myStats, setMyStats] = useState([])
 
     const [specialDays, setSpecialDays] = useState([])
+
     const changeCurrentDay = (day) => {
         setCurrentDay(new Date(day.year, day.month, day.number));
         goodActualClock(new Date(day.year, day.month, day.number))
@@ -44,7 +45,6 @@ export function Comptheures() {
                 setCustomSelected(true)
                 break;
             case "SPECIAL":
-                console.log(items)
                 setNotationSelected(items)
                 setNotationType("SPECIAL")
                 break;
@@ -54,14 +54,14 @@ export function Comptheures() {
     }
 
     useEffect(() => {
-        setBurgerOpen(false); refresh(); getUserClocks();
+        setBurgerOpen(false); refresh();
         setSpecialDays(user?.userEnterprise?.enterprise?.configEnterprise.SpecialDays)
         getMyStats()
     }, [])
 
     useEffect(() => {
         goodActualClock(currentDay);
-    }, [clocks])
+    }, [myStats])
 
     useEffect(() => {
         // goodActualClock(currentDay);
@@ -75,27 +75,23 @@ export function Comptheures() {
     const getTimeOfTheDay = async (day) => {
         setNotationSelected(null)
         setNotationType(null)
+        setCustomSelected(false)
         const myStat = myStats.find(stat => stat.day === day.getDate() && stat.month === day.getMonth() && stat.year === day.getFullYear())
-        console.log(myStat)
-        if(myStat?.specialTime){
-            // console.log(myStat?.specialTime?.specialDay)
+        if (myStat?.specialTime) {
+            // console.pecialDay)
             setNotationSelected(myStat?.specialTime?.specialDay)
             setNotationType("SPECIAL")
         }
-        if(!myStat?.specialTime && myStat?.CustomTime?.length === 0){
+        if (!myStat?.specialTime && myStat?.CustomTime?.length === 0) {
             setNotationSelected("AUTO")
             setNotationType("AUTO")
         }
-        if(!myStat?.specialTime && myStat?.CustomTime?.length > 0){
-            setNotationSelected(myStat?.CustomTime)
+        if (!myStat?.specialTime && myStat?.CustomTime?.length > 0) {
+            // setNotationSelected(myStat?.CustomTime)
             setCustomSelected(true)
             setNotationType("CUSTOM")
         }
     }
-
-    useEffect(() => {
-        console.log(notationSelected)
-    }, [notationSelected])
 
     const getMyStats = async () => {
         const response = await statsList()
@@ -104,82 +100,51 @@ export function Comptheures() {
         }
     }
 
-    const getUserClocks = async () => {
-        const response = await getClocks()
-        if (response.error === false) {
-            setClocks(response.data)
-        }
-    }
-
     const changeClockType = (index, type) => {
-        const newClocks = [...currentClocks]
+        const newClocks = [...currentCustomTimes]
         if (type === "WORK") {
             newClocks[index].type = "BREAK"
-            setCurrentClocks(newClocks)
+            setCurrentCustomTimes(newClocks)
         }
         if (type === "BREAK") {
             newClocks[index].type = "WORK"
-            setCurrentClocks(newClocks)
+            setCurrentCustomTimes(newClocks)
         }
     }
 
     const goodActualClock = (date) => {
-        const dayClocks = clocks.filter(clock => clock.year === date.getFullYear() && clock.month === date.getMonth() && clock.day === date.getDate())
-        if (dayClocks.length === 1) {
-            // replace first item of currentClocks with dayClocks[0]
-            let newClocks = [...currentClocks]
-            newClocks = []
-            newClocks[0] = dayClocks[0]
-            newClocks[1] = {
-                name: "Pause déjeuner",
-                year: currentDay?.getFullYear(),
-                month: currentDay?.getMonth(),
-                week: getWeekNumber(currentDay),
-                day: currentDay?.getDate(),
-                order: 2,
-                type: "BREAK",
-                start: "",
-                end: "",
-            }
-            setCurrentClocks(newClocks)
-        } else if (dayClocks.length > 1) {
-            setCurrentClocks(dayClocks)
-        } else {
+        // get the unique item where the date is the same as the current day
+        const dayClocks = myStats.filter(stat => stat.year === date.getFullYear() && stat.month === date.getMonth() && stat.day === date.getDate())
+        if (dayClocks[0]?.CustomTime?.length === 0) {
             const newClocks = [{
                 name: "Journée de travail",
-                year: currentDay?.getFullYear(),
-                month: currentDay?.getMonth(),
-                week: getWeekNumber(currentDay),
-                day: currentDay?.getDate(),
                 order: 1,
                 type: "WORK",
                 start: "",
                 end: "",
             }, {
                 name: "Pause déjeuner",
-                year: currentDay?.getFullYear(),
-                month: currentDay?.getMonth(),
-                week: getWeekNumber(currentDay),
-                day: currentDay?.getDate(),
                 order: 2,
                 type: "BREAK",
                 start: "",
                 end: "",
             }
             ]
-            setCurrentClocks(newClocks)
+            setCurrentCustomTimes(newClocks)
         }
-        if (dayClocks.length > 0) {
+        if (dayClocks[0]?.CustomTime.length > 0) {
+            setCurrentCustomTimes(dayClocks[0]?.CustomTime)
             setEdit(false)
         } else {
             setEdit(true)
         }
+
     }
 
-    const displayAddOneClockButton = () => {
+    const displayAddOneTimeButton = () => {
         let canAdd = true
-        currentClocks.forEach(clock => {
-            if (clock.start === "" || clock.end === "") {
+        currentCustomTimes.forEach(time => {
+            if (time.start === "" || time.end === "") {
                 canAdd = false
             }
         })
@@ -187,38 +152,38 @@ export function Comptheures() {
     }
 
     const addClock = () => {
-        const newClock = [...currentClocks]
+        const newClock = [...currentCustomTimes]
         newClock.push({
             name: "Travail supplémentaire",
-            year: currentDay?.getFullYear(),
-            month: currentDay?.getMonth(),
-            week: getWeekNumber(currentDay),
-            day: currentDay?.getDate(),
-            order: currentClocks?.length + 1,
+            order: currentCustomTimes?.length + 1,
             type: "WORK",
             start: "",
             end: "",
         })
-        setCurrentClocks(newClock)
+        setCurrentCustomTimes(newClock)
     }
 
     const validateClocks = async (item, type) => {
+        console.log(item, type)
+        return
         if (edit) {
-            const payload = 
-                { type: type ,
-                    data: {
-                        ...item,
-                        day: currentDay.getDate(),
-                        month: currentDay.getMonth(),
-                        year: currentDay.getFullYear(),
-                        week: getWeekNumber(currentDay),
-                    }
+            const payload =
+            {
+                type: type,
+                data: {
+                    ...item,
+                    day: currentDay.getDate(),
+                    month: currentDay.getMonth(),
+                    year: currentDay.getFullYear(),
+                    week: getWeekNumber(currentDay),
                 }
+            }
             const response = await createTime(payload)
             if (response.error === false) {
-                // getUserClocks()
                 setEdit(false)
                 setModal(false)
+                setMyStats(response.data)
+                setUser({ ...user, userEnterprise: { ...user.userEnterprise, Stats: response.data } })
                 toast.success(response.message)
             } else {
                 setModal(false)
@@ -273,7 +238,7 @@ export function Comptheures() {
             <Calendar frenchDays={frenchDays} setCurrentNumber={setCurrentNumber} day={currentDay} currentNumber={currentNumber} changeCurrentDay={changeCurrentDay} />
             <ComptheuresSwitch comptheuresSwitchState={comptheuresSwitchState} setComptheuresSwitchState={setComptheuresSwitchState} />
             {comptheuresSwitchState ?
-                <Recapitulatif />
+                <Recapitulatif myStats={myStats} />
                 :
                 customSelected ?
                     <>
@@ -283,20 +248,20 @@ export function Comptheures() {
                             <Paragraph className="uppercase font-bold">Retour</Paragraph>
                         </div>
                         <div className="flex flex-col w-full items-center gap-10">
-                            {notationSelected?.sort((a, b) => a.order > b.order ? 1 : -1).map((clock, index) => (
-                                ((!edit && clock?.start.length > 0) || edit) && <div key={index} className={`flex flex-col w-full items-center gap-[15px]`}>
+                            {currentCustomTimes?.sort((a, b) => a.order > b.order ? 1 : -1).map((time, index) => (
+                                ((!edit && time?.start?.length > 0) || edit) && <div key={index} className={`flex flex-col w-full items-center gap-[15px]`}>
                                     <div className="flex w-full items-center justify-center gap-2.5">
-                                        {clock.type === "WORK" ? <WorkIcon className={edit && "cursor-pointer"} onClick={() => edit && changeClockType(index, clock.type)} /> : clock.type === "BREAK" ? <CoffeeIcon className={edit && "cursor-pointer"} onClick={() => edit && changeClockType(index, clock.type)} /> : <WorkIcon onClick={() => changeClockType(key, clock.type)} />}
-                                        {edit ? <input id="txt" type="text" defaultValue={clock.name} className="bg-transparent font-bold outline-none text-center text-blue dark:text-white w-[55px]" onChange={(e) =>
-                                            setCurrentClocks(currentClocks.map((clock, i) =>
-                                                i === index ? { ...clock, name: e.target.value } : clock
+                                        {time.type === "WORK" ? <WorkIcon className={edit && "cursor-pointer"} onClick={() => edit && changeClockType(index, time.type)} /> : time.type === "BREAK" ? <CoffeeIcon className={edit && "cursor-pointer"} onClick={() => edit && changeClockType(index, time.type)} /> : <WorkIcon onClick={() => changeClockType(key, time.type)} />}
+                                        {edit ? <input id="txt" type="text" defaultValue={time.name} className="bg-transparent font-bold outline-none text-center text-blue dark:text-white w-[55px]" onChange={(e) =>
+                                            setCurrentCustomTimes(currentCustomTimes.map((time, i) =>
+                                                i === index ? { ...time, name: e.target.value } : time
                                             ))}
-                                            style={{ width: ((clock.name.length + 3) * 8) + 'px' }}
-                                        /> : <Paragraph className={"font-bold"}>{clock.name}</Paragraph>
+                                            style={{ width: ((time.name.length + 3) * 8) + 'px' }}
+                                        /> : <Paragraph className={"font-bold"}>{time.name}</Paragraph>
                                         }
                                     </div>
                                     <Card edit={edit} className="">
-                                        <TimeInput index={index} defaultValue={clock.start} edit={edit}>{clock.start}</TimeInput>
+                                        <TimeInput index={index} defaultValue={time.start} edit={edit}>{time.start}</TimeInput>
                                         <div className={`h-full flex-col py-[5px] flex ${edit ? "justify-between" : "justify-center"} items-center`}>
                                             {edit && <span className="w-[2px] rounded-full bg-white dark:bg-blue h-full ">
                                             </span>}
@@ -304,12 +269,12 @@ export function Comptheures() {
                                             {edit && <span className="w-[2px] rounded-full bg-white dark:bg-blue h-full ">
                                             </span>}
                                         </div>
-                                        <TimeInput index={index} defaultValue={clock.end} edit={edit} end={true}>{clock.end}</TimeInput>
+                                        <TimeInput index={index} defaultValue={time.end} edit={edit} end={true}>{time.end}</TimeInput>
                                     </Card>
                                 </div>
                             ))}
-                            {edit && displayAddOneClockButton() && <div onClick={addClock} className="dark:bg-white bg-blue cursor-pointer rounded-full flex justify-center items-center w-10 h-10"><Plus /></div>}
-                            <Button className="md:mb-0 mb-10" onClick={() => { validateClocks() }}>{edit ? "Enregistrer" : "Modifier"}</Button>
+                            {edit && displayAddOneTimeButton() && <div onClick={addClock} className="dark:bg-white bg-blue cursor-pointer rounded-full flex justify-center items-center w-10 h-10"><Plus /></div>}
+                            <Button className="md:mb-0 mb-10" onClick={() => { validateClocks(currentCustomTimes, notationType) }}>{edit ? "Enregistrer" : "Modifier"}</Button>
                         </div>
                         {(workTotal || breakTotal) && <div className="w-screen -ml-[5.5%] md:hidden gap-10 border-y-blue flex flex-col py-10 border-y md:mb-0 mb-[60px]">
                             {workTotal && workTotal !== "0h00" && <div className="flex flex-col items-center">

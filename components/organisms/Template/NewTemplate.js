@@ -8,15 +8,15 @@ import { MobileBurger } from "../Burger/MobileBurger";
 
 export function NewTemplate({ children, comptheures = false, className = "" }) {
 
-    const { currentClocks, clocks, currentDay, workTotal, setWorkTotal, breakTotal, setBreakTotal, user } = useCalendarContext()
+    const { currentCustomTimes, clocks, currentDay, workTotal, setWorkTotal, breakTotal, setBreakTotal, user } = useCalendarContext()
 
 
     const [canUpdate, setCanUpdate] = useState(false)
 
     const getClocksTotal = () => {
-        if (currentClocks[0].stats) {
-            setWorkTotal(currentClocks[0].stats[0].work)
-            setBreakTotal(currentClocks[0].stats[0].break)
+        if (currentCustomTimes[0].stats) {
+            setWorkTotal(currentCustomTimes[0].stats[0].work)
+            setBreakTotal(currentCustomTimes[0].stats[0].break)
         } else {
             setWorkTotal(null)
             setBreakTotal(null)
@@ -28,7 +28,7 @@ export function NewTemplate({ children, comptheures = false, className = "" }) {
         if (canUpdate) {
             getClocksTotal()
         }
-    }, [currentClocks, clocks, currentDay])
+    }, [currentCustomTimes, clocks, currentDay])
 
 
     useEffect(() => {

@@ -48,22 +48,14 @@ const CalendarContextProvider = ({ children }) => {
     return weekNumber;
   }
 
-  const [currentClocks, setCurrentClocks] = useState([{
+  const [currentCustomTimes, setCurrentCustomTimes] = useState([{
     name: "Journée de travail",
-    year: currentDay?.getFullYear(),
-    week: getWeekNumber(currentDay),
-    day: currentDay?.getDate(),
     order: 1,
     type: "WORK",
     start: "",
     end: "",
   }, {
     name: "Pause déjeuner",
-    year: currentDay?.getFullYear(),
-    month: currentDay?.getMonth(),
-    week: getWeekNumber(currentDay),
-    day: currentDay?.getDate(),
-    hour: currentDay?.getHours(),
     order: 2,
     type: "BREAK",
     start: "",
@@ -127,7 +119,7 @@ const CalendarContextProvider = ({ children }) => {
   }
 
   const [workTotal, setWorkTotal] = useState(null)
-    const [breakTotal, setBreakTotal] = useState(null)
+  const [breakTotal, setBreakTotal] = useState(null)
 
   const stateValues = useMemo(
     () => ({
@@ -149,8 +141,8 @@ const CalendarContextProvider = ({ children }) => {
       setCurrentDay,
       refresh,
       getWeekNumber,
-      currentClocks,
-      setCurrentClocks,
+      currentCustomTimes,
+      setCurrentCustomTimes,
       clocks,
       setClocks,
       workTotal,
@@ -159,7 +151,7 @@ const CalendarContextProvider = ({ children }) => {
       setBreakTotal
     }),
     [frenchDays, frenchMonths, setFrenchDays, setFrenchMonths, months, setMonths, today, setToday, getPrevMonth, getMonth, getNextMonth, setTheDay, getMonthByIndex, getDayByIndex, currentDay, setCurrentDay, refresh,
-      getWeekNumber, currentClocks, setCurrentClocks, clocks, setClocks, workTotal, setWorkTotal, breakTotal, setBreakTotal]
+      getWeekNumber, currentCustomTimes, setCurrentCustomTimes, clocks, setClocks, workTotal, setWorkTotal, breakTotal, setBreakTotal]
   );
 
   return (
