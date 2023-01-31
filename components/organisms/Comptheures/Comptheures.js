@@ -9,7 +9,7 @@ import { addClocks, getClocks } from "../../../api/clock/clock";
 import { toast } from "react-toastify"
 import { Recapitulatif } from "../../organisms"
 import { Notations } from "./Notations"
-import { createTime, statsList } from "../../../api/time/time"
+import { createTime, deleteStat, statsList } from "../../../api/time/time"
 
 export function Comptheures() {
 
@@ -37,22 +37,37 @@ export function Comptheures() {
 
     // when clicking on a day, know which type of notation is selected
     const pickedNotation = (notation, items) => {
-
-        
-
         switch (notation) {
             case "AUTO":
-                setNotationSelected("AUTO")
-                setNotationType("AUTO")
+                if (notationSelected === "AUTO") {
+                    setNotationSelected(null)
+                    setNotationType(null)
+                } else {
+                    setNotationSelected("AUTO")
+                    setNotationType("AUTO")
+                    setEdit(true)
+                }
                 break;
             case "CUSTOM":
-                setNotationSelected(items)
-                setNotationType("CUSTOM")
-                setCustomSelected(true)
+                if(items === notationSelected){
+                    setNotationSelected(null)
+                    setNotationType(null)
+                    setCustomSelected(false)
+                }else{
+                    setNotationSelected(items)
+                    setNotationType("CUSTOM")
+                    setCustomSelected(true)
+                }
                 break;
             case "SPECIAL":
+                if(items?.id === notationSelected?.id){
+                    setNotationSelected(null)
+                    setNotationType(null)
+                }else{
                 setNotationSelected(items)
                 setNotationType("SPECIAL")
+                setEdit(true)
+                }
                 break;
             default:
                 break;
@@ -83,10 +98,10 @@ export function Comptheures() {
     const getTimeOfTheDay = async (day) => {
         setNotationSelected(null)
         setNotationType(null)
+        setInitialNotation(null)
         setCustomSelected(false)
-        const myStat = myStats.find(stat => stat.day === day.getDate() && stat.month === day.getMonth() && stat.year === day.getFullYear())
+        const myStat = myStats?.find(stat => stat.day === day.getDate() && stat.month === day.getMonth() && stat.year === day.getFullYear())
         if (myStat?.specialTime) {
-            // console.pecialDay)
             setInitialNotation(myStat?.specialTime?.specialDay)
             setNotationSelected(myStat?.specialTime?.specialDay)
             setNotationType("SPECIAL")
@@ -129,8 +144,8 @@ export function Comptheures() {
     // get custom times for custom days if there is one
     const goodActualTimes = (date) => {
         // get the unique item where the date is the same as the current day
-        const dayClocks = myStats.filter(stat => stat.year === date.getFullYear() && stat.month === date.getMonth() && stat.day === date.getDate())
-        if (dayClocks[0]?.CustomTime?.length === 0 || dayClocks?.length === 0) {
+        const dayClocks = myStats?.filter(stat => stat.year === date.getFullYear() && stat.month === date.getMonth() && stat.day === date.getDate())
+        if (dayClocks && dayClocks[0]?.CustomTime?.length === 0 || dayClocks?.length === 0) {
             const newClocks = [{
                 name: "Journée de travail",
                 order: 1,
@@ -147,7 +162,7 @@ export function Comptheures() {
             ]
             setCurrentCustomTimes(newClocks)
         }
-        if (dayClocks[0]?.CustomTime.length > 0) {
+        if (dayClocks && dayClocks[0]?.CustomTime.length > 0) {
             setCurrentCustomTimes(dayClocks[0]?.CustomTime)
             setEdit(false)
         } else {
@@ -183,61 +198,90 @@ export function Comptheures() {
 
     // when clicking on enregistrer ou modifier pour save la value
     const validateClocks = async (item, type) => {
+        console.log("item", item, type, edit)
         if (edit) {
-            let payload = {}
-            if (type === "CUSTOM") {
-                payload =
-                {
-                    type: type,
-                    data: {
-                        times: item,
-                        day: currentDay.getDate(),
-                        month: currentDay.getMonth(),
-                        year: currentDay.getFullYear(),
-                        week: getWeekNumber(currentDay),
-                    }
+            console.log("y passe que si edit")
+            if (type === null && item === null && notationSelected === null) {
+                const data = {
+                    day: currentDay.getDate(),
+                    month: currentDay.getMonth(),
+                    year: currentDay.getFullYear(),
+
                 }
-            } 
-            if(type === "SPECIAL"){
-                payload =
-                {
-                    type: type,
-                    data: {
-                        ...item,
-                        day: currentDay.getDate(),
-                        month: currentDay.getMonth(),
-                        year: currentDay.getFullYear(),
-                        week: getWeekNumber(currentDay),
-                    }
+                const response = await deleteStat(data)
+                if (response.error === false) {
+                    setInitialNotation(null)
+                    setNotationSelected(null)
+                    setNotationType(null)
+                    setEdit(false)
+                    setModal(false)
+                    setMyStats(response.data)
+                    setUser({ ...user, userEnterprise: { ...user.userEnterprise, Stats: response.data } })
+                    toast.success(response.message)
                 }
-            } 
-            if(type === "AUTO") {
-                payload =
-                {
-                    type: type,
-                    data: {
-                        day: currentDay.getDate(),
-                        month: currentDay.getMonth(),
-                        year: currentDay.getFullYear(),
-                        week: getWeekNumber(currentDay),
-                    }
+                else {
+                    toast.error(response.message)
                 }
-            }
-            const response = await createTime(payload)
-            if (response.error === false) {
-                setInitialNotation(item)
-                setNotationSelected(item)
-                setEdit(false)
-                setModal(false)
-                setMyStats(response.data)
-                setUser({ ...user, userEnterprise: { ...user.userEnterprise, Stats: response.data } })
-                toast.success(response.message)
             } else {
-                toast.error(response.message)
+
+                let payload = {}
+
+                switch (type) {
+                    case "CUSTOM":
+                        payload = {
+                            type: type,
+                            data: {
+                                times: item,
+                                day: currentDay.getDate(),
+                                month: currentDay.getMonth(),
+                                year: currentDay.getFullYear(),
+                                week: getWeekNumber(currentDay),
+                            }
+                        }
+                        break;
+                    case "SPECIAL":
+                        payload = {
+                            type: type,
+                            data: {
+                                ...item,
+                                day: currentDay.getDate(),
+                                month: currentDay.getMonth(),
+                                year: currentDay.getFullYear(),
+                                week: getWeekNumber(currentDay),
+                            }
+                        }
+                        break;
+                    case "AUTO":
+                        payload = {
+                            type: type,
+                            data: {
+                                day: currentDay.getDate(),
+                                month: currentDay.getMonth(),
+                                year: currentDay.getFullYear(),
+                                week: getWeekNumber(currentDay),
+                            }
+                        }
+                }
+
+                const response = await createTime(payload)
+                if (response.error === false) {
+                    setInitialNotation(item)
+                    setNotationSelected(item)
+                    setEdit(false)
+                    setModal(false)
+                    setMyStats(response.data)
+                    setUser({ ...user, userEnterprise: { ...user.userEnterprise, Stats: response.data } })
+                    toast.success(response.message)
+                } else {
+                    toast.error(response.message)
+                }
             }
         } else {
+            console.log("y passe que si non")
             setEdit(true)
         }
+        console.log("y passe que si biboup")
+
     }
 
     return (

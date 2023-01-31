@@ -14,7 +14,7 @@ export function Notations({pickAutoNotation, pickCustomNotation, notationSelecte
                     Choisir une notation
                 </Paragraph>
                 <Button className={ notationSelected === "AUTO" && "!bg-blue-selected !text-white"} onClick={() => { pickedNotation("AUTO", {type: "AUTO"}) }}>Automatique</Button>
-                <BorderedButton className={customSelected && "!bg-blue-selected"} onClick={() => { pickedNotation("CUSTOM", []) }}>Personnalisé</BorderedButton>
+                <BorderedButton className={customSelected && "!bg-blue-selected"} onClick={() => { pickedNotation("CUSTOM", []); }}>Personnalisé</BorderedButton>
                 <Paragraph className="font-bold uppercase">
                     Ou
                 </Paragraph>

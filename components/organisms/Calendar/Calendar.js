@@ -36,7 +36,7 @@ export function Calendar(props) {
     }
 
     const dayHasTimes = (day) => {
-        return props.times.filter(stat => stat.year === day.year && stat.month === day.month && stat.day === day.number).length > 0
+        return props?.times?.filter(stat => stat.year === day.year && stat.month === day.month && stat.day === day.number).length > 0
     }
 
     return (
