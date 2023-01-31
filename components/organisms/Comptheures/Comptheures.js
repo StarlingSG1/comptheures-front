@@ -21,6 +21,7 @@ export function Comptheures() {
 
     // selected item in blue
     const [notationSelected, setNotationSelected] = useState(null)
+    const [initialNotation, setInitialNotation] = useState(null)
     const [notationType, setNotationType] = useState(null)
     const [customSelected, setCustomSelected] = useState(false)
     const [currentNumber, setCurrentNumber] = useState("")
@@ -28,12 +29,17 @@ export function Comptheures() {
 
     const [specialDays, setSpecialDays] = useState([])
 
+    // when clicking on a day, change the current day
     const changeCurrentDay = (day) => {
         setCurrentDay(new Date(day.year, day.month, day.number));
-        goodActualClock(new Date(day.year, day.month, day.number))
+        goodActualTimes(new Date(day.year, day.month, day.number))
     }
 
+    // when clicking on a day, know which type of notation is selected
     const pickedNotation = (notation, items) => {
+
+        
+
         switch (notation) {
             case "AUTO":
                 setNotationSelected("AUTO")
@@ -59,19 +65,21 @@ export function Comptheures() {
         getMyStats()
     }, [])
 
+
     useEffect(() => {
-        goodActualClock(currentDay);
     }, [myStats])
 
     useEffect(() => {
-        // goodActualClock(currentDay);
         getTimeOfTheDay(currentDay)
     }, [currentDay])
 
     useEffect(() => {
-        getTimeOfTheDay(new Date)
+        goodActualTimes(currentDay);
+        currentDay ? getTimeOfTheDay(currentDay) :
+            getTimeOfTheDay(new Date)
     }, [myStats])
 
+    // get if there is a stat for the current day and if there is, give what type of notation is selected
     const getTimeOfTheDay = async (day) => {
         setNotationSelected(null)
         setNotationType(null)
@@ -79,20 +87,25 @@ export function Comptheures() {
         const myStat = myStats.find(stat => stat.day === day.getDate() && stat.month === day.getMonth() && stat.year === day.getFullYear())
         if (myStat?.specialTime) {
             // console.pecialDay)
+            setInitialNotation(myStat?.specialTime?.specialDay)
             setNotationSelected(myStat?.specialTime?.specialDay)
             setNotationType("SPECIAL")
         }
         if (!myStat?.specialTime && myStat?.CustomTime?.length === 0) {
+            setInitialNotation("AUTO")
             setNotationSelected("AUTO")
             setNotationType("AUTO")
         }
+
         if (!myStat?.specialTime && myStat?.CustomTime?.length > 0) {
-            // setNotationSelected(myStat?.CustomTime)
+            setInitialNotation(myStat?.CustomTime)
+            setNotationSelected(myStat?.CustomTime)
             setCustomSelected(true)
             setNotationType("CUSTOM")
         }
     }
 
+    // pas utiliser actuellement
     const getMyStats = async () => {
         const response = await statsList()
         if (response.error === false) {
@@ -100,6 +113,7 @@ export function Comptheures() {
         }
     }
 
+    // cliquer sur le picot d'une heure custom pour changer le type
     const changeClockType = (index, type) => {
         const newClocks = [...currentCustomTimes]
         if (type === "WORK") {
@@ -112,10 +126,11 @@ export function Comptheures() {
         }
     }
 
-    const goodActualClock = (date) => {
+    // get custom times for custom days if there is one
+    const goodActualTimes = (date) => {
         // get the unique item where the date is the same as the current day
         const dayClocks = myStats.filter(stat => stat.year === date.getFullYear() && stat.month === date.getMonth() && stat.day === date.getDate())
-        if (dayClocks[0]?.CustomTime?.length === 0) {
+        if (dayClocks[0]?.CustomTime?.length === 0 || dayClocks?.length === 0) {
             const newClocks = [{
                 name: "Journée de travail",
                 order: 1,
@@ -141,6 +156,7 @@ export function Comptheures() {
 
     }
 
+    // afficher le bouton ajouter une heure custom si les précédentes sont remplies
     const displayAddOneTimeButton = () => {
         let canAdd = true
         currentCustomTimes.forEach(time => {
@@ -151,6 +167,7 @@ export function Comptheures() {
         return canAdd
     }
 
+    // ajouter une heure custom si les précédentes sont remplies
     const addClock = () => {
         const newClock = [...currentCustomTimes]
         newClock.push({
@@ -163,19 +180,34 @@ export function Comptheures() {
         setCurrentCustomTimes(newClock)
     }
 
+
+    // when clicking on enregistrer ou modifier pour save la value
     const validateClocks = async (item, type) => {
-        console.log(item, type)
-        return
         if (edit) {
-            const payload =
-            {
-                type: type,
-                data: {
-                    ...item,
-                    day: currentDay.getDate(),
-                    month: currentDay.getMonth(),
-                    year: currentDay.getFullYear(),
-                    week: getWeekNumber(currentDay),
+            let payload = {}
+            if (type === "CUSTOM") {
+                payload =
+                {
+                    type: type,
+                    data: {
+                        times: item,
+                        day: currentDay.getDate(),
+                        month: currentDay.getMonth(),
+                        year: currentDay.getFullYear(),
+                        week: getWeekNumber(currentDay),
+                    }
+                }
+            } else {
+                payload =
+                {
+                    type: type,
+                    data: {
+                        ...item,
+                        day: currentDay.getDate(),
+                        month: currentDay.getMonth(),
+                        year: currentDay.getFullYear(),
+                        week: getWeekNumber(currentDay),
+                    }
                 }
             }
             const response = await createTime(payload)
@@ -186,12 +218,20 @@ export function Comptheures() {
                 setUser({ ...user, userEnterprise: { ...user.userEnterprise, Stats: response.data } })
                 toast.success(response.message)
             } else {
-                setModal(false)
+                toast.error(response.message)
             }
         } else {
             setEdit(true)
         }
     }
+
+    useEffect(() => {
+        console.log("notationSelected", notationSelected)
+        console.log("initialNotation", initialNotation)
+        console.log(notationSelected === initialNotation)
+    }, [
+        notationSelected
+    ])
 
     return (
         <div>
@@ -288,7 +328,7 @@ export function Comptheures() {
                         </div>}
                     </>
                     :
-                    <Notations pickedNotation={pickedNotation} notationSelected={notationSelected} setModal={setModal} specialDays={specialDays} />
+                    <Notations pickedNotation={pickedNotation} notationSelected={notationSelected} initialNotation={initialNotation} setModal={setModal} specialDays={specialDays} />
             }
         </div>
     )
