@@ -25,7 +25,7 @@ export function Notations({pickAutoNotation, pickCustomNotation, notationSelecte
                         ))}
                     </div>
                 </div>
-                {(initialNotation !== null && (initialNotation?.name !== notationSelected?.name))  &&  <Button onClick={() => setModal(true)}>Enregistrer</Button>}
+                {(initialNotation !== notationSelected || initialNotation?.name !== notationSelected?.name)  &&  <Button onClick={() => setModal(true)}>Enregistrer</Button>}
             </div>
         </>
     )

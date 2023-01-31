@@ -197,7 +197,8 @@ export function Comptheures() {
                         week: getWeekNumber(currentDay),
                     }
                 }
-            } else {
+            } 
+            if(type === "SPECIAL"){
                 payload =
                 {
                     type: type,
@@ -209,9 +210,24 @@ export function Comptheures() {
                         week: getWeekNumber(currentDay),
                     }
                 }
+            } 
+            if(type === "AUTO") {
+                payload =
+                {
+                    type: type,
+                    data: {
+                        day: currentDay.getDate(),
+                        month: currentDay.getMonth(),
+                        year: currentDay.getFullYear(),
+                        week: getWeekNumber(currentDay),
+                    }
+                }
             }
+            console.log(payload)
             const response = await createTime(payload)
             if (response.error === false) {
+                setInitialNotation(item)
+                setNotationSelected(item)
                 setEdit(false)
                 setModal(false)
                 setMyStats(response.data)
@@ -228,7 +244,8 @@ export function Comptheures() {
     useEffect(() => {
         console.log("notationSelected", notationSelected)
         console.log("initialNotation", initialNotation)
-        console.log(notationSelected === initialNotation)
+        console.log(notationSelected !== initialNotation)
+        console.log(initialNotation?.name !== notationSelected?.name)
     }, [
         notationSelected
     ])
