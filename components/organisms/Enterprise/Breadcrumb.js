@@ -6,7 +6,6 @@ export function Breadcrumb({
   onChooseStep = () => {},
 }) {
   const selectStep = (index) => {
-    console.log(index);
     if (index > currentStep) return;
     onChooseStep(index);
   };

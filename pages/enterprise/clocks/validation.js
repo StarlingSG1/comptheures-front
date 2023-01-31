@@ -24,7 +24,6 @@ export default function enterpriseValidation() {
                 })
                 item.total = total
             })
-            console.log(list)
             setUsersData(list)
         } else {
             toast.error(response.message)
@@ -43,7 +42,6 @@ export default function enterpriseValidation() {
     const [selectedUser, setSelectedUser] = useState({})
 
     const handleDetails = (item) => {
-        console.log(item)
         setDetails(true)
         setSelectedUser(item)
     }

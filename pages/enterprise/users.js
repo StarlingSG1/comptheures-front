@@ -14,7 +14,7 @@ export default function EnterpriseUsers() {
     const users = async () => {
         const response = await usersList("09a7b31f-2445-47b1-bda3-54674772b3ec")
         if(response.error === false){
-            console.log(response.data)
+            (response.data)
             setUsersData(response.data)
         }else{
             toast.error(response.message)

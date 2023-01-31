@@ -223,7 +223,6 @@ export function Comptheures() {
                     }
                 }
             }
-            console.log(payload)
             const response = await createTime(payload)
             if (response.error === false) {
                 setInitialNotation(item)
@@ -240,15 +239,6 @@ export function Comptheures() {
             setEdit(true)
         }
     }
-
-    useEffect(() => {
-        console.log("notationSelected", notationSelected)
-        console.log("initialNotation", initialNotation)
-        console.log(notationSelected !== initialNotation)
-        console.log(initialNotation?.name !== notationSelected?.name)
-    }, [
-        notationSelected
-    ])
 
     return (
         <div>
@@ -292,7 +282,7 @@ export function Comptheures() {
                         new Date(currentDay.getFullYear(), currentDay.getMonth() + 1, currentDay.getDate()));
                 }} />
             </div>
-            <Calendar frenchDays={frenchDays} setCurrentNumber={setCurrentNumber} day={currentDay} currentNumber={currentNumber} changeCurrentDay={changeCurrentDay} />
+            <Calendar times={myStats} frenchDays={frenchDays} setCurrentNumber={setCurrentNumber} day={currentDay} currentNumber={currentNumber} changeCurrentDay={changeCurrentDay} />
             <ComptheuresSwitch comptheuresSwitchState={comptheuresSwitchState} setComptheuresSwitchState={setComptheuresSwitchState} />
             {comptheuresSwitchState ?
                 <Recapitulatif myStats={myStats} />

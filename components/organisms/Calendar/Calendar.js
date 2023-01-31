@@ -35,6 +35,10 @@ export function Calendar(props) {
 
     }
 
+    const dayHasTimes = (day) => {
+        return props.times.filter(stat => stat.year === day.year && stat.month === day.month && stat.day === day.number).length > 0
+    }
+
     return (
         <table className="w-full">
             <thead className="w-full grid grid-cols-7 my-[15px]">
@@ -48,7 +52,9 @@ export function Calendar(props) {
                     currentDays.map((day, index) => (
                         day.currentMonth && <tr style={{ "gridColumnStart": `${day.number === 1 ? props?.currentNumber : "auto"}` }} key={index} className={`col-span-1 flex justify-center calendar-day w-auto` + (day.currentMonth ? " current" : "") + (day.selected ? " " : "")}
                             onClick={() => props.changeCurrentDay(day)}>
-                            <td className={`${day.selected && " dark:bg-white bg-blue rounded-full !text-white dark:!text-blue"} ${day.number > 9 ? "py-1 px-2" : "py-1 px-3"} cursor-pointer text-blue dark:text-white`} >{day.number}</td>
+                            <td className={`relative ${day.selected && " dark:bg-white bg-blue rounded-full !text-white dark:!text-blue"} ${day.number > 9 ? "pt-0.5 pb-1.5 px-2" : "pt-0.5 pb-1.5 px-3"} cursor-pointer text-blue dark:text-white`} >{day.number}
+                            {dayHasTimes(day) && <span className={`absolute bottom-[3px] w-1 h-1 ${day.selected ? "dark:bg-blue bg-white" : "dark:bg-white bg-blue"} left-1/2 -translate-x-1/2 rounded-full`}></span>}
+                            </td>
                         </tr>
                     ))
                 }

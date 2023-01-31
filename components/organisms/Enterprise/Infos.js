@@ -37,7 +37,6 @@ export function Infos({ }) {
     }, [user])
 
     useEffect(() => {
-        console.log(enterprise)
         setEnterpriseInfo(
             {
                 name: enterprise?.name,
