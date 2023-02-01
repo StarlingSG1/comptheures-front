@@ -12,6 +12,7 @@ export { SmallDesktopCard } from "./Cards/SmallDesktopCard";
 export { Arrow } from "./Icons/Arrow";
 export { CoffeeIcon } from "./Icons/CoffeeIcon";
 export { ComptheuresIcon } from "./Icons/ComptheuresIcon";
+export { Cross } from "./Icons/Cross";
 export { CrossIcon } from "./Icons/CrossIcon";
 export { House } from "./Icons/House";
 export { LoginIcon } from "./Icons/LoginIcon";
@@ -25,6 +26,7 @@ export { RegisterIcon } from "./Icons/RegisterIcon";
 export { SunIcon } from "./Icons/SunIcon";
 export { SystemIcon } from "./Icons/SystemIcon";
 export { WorkIcon } from "./Icons/WorkIcon";
+
 
 // INPUTS
 export { ClockNameInput } from "./Inputs/ClockNameInput";

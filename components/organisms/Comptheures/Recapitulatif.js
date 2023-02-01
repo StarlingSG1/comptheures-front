@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useCalendarContext } from "../../../context/calendar";
 import { Card, ReverseParagraph, SubTitle } from "../../atoms";
 
-export function Recapitulatif({myStats}){
+export function Recapitulatif({ myStats }) {
 
     const { frenchDays, frenchMonths, getPrevMonth, getMonth, getNextMonth, clocks, getMonthByIndex, getDayByIndex, currentDay, setCurrentDay, refresh, getWeekNumber } = useCalendarContext();
 
@@ -85,6 +85,10 @@ export function Recapitulatif({myStats}){
     }
 
     useEffect(() => {
+        getWorkOfTheDay(currentDay)
+    }, [myStats])
+
+    useEffect(() => {
         setCurrentWeekNumber(getWeekNumber(new Date()))
         setActualMonth(frenchMonths[new Date().getMonth()].french)
     }, [])
@@ -97,16 +101,14 @@ export function Recapitulatif({myStats}){
         getClocksOfTheWeek()
     }, [currentWeekNumber])
 
-    useEffect(() => {
-        getClocksOfTheWeek(), totalMonthHours(), getWorkOfTheDay(new Date())
-    }, [clocks])
+
 
     useEffect(() => {
         totalWeekHours()
     }, [weekClocks])
 
     return (
-         <div>
+        <div>
             <div className="flex flex-col w-full items-center mt-10 gap-10">
                 <div className="flex flex-col w-full items-center gap-[15px] ">
                     <SubTitle className="font-orbitron">{getDayByIndex() + " " + currentDay.getDate() + " " + getMonthByIndex()}</SubTitle>
@@ -127,6 +129,6 @@ export function Recapitulatif({myStats}){
                     </Card>
                 </div>
             </div>
-        </div> 
+        </div>
     )
 }

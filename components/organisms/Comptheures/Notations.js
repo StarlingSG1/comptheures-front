@@ -1,7 +1,7 @@
 import { useCalendarContext } from "../../../context/calendar";
 import { BorderedButton, Button, Paragraph, SpecialDayButton, SubTitle } from "../../atoms"
 
-export function Notations({pickAutoNotation, pickCustomNotation, notationSelected, initialNotation, autoSelected, customSelected, specialSelected, pickedNotation, setModal = () => {}, specialDays, pickSpecialNotation}) {
+export function Notations({pickAutoNotation, pickCustomNotation, notationSelected, initialNotation, autoSelected, customSelected, modalCheck, specialSelected, notationType, validateClocks,  pickedNotation, setModal = () => {}, specialDays, pickSpecialNotation}) {
 
     const { getMonthByIndex, getDayByIndex, currentDay } = useCalendarContext();
 
@@ -25,7 +25,7 @@ export function Notations({pickAutoNotation, pickCustomNotation, notationSelecte
                         ))}
                     </div>
                 </div>
-                {(initialNotation !== notationSelected || initialNotation?.name !== notationSelected?.name)  &&  <Button onClick={() => setModal(true)}>Enregistrer</Button>}
+                {(initialNotation !== notationSelected || initialNotation?.name !== notationSelected?.name)  &&  <Button onClick={() => modalCheck ? validateClocks(notationSelected, notationType) :  setModal(true)}>Enregistrer</Button>}
             </div>
         </>
     )

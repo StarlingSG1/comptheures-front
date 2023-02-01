@@ -1,6 +1,6 @@
 import { use, useEffect, useState } from "react"
 import { useUserContext } from "../../../context"
-import { Arrow, BorderedButton, Button, Card, CoffeeIcon, ComptheuresSwitch, OrbitronTitle, Paragraph, Plus, RealArrow, ReverseParagraph, SpecialDayButton, SubTitle, Title, WorkIcon } from "../../atoms"
+import { Arrow, BorderedButton, Button, Card, CoffeeIcon, ComptheuresSwitch, Cross, CrossIcon, OrbitronTitle, Paragraph, Plus, RealArrow, ReverseParagraph, SpecialDayButton, SubTitle, Title, WorkIcon } from "../../atoms"
 import { SmallStraightLogo, TimeInput } from "../../molecules"
 import { Calendar } from "../Calendar/Calendar"
 import { TimeBlock } from "../../organisms";
@@ -18,6 +18,7 @@ export function Comptheures() {
     const [edit, setEdit] = useState(true)
     const [comptheuresSwitchState, setComptheuresSwitchState] = useState(false)
     const [modal, setModal] = useState(false)
+    const [modalCheck, setModalCheck] = useState(false)
 
     // selected item in blue
     const [notationSelected, setNotationSelected] = useState(null)
@@ -35,6 +36,8 @@ export function Comptheures() {
         goodActualTimes(new Date(day.year, day.month, day.number))
     }
 
+
+
     // when clicking on a day, know which type of notation is selected
     const pickedNotation = (notation, items) => {
         switch (notation) {
@@ -49,24 +52,24 @@ export function Comptheures() {
                 }
                 break;
             case "CUSTOM":
-                if(items === notationSelected){
+                if (items === notationSelected) {
                     setNotationSelected(null)
                     setNotationType(null)
                     setCustomSelected(false)
-                }else{
+                } else {
                     setNotationSelected(items)
                     setNotationType("CUSTOM")
                     setCustomSelected(true)
                 }
                 break;
             case "SPECIAL":
-                if(items?.id === notationSelected?.id){
+                if (items?.id === notationSelected?.id) {
                     setNotationSelected(null)
                     setNotationType(null)
-                }else{
-                setNotationSelected(items)
-                setNotationType("SPECIAL")
-                setEdit(true)
+                } else {
+                    setNotationSelected(items)
+                    setNotationType("SPECIAL")
+                    setEdit(true)
                 }
                 break;
             default:
@@ -74,11 +77,21 @@ export function Comptheures() {
         }
     }
 
+    const modalCheckHandler = () => {
+        if (localStorage.getItem("timeConfirmation") === null) {
+          localStorage.setItem("timeConfirmation", false);
+        } else if (localStorage.getItem("timeConfirmation") === "true") {
+          setModalCheck(true);
+        }
+      };
+
     useEffect(() => {
         setBurgerOpen(false); refresh();
         setSpecialDays(user?.userEnterprise?.enterprise?.configEnterprise.SpecialDays)
         getMyStats()
+        modalCheckHandler()
     }, [])
+
 
 
     useEffect(() => {
@@ -198,7 +211,11 @@ export function Comptheures() {
 
     // when clicking on enregistrer ou modifier pour save la value
     const validateClocks = async (item, type) => {
-        console.log("item", item, type, edit)
+
+        if (modalCheck) {
+                localStorage.setItem("timeConfirmation", true)
+        }
+
         if (edit) {
             console.log("y passe que si edit")
             if (type === null && item === null && notationSelected === null) {
@@ -281,19 +298,19 @@ export function Comptheures() {
             setEdit(true)
         }
         console.log("y passe que si biboup")
-
     }
+
 
     return (
         <div>
             {modal &&
                 <div className="absolute w-full h-full top-0 left-0 bottom-O right-0 bg-black/[0.3] flex justify-center items-end rounded-2xl z-20">
                     <div className="h-[240px] w-[70%] bg-white dark:bg-blue mb-80 rounded-xl flex flex-col justify-between p-5">
-                        <Paragraph onClick={() => setModal(false)}>X</Paragraph>
+                        <Cross width="32" height="32" onClick={() => setModal(false)} />
                         <Paragraph className="text-center">Vos horaires pour ce jour seront envoyés à un administrateur de l’entreprise pour validation.</Paragraph>
                         <div className="flex flex-col gap-2.5">
-                            <div className="flex gap-2.5">
-                                <input type="checkbox" />
+                            <div className="flex gap-2.5 cursor-pointer" onClick={() => setModalCheck(!modalCheck)}>
+                                <input type="checkbox" checked={modalCheck} />
                                 <Paragraph>Ne plus me demander</Paragraph>
                             </div>
                             <Button onClick={() => validateClocks(notationSelected, notationType)}>Oui, enregistrer</Button>
@@ -379,7 +396,7 @@ export function Comptheures() {
                         </div>}
                     </>
                     :
-                    <Notations pickedNotation={pickedNotation} notationSelected={notationSelected} initialNotation={initialNotation} setModal={setModal} specialDays={specialDays} />
+                    <Notations pickedNotation={pickedNotation} modalCheck={modalCheck} notationSelected={notationSelected} validateClocks={validateClocks} notationType={notationType} initialNotation={initialNotation} setModal={setModal} specialDays={specialDays} />
             }
         </div>
     )
