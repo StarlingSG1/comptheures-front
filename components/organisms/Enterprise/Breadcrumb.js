@@ -21,7 +21,7 @@ export function Breadcrumb({
               className={joinClasses(
                 "flex items-center transition-all duration-300 ease-in-out  border-b p-2",
                 index === currentStep
-                  ? "text-blue border-blue"
+                  ? "text-blue border-blue dark:text-white dark:border-white"
                   : "text-gray-400 border-transparent",
                 index > currentStep ? "cursor-not-allowed" : "cursor-pointer"
               )}

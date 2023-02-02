@@ -59,7 +59,21 @@ export default function EnterpriseConfig() {
     });
   }
 
-
+  const handleSelectSpecialDay = (specialDay) => {
+    const findSelectedSpecialDay = enterpriseConfig.specialDays.find((day) => day === specialDay);
+    if (findSelectedSpecialDay) {
+      setEnterpriseConfig({
+        ...enterpriseConfig,
+        specialDays: enterpriseConfig.specialDays.filter((day) => day !== specialDay),
+      });
+    }
+    else {
+      setEnterpriseConfig({
+        ...enterpriseConfig,
+        specialDays: [...enterpriseConfig.specialDays, specialDay],
+      });
+    }
+  }
 
   useEffect(() => {
     setBurgerOpen(false);
@@ -86,15 +100,17 @@ export default function EnterpriseConfig() {
           />
           <SpecialDaysStep
             show={step === 1}
+            selectedSpecialDays={enterpriseConfig.specialDays}
+            onSelectSpecialDay={handleSelectSpecialDay}
           />
-          <ClocksStep
+          < ClocksStep
             show={step === 2}
           />
           <InvitationsStep
             show={step === 3}
           />
           <div className="mt-10 flex items-center gap-5">
-            {step > 0 && <BorderedButton onClick={handlePreviousStep} className="!w-max min-w-fit px-5">étape précédente</BorderedButton>}
+            {step > 0 && <BorderedButton onClick={handlePreviousStep} className="!w-max min-w-fit px-5 dark:bg-transparent">étape précédente</BorderedButton>}
             {step < stepsName.length - 1 && <Button onClick={handleNextStep}>étape suivante</Button>}
             {step === stepsName.length - 1 && <Button onClick={handleSubmit}>terminer</Button>}
           </div>
