@@ -20,6 +20,15 @@ export async function statsList() {
     return response.data
 }
 
+export async function recapList(payload) {
+    const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_LOCAL_BACK_URL}/stats/recap`,
+        payload,
+        getFormattedToken()
+    );
+    return response.data
+}
+
 export async function deleteStat(payload){
     const response = await axios.post(
         `${process.env.NEXT_PUBLIC_LOCAL_BACK_URL}/stats/delete`,

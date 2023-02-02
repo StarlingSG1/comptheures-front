@@ -9,7 +9,7 @@ import { addClocks, getClocks } from "../../../api/clock/clock";
 import { toast } from "react-toastify"
 import { Recapitulatif } from "../../organisms"
 import { Notations } from "./Notations"
-import { createTime, deleteStat, statsList } from "../../../api/time/time"
+import { createTime, deleteStat, recapList, statsList } from "../../../api/time/time"
 
 export function Comptheures() {
 
@@ -26,6 +26,7 @@ export function Comptheures() {
     const [notationType, setNotationType] = useState(null)
     const [customSelected, setCustomSelected] = useState(false)
     const [currentNumber, setCurrentNumber] = useState("")
+    const [recapData, setRecapData] = useState([])
     const [myStats, setMyStats] = useState([])
 
     const [specialDays, setSpecialDays] = useState([])
@@ -92,17 +93,14 @@ export function Comptheures() {
         modalCheckHandler()
     }, [])
 
-
-
-    useEffect(() => {
-    }, [myStats])
-
     useEffect(() => {
         getTimeOfTheDay(currentDay)
+        getRecapTimes()
     }, [currentDay])
 
     useEffect(() => {
         goodActualTimes(currentDay);
+        getRecapTimes()
         currentDay ? getTimeOfTheDay(currentDay) :
             getTimeOfTheDay(new Date)
     }, [myStats])
@@ -137,7 +135,7 @@ export function Comptheures() {
     const getMyStats = async () => {
         const response = await statsList()
         if (response.error === false) {
-            setMyStats(response.data)
+            setMyStats(response.data.stats)
         }
     }
 
@@ -208,6 +206,18 @@ export function Comptheures() {
         setCurrentCustomTimes(newClock)
     }
 
+    const getRecapTimes = async () => {
+            const date = {
+                day: currentDay.getDate(),
+                month: currentDay.getMonth(),
+                year: currentDay.getFullYear(),
+            }
+            const response = await recapList(date)
+            console.log(response.data.recap)
+            if (response.error === false) {
+                setRecapData(response.data.recap)
+            }
+    }
 
     // when clicking on enregistrer ou modifier pour save la value
     const validateClocks = async (item, type) => {
@@ -217,7 +227,6 @@ export function Comptheures() {
         }
 
         if (edit) {
-            console.log("y passe que si edit")
             if (type === null && item === null && notationSelected === null) {
                 const data = {
                     day: currentDay.getDate(),
@@ -294,10 +303,8 @@ export function Comptheures() {
                 }
             }
         } else {
-            console.log("y passe que si non")
             setEdit(true)
         }
-        console.log("y passe que si biboup")
     }
 
 
@@ -344,9 +351,9 @@ export function Comptheures() {
                 }} />
             </div>
             <Calendar times={myStats} frenchDays={frenchDays} setCurrentNumber={setCurrentNumber} day={currentDay} currentNumber={currentNumber} changeCurrentDay={changeCurrentDay} />
-            <ComptheuresSwitch comptheuresSwitchState={comptheuresSwitchState} setComptheuresSwitchState={setComptheuresSwitchState} />
+            <ComptheuresSwitch getRecapTimes={getRecapTimes} comptheuresSwitchState={comptheuresSwitchState} setComptheuresSwitchState={setComptheuresSwitchState} />
             {comptheuresSwitchState ?
-                <Recapitulatif myStats={myStats} />
+                <Recapitulatif recapData={recapData} myStats={myStats} />
                 :
                 customSelected ?
                     <>

@@ -105,6 +105,42 @@ const CalendarContextProvider = ({ children }) => {
     return frenchMonths[currentDay.getMonth()].french
   }
 
+  const getFirstMonthRecap = (config,currentDay) => {
+    let month = 0;
+    if(currentDay?.getDate() >= config?.start){
+      month = currentDay.getMonth() + 1
+      console.log(month)
+    }else{
+      month = currentDay.getMonth()
+    }
+    
+    if(month === -1){
+      month = 11
+    } if(month === 12){
+      month = 0
+    }
+    
+    return frenchMonths[month].abrev
+  }
+
+  const getSecondMonthRecap = (config, currentDay) => {
+    let month = 0;
+    if(currentDay?.getDate() >= config?.start){
+      month = currentDay.getMonth()
+      console.log(month)
+    }else{
+      month = currentDay.getMonth() + 1
+    }
+
+    if(month === -1){
+      month = 11
+    } if(month === 12){
+      month = 0
+    }
+
+    return frenchMonths[month].abrev
+  }
+
   const getDayByIndex = () => {
     let day = currentDay.getDay() - 1
     if (day === -1) {
@@ -148,9 +184,11 @@ const CalendarContextProvider = ({ children }) => {
       workTotal,
       setWorkTotal,
       breakTotal,
-      setBreakTotal
+      setBreakTotal,
+      getFirstMonthRecap,
+      getSecondMonthRecap
     }),
-    [frenchDays, frenchMonths, setFrenchDays, setFrenchMonths, months, setMonths, today, setToday, getPrevMonth, getMonth, getNextMonth, setTheDay, getMonthByIndex, getDayByIndex, currentDay, setCurrentDay, refresh,
+    [frenchDays, frenchMonths, setFrenchDays, getFirstMonthRecap, getSecondMonthRecap, setFrenchMonths, months, setMonths, today, setToday, getPrevMonth, getMonth, getNextMonth, setTheDay, getMonthByIndex, getDayByIndex, currentDay, setCurrentDay, refresh,
       getWeekNumber, currentCustomTimes, setCurrentCustomTimes, clocks, setClocks, workTotal, setWorkTotal, breakTotal, setBreakTotal]
   );
 
