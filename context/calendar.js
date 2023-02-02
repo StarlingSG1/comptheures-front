@@ -108,10 +108,10 @@ const CalendarContextProvider = ({ children }) => {
   const getFirstMonthRecap = (config,currentDay) => {
     let month = 0;
     if(currentDay?.getDate() >= config?.start){
-      month = currentDay.getMonth() + 1
+      month = currentDay.getMonth() 
       console.log(month)
     }else{
-      month = currentDay.getMonth()
+      month = currentDay.getMonth() - 1
     }
     
     if(month === -1){
@@ -125,11 +125,11 @@ const CalendarContextProvider = ({ children }) => {
 
   const getSecondMonthRecap = (config, currentDay) => {
     let month = 0;
-    if(currentDay?.getDate() >= config?.start){
-      month = currentDay.getMonth()
+    if(currentDay?.getDate() >= config?.start && config?.start >= config?.end){
+      month = currentDay.getMonth() + 1
       console.log(month)
     }else{
-      month = currentDay.getMonth() + 1
+      month = currentDay.getMonth()
     }
 
     if(month === -1){
