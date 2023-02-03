@@ -46,6 +46,7 @@ export function Comptheures() {
                 if (notationSelected === "AUTO") {
                     setNotationSelected(null)
                     setNotationType(null)
+                    setEdit(false)
                 } else {
                     setNotationSelected("AUTO")
                     setNotationType("AUTO")
@@ -67,6 +68,7 @@ export function Comptheures() {
                 if (items?.id === notationSelected?.id) {
                     setNotationSelected(null)
                     setNotationType(null)
+                    setEdit(false)
                 } else {
                     setNotationSelected(items)
                     setNotationType("SPECIAL")

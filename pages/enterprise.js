@@ -8,9 +8,7 @@ import { useUserContext } from "../context";
 
 export default function Enterprise() {
     const { theme, setBurgerOpen, user } = useUserContext();
-    const enterprise = {
-        name: "Maison de la Barbe à Papa",
-    };
+    
 
     const [pages, setPages] = useState([
         { name: "Configuration de l’entreprise", link: "/enterprise/config" },
@@ -33,7 +31,7 @@ export default function Enterprise() {
                 <div className="h-full w-full flex flex-col">
                     <ul className="flex flex-col justify-between h-full w-full">
                         <li>
-                            <OrbitronTitle className="text-center">{enterprise.name}</OrbitronTitle>
+                            <OrbitronTitle className="text-center">{user?.userEnterprise?.enterprise?.name}</OrbitronTitle>
                         </li>
                         {pages.map((page, index) => (
                             <li key={index}>

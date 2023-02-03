@@ -59,7 +59,7 @@ export default function enterpriseValidation() {
                 {!user ? <Redirect /> :
                     !details ?
                         <div>
-                            <OrbitronTitle className="text-center !font-normal">{"Maison de la Barbe à Papa"}</OrbitronTitle>
+                            <OrbitronTitle className="text-center !font-normal">{user?.userEnterprise?.enterprise?.name}</OrbitronTitle>
                             <BackTitle>Horaires à valider</BackTitle>
                             <table className="w-full border border-blue dark:border-white border-2">
                                 <thead className="w-full text-left bg-blue dark:bg-blue-dark text-white">
@@ -85,7 +85,7 @@ export default function enterpriseValidation() {
                         </div>
                         :
                         <div>
-                            <OrbitronTitle className="text-center !font-normal">{"Maison de la Barbe à Papa"}</OrbitronTitle>
+                            <OrbitronTitle className="text-center !font-normal">{user?.userEnterprise?.enterprise?.name}</OrbitronTitle>
                             <div className="flex items-center justify-between mt-[25px] mb-[50px]">
                                 <RealArrow onClick={() => setDetails(false)} width={40} height={40} className="cursor-pointer rotate-180" />
                                 <SubTitle className="text-center ">{selectedUser?.user?.firstName}{" "}{selectedUser?.user?.lastName}</SubTitle>

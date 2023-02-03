@@ -51,7 +51,7 @@ export default function EnterpriseData() {
             <NewTemplate>
             {!user ? <Redirect/> : 
                 <div>
-                <OrbitronTitle className="text-center !font-normal">{"Maison de la Barbe à Papa"}</OrbitronTitle>
+                <OrbitronTitle className="text-center !font-normal">{user?.userEnterprise?.enterprise?.name}</OrbitronTitle>
                 <BackTitle>Récapulatif / Données</BackTitle>
                 <table className="w-full border border-blue border-2">
                     <thead className="w-full text-left bg-blue dark:bg-blue-dark text-white">

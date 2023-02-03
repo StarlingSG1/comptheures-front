@@ -42,7 +42,7 @@ export default function EnterpriseUsers() {
             <NewTemplate>
                 {!user ? <Redirect /> :
                     <div>
-                        <OrbitronTitle className="text-center !font-normal">{"Maison de la Barbe à Papa"}</OrbitronTitle>
+                        <OrbitronTitle className="text-center !font-normal">{user?.userEnterprise?.enterprise?.name}</OrbitronTitle>
                         <BackTitle>Liste des utilisateurs</BackTitle>
                         <table className="w-full border border-blue dark:border-white border-2">
                             <thead className="w-full text-left bg-blue dark:bg-blue-dark text-white">
