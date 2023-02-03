@@ -109,7 +109,7 @@ const CalendarContextProvider = ({ children }) => {
     let month = 0;
     if(currentDay?.getDate() >= config?.start){
       month = currentDay.getMonth() 
-      console.log(month)
+      (month)
     }else{
       month = currentDay.getMonth() - 1
     }
@@ -127,7 +127,6 @@ const CalendarContextProvider = ({ children }) => {
     let month = 0;
     if(currentDay?.getDate() >= config?.start && config?.start >= config?.end){
       month = currentDay.getMonth() + 1
-      console.log(month)
     }else{
       month = currentDay.getMonth()
     }
