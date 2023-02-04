@@ -119,7 +119,7 @@ const CalendarContextProvider = ({ children }) => {
       month = 0
     }
     
-    return frenchMonths[month].abrev
+    return frenchMonths[month].french
   }
 
   const getSecondMonthRecap = (config, currentDay) => {
@@ -136,7 +136,7 @@ const CalendarContextProvider = ({ children }) => {
       month = 0
     }
 
-    return frenchMonths[month].abrev
+    return frenchMonths[month].french
   }
 
   const getDayByIndex = () => {

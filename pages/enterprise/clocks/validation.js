@@ -97,19 +97,17 @@ export default function enterpriseValidation() {
                                         <th className="pl-2.5">Date</th>
                                         <th className="pl-2.5">Nombre d'heures</th>
                                         <th className="pl-2.5">Type de journée</th>
-                                        <th className="pl-2.5">Actions</th>
+                                        <th className="pl-2.5">Selection</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {selectedUser?.Stats?.map((item, index) => (
-                                        <tr key={index} className="dark:hover:text-white dark:even:bg-blue-dark even:bg-blue odd:bg-transparent even:text-white dark:odd:text-white h-10 ">
-                                            {item.realisationStatus === "IN_VALIDATION" &&
-                                                <>
-                                                    <td className="pl-2.5">{item.day}/{item.month + 1}/{item.year}</td>
-                                                    <td className="pl-2.5">{item.work}</td>
-                                                    <td className="pl-2.5">{item?.CustomTime?.length > 0 ? "Personnalisé" : "Special"}</td>
-                                                    <td className="pl-2.5">action</td>
-                                                </>}
+                                        item.realisationStatus === "IN_VALIDATION" && <tr key={index} className="dark:hover:text-white dark:even:bg-blue-dark even:bg-blue odd:bg-transparent even:text-white dark:odd:text-white h-10 ">
+                                            <td className="pl-2.5">{item.day}/{item.month + 1}/{item.year}</td>
+                                            <td className="pl-2.5">{item.work}</td>
+                                            {console.log(item)}
+                                            <td className="pl-2.5">{item?.CustomTime?.length > 0 ? "Personnalisé" : item?.specialTime?.name ? item?.specialTime?.name : "Automatique"}</td>
+                                            <td className="pl-2.5"><input type="checkbox"/></td>
                                         </tr>
                                     ))}
                                 </tbody>
@@ -118,6 +116,5 @@ export default function enterpriseValidation() {
                 }
             </NewTemplate>
         </>
-
     )
 }

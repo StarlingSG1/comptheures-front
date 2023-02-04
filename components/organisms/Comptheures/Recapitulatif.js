@@ -8,9 +8,6 @@ export function Recapitulatif({ myStats,recapData }) {
 
 
     const [currentWeekNumber, setCurrentWeekNumber] = useState(null)
-    const [monthHours, setMonthHours] = useState(0)
-    const [weekHours, setWeekHours] = useState(0)
-    const [weekClocks, setWeekClocks] = useState([])
     const [workHourToday, setWorkHourToday] = useState(0)
     const [actualMonth, setActualMonth] = useState(new Date().getMonth())
 
@@ -43,7 +40,7 @@ export function Recapitulatif({ myStats,recapData }) {
                     </Card>
                 </div>
                 <div className="flex flex-col w-full items-center gap-[15px] ">
-                    <SubTitle className="font-orbitron text-center">{"Lundi " + recapData?.week?.start.number + " au dimanche " + recapData?.week?.end.number}</SubTitle>
+                    <SubTitle className="font-orbitron text-center">{"Lun. " + recapData?.week?.start.number + " " + frenchMonths[recapData?.week?.start?.month].french + " au dim. " + recapData?.week?.end.number + " " + frenchMonths[recapData?.week?.end?.month].french}</SubTitle>
                     <Card edit={true}>  
                         <ReverseParagraph><strong>{recapData?.week?.length}</strong> {recapData?.week?.length < 2 ? "jour" : "jours"}  | <strong>{recapData.week.total}</strong> travaillées</ReverseParagraph>
                     </Card>
