@@ -13,7 +13,7 @@ import { createTime, deleteStat, recapList, statsList } from "../../../api/time/
 
 export function Comptheures() {
 
-    const { frenchDays, getMonth, setTheDay, getPrevMonth, getNextMonth, getMonthByIndex, getDayByIndex, currentDay, setCurrentDay, refresh, getWeekNumber, currentCustomTimes, setCurrentCustomTimes, clocks, setClocks, workTotal, breakTotal } = useCalendarContext();
+    const { frenchDays, getMonth, setTheDay, getPrevMonth, getNextMonth, getMonthByIndex, setTimes, getDayByIndex, currentDay, setCurrentDay, refresh, getWeekNumber, currentCustomTimes, setCurrentCustomTimes, clocks, setClocks, workTotal, breakTotal } = useCalendarContext();
     const { setBurgerOpen, user, setUser } = useUserContext()
     const [edit, setEdit] = useState(true)
     const [comptheuresSwitchState, setComptheuresSwitchState] = useState(false)
@@ -28,16 +28,15 @@ export function Comptheures() {
     const [currentNumber, setCurrentNumber] = useState("")
     const [recapData, setRecapData] = useState([])
     const [myStats, setMyStats] = useState([])
-
     const [specialDays, setSpecialDays] = useState([])
+    const [todayTime, setTodayTime] = useState(null)
+    const [todayStatus, setTodayStatus] = useState(null)
 
     // when clicking on a day, change the current day
     const changeCurrentDay = (day) => {
         setCurrentDay(new Date(day.year, day.month, day.number));
         goodActualTimes(new Date(day.year, day.month, day.number))
     }
-
-
 
     // when clicking on a day, know which type of notation is selected
     const pickedNotation = (notation, items) => {
@@ -46,7 +45,6 @@ export function Comptheures() {
                 if (notationSelected === "AUTO") {
                     setNotationSelected(null)
                     setNotationType(null)
-                    setEdit(false)
                 } else {
                     setNotationSelected("AUTO")
                     setNotationType("AUTO")
@@ -82,11 +80,11 @@ export function Comptheures() {
 
     const modalCheckHandler = () => {
         if (localStorage.getItem("timeConfirmation") === null) {
-          localStorage.setItem("timeConfirmation", false);
+            localStorage.setItem("timeConfirmation", false);
         } else if (localStorage.getItem("timeConfirmation") === "true") {
-          setModalCheck(true);
+            setModalCheck(true);
         }
-      };
+    };
 
     useEffect(() => {
         setBurgerOpen(false); refresh();
@@ -98,14 +96,39 @@ export function Comptheures() {
     useEffect(() => {
         getTimeOfTheDay(currentDay)
         getRecapTimes()
+        checkTimeToday()
     }, [currentDay])
 
     useEffect(() => {
         goodActualTimes(currentDay);
         getRecapTimes()
+        checkTimeToday()
         currentDay ? getTimeOfTheDay(currentDay) :
             getTimeOfTheDay(new Date)
     }, [myStats])
+
+
+    const checkTimeToday = () => {
+        const today = myStats.find(time => time.day === currentDay.getDate() && time.month === currentDay.getMonth() && time.year === currentDay.getFullYear())
+        if (today?.realisationStatus) {
+            switch (today.realisationStatus) {
+                case "IN_VALIDATION":
+                    setTodayStatus("En attente de validation")
+                    break;
+                case "VALIDATED":
+                    setTodayStatus("Validé par l'administateur")
+                    break;
+                case "REFUSED":
+                    setTodayStatus("Refusé par l'administateur")
+                    break;
+                default:
+                    setTodayTime(today)
+            }
+        } else {
+            setTodayTime(null)
+            setTodayStatus(null)
+        }
+    }
 
     // get if there is a stat for the current day and if there is, give what type of notation is selected
     const getTimeOfTheDay = async (day) => {
@@ -138,6 +161,7 @@ export function Comptheures() {
         const response = await statsList()
         if (response.error === false) {
             setMyStats(response.data.stats)
+            setTimes(response.data.stats)
         }
     }
 
@@ -209,22 +233,22 @@ export function Comptheures() {
     }
 
     const getRecapTimes = async () => {
-            const date = {
-                day: currentDay.getDate(),
-                month: currentDay.getMonth(),
-                year: currentDay.getFullYear(),
-            }
-            const response = await recapList(date)
-            if (response.error === false) {
-                setRecapData(response.data.recap)
-            }
+        const date = {
+            day: currentDay.getDate(),
+            month: currentDay.getMonth(),
+            year: currentDay.getFullYear(),
+        }
+        const response = await recapList(date)
+        if (response.error === false) {
+            setRecapData(response.data.recap)
+        }
     }
 
     // when clicking on enregistrer ou modifier pour save la value
     const validateClocks = async (item, type) => {
 
         if (modalCheck) {
-                localStorage.setItem("timeConfirmation", true)
+            localStorage.setItem("timeConfirmation", true)
         }
 
         if (edit) {
@@ -243,6 +267,7 @@ export function Comptheures() {
                     setEdit(false)
                     setModal(false)
                     setMyStats(response.data)
+                    setTimes(response.data)
                     setUser({ ...user, userEnterprise: { ...user.userEnterprise, Stats: response.data } })
                     toast.success(response.message)
                 }
@@ -297,6 +322,7 @@ export function Comptheures() {
                     setEdit(false)
                     setModal(false)
                     setMyStats(response.data)
+                    setTimes(response.data)
                     setUser({ ...user, userEnterprise: { ...user.userEnterprise, Stats: response.data } })
                     toast.success(response.message)
                 } else {
@@ -309,13 +335,13 @@ export function Comptheures() {
     }
 
     const changeMonth = (direction) => {
-        if(direction === "previous"){
+        if (direction === "previous") {
             let newDate = new Date(currentDay.getFullYear(), currentDay.getMonth() - 1, currentDay.getDate())
             while (newDate.getMonth() === currentDay.getMonth()) {
                 newDate.setDate(newDate.getDate() - 1)
             }
             setCurrentDay(newDate)
-        }else{
+        } else {
             let newDate = new Date(currentDay.getFullYear(), currentDay.getMonth() + 1, currentDay.getDate())
             while (newDate.getMonth() - 1 !== currentDay.getMonth()) {
                 newDate.setDate(newDate.getDate() - 1)
@@ -404,20 +430,17 @@ export function Comptheures() {
                             {edit && displayAddOneTimeButton() && <div onClick={addClock} className="dark:bg-white bg-blue cursor-pointer rounded-full flex justify-center items-center w-10 h-10"><Plus /></div>}
                             <Button className="md:mb-0 mb-10" onClick={() => { validateClocks(currentCustomTimes, notationType) }}>{edit ? "Enregistrer" : "Modifier"}</Button>
                         </div>
-                        {(workTotal || breakTotal) && <div className="w-screen -ml-[5.5%] md:hidden gap-10 border-y-blue flex flex-col py-10 border-y md:mb-0 mb-[60px]">
-                            {workTotal && workTotal !== "0h00" && <div className="flex flex-col items-center">
-                                <Title>{workTotal}</Title>
-                                <Paragraph>de travail</Paragraph>
-                            </div>}
-                            {breakTotal && breakTotal !== "0h00" && <div className="flex flex-col items-center">
-                                <Title>{breakTotal}</Title>
-                                <Paragraph>de pause</Paragraph>
-                            </div>}
-                        </div>}
                     </>
                     :
-                    <Notations pickedNotation={pickedNotation} modalCheck={modalCheck} notationSelected={notationSelected} validateClocks={validateClocks} notationType={notationType} initialNotation={initialNotation} setModal={setModal} specialDays={specialDays} />
+                    <>
+                        <Notations pickedNotation={pickedNotation} modalCheck={modalCheck} notationSelected={notationSelected} validateClocks={validateClocks} notationType={notationType} initialNotation={initialNotation} setModal={setModal} specialDays={specialDays} />
+                    </>
             }
+            <div className="w-screen -ml-[5.5%] md:hidden gap-10 border-y-blue flex flex-col py-10 border-y md:mb-0 mb-[60px]">
+                <Paragraph className="text-center"><strong>Automatique : </strong>{user?.userEnterprise?.enterprise?.configEnterprise?.workHourADay}</Paragraph>
+                {todayStatus && <Paragraph className="text-center"><strong>Statut : </strong>{todayStatus}</Paragraph>
+                }
+            </div>
         </div>
     )
 }

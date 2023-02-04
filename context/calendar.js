@@ -35,7 +35,7 @@ const CalendarContextProvider = ({ children }) => {
 
   const [today, setToday] = useState(months.indexOf(months[new Date().getMonth()]))
 
-  const [clocks, setClocks] = useState([])
+  const [times, setTimes] = useState([])
 
   const [currentDay, setCurrentDay] = useState(new Date())
 
@@ -177,8 +177,8 @@ const CalendarContextProvider = ({ children }) => {
       getWeekNumber,
       currentCustomTimes,
       setCurrentCustomTimes,
-      clocks,
-      setClocks,
+      times,
+      setTimes,
       workTotal,
       setWorkTotal,
       breakTotal,
@@ -187,7 +187,7 @@ const CalendarContextProvider = ({ children }) => {
       getSecondMonthRecap
     }),
     [frenchDays, frenchMonths, setFrenchDays, getFirstMonthRecap, getSecondMonthRecap, setFrenchMonths, months, setMonths, today, setToday, getPrevMonth, getMonth, getNextMonth, setTheDay, getMonthByIndex, getDayByIndex, currentDay, setCurrentDay, refresh,
-      getWeekNumber, currentCustomTimes, setCurrentCustomTimes, clocks, setClocks, workTotal, setWorkTotal, breakTotal, setBreakTotal]
+      getWeekNumber, currentCustomTimes, setCurrentCustomTimes, times, setTimes, workTotal, setWorkTotal, breakTotal, setBreakTotal]
   );
 
   return (
