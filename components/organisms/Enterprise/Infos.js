@@ -15,6 +15,8 @@ export function Infos({ }) {
 
     const [edit, setEdit] = useState(true)
     const [enterprise, setEnterprise] = useState({})
+    const [createdBy, setCreatedBy] = useState("")
+    const [userRole, setUserRole] = useState(0)
 
     const [enterpriseInfo, setEnterpriseInfo] = useState({})
 
@@ -34,13 +36,15 @@ export function Infos({ }) {
     useEffect(() => {
         setBurgerOpen(false);
         setEnterprise(user?.userEnterprise?.enterprise)
+        setCreatedBy(user?.userEnterprise?.enterprise?.createdBy?.firstName + " " + user?.userEnterprise?.enterprise?.createdBy?.lastName)
+        setUserRole(user?.userEnterprise?.role?.isAdmin)
     }, [user])
 
     useEffect(() => {
         setEnterpriseInfo(
             {
+                adminName: createdBy,
                 name: enterprise?.name,
-                adminName: enterprise?.firstName,
                 address: enterprise?.address,
                 email: enterprise?.email,
                 phone: enterprise?.phone,
@@ -52,13 +56,13 @@ export function Infos({ }) {
     return (
         <form onSubmit={validateUpdateUser} className="">
             <OrbitronTitle className="text-center !font-normal">{enterprise?.name}</OrbitronTitle>
-            <BackTitle>Informations de l'entreprise</BackTitle>
+            {user?.userEnterprise?.role?.isAdmin > 0 && <BackTitle>Informations de l'entreprise</BackTitle>}
             <div className="flex flex-col mt-10 gap-[30px] wp-full">
-                <OpenInput onChange={(e) => setEnterpriseInfo({ ...enterpriseInfo, adminName: e.target.value })} defaultValue={enterprise?.adminName} placeholder="Administrateur (createdBy userEnterpriseId)" />
-                <OpenInput onChange={(e) => setEnterpriseInfo({ ...enterpriseInfo, address: e.target.value })} defaultValue={enterprise?.address} placeholder="Adresse" />
-                <OpenInput onChange={(e) => setEnterpriseInfo({ ...enterpriseInfo, email: e.target.value })} defaultValue={enterprise?.email} placeholder="Adresse email" />
-                <OpenInput onChange={(e) => setEnterpriseInfo({ ...enterpriseInfo, phone: e.target.value })} defaultValue={enterprise?.phone} placeholder="Téléphone" />
-                <OpenInput onChange={(e) => setEnterpriseInfo({ ...enterpriseInfo, website: e.target.value })} defaultValue={enterprise?.website} placeholder="Site web" />
+                <OpenInput editable={false} onChange={(e) => setEnterpriseInfo({ ...enterpriseInfo, adminName: e.target.value })} defaultValue={createdBy} placeholder="Administrateur" />
+                <OpenInput editable={userRole < 2 ? false : true} onChange={(e) => setEnterpriseInfo({ ...enterpriseInfo, address: e.target.value })} defaultValue={enterprise?.address} placeholder="Adresse" />
+                <OpenInput editable={userRole < 2 ? false : true} onChange={(e) => setEnterpriseInfo({ ...enterpriseInfo, email: e.target.value })} defaultValue={enterprise?.email} placeholder="Adresse email" />
+                <OpenInput editable={userRole < 2 ? false : true} onChange={(e) => setEnterpriseInfo({ ...enterpriseInfo, phone: e.target.value })} defaultValue={enterprise?.phone} placeholder="Téléphone" />
+                <OpenInput editable={userRole < 2 ? false : true} onChange={(e) => setEnterpriseInfo({ ...enterpriseInfo, website: e.target.value })} defaultValue={enterprise?.website} placeholder="Site web" />
             </div>
             <Button type="submit" className="mt-60 md:mb-0 mb-60">Enregistrer</Button>
         </form>

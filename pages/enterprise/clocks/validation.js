@@ -12,7 +12,6 @@ import { useUserContext } from "../../../context";
 export default function enterpriseValidation() {
 
     const { setBurgerOpen, theme, user } = useUserContext()
-
     const [enterpriseId, setEnterpriseId] = useState(null)
     const [usersData, setUsersData] = useState([])
     const [details, setDetails] = useState(false)
@@ -104,7 +103,7 @@ export default function enterpriseValidation() {
                 checkedItems.push(item)
             }
         })
-        if(checkedItems.length === 0) {
+        if (checkedItems.length === 0) {
             toast.error("Vous devez sélectionner au moins un horaire")
             return
         }
@@ -114,7 +113,7 @@ export default function enterpriseValidation() {
             setUserTimes(response.data)
             toast.success(response.message)
             await users()
-            if(response.data.length === 0 ){
+            if (response.data.length === 0) {
                 setDetails(false)
                 setSelectedUser({})
             }
@@ -136,9 +135,7 @@ export default function enterpriseValidation() {
         } else {
             return false
         }
-        
     }
-
 
     useEffect(() => {
         setBurgerOpen(false);
@@ -198,10 +195,10 @@ export default function enterpriseValidation() {
                                             <td className="pl-2.5">{item.user.firstName}</td>
                                             <td className="pl-2.5">{item.role.label}</td>
                                             <td className="pl-2.5">{item.total}</td>
-                                        </tr> 
+                                        </tr>
                                     ))}
                                 </tbody>
-                            </table> :  <Paragraph className="text-center">Aucun horaire à valider !</Paragraph>}
+                            </table> : <Paragraph className="text-center">Aucun horaire à valider !</Paragraph>}
                         </div>
                         :
                         <div>

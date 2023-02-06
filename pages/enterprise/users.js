@@ -2,7 +2,7 @@ import Head from "next/head";
 import { useEffect, useState } from "react";
 import { OrbitronTitle } from "../../components/atoms";
 import { BackTitle } from "../../components/molecules";
-import { Infos, NewTemplate, Profile, Redirect } from "../../components/organisms";
+import { AdminRedirect, Infos, NewTemplate, Profile, Redirect } from "../../components/organisms";
 import { useUserContext } from "../../context";
 import { usersList } from "../../api/enterprise/users";
 import { toast } from "react-toastify";
@@ -23,8 +23,12 @@ export default function EnterpriseUsers() {
 
     useEffect(() => {
         setBurgerOpen(false);
-        users()
     }, [])
+
+    useEffect(() => {
+        user?.userEnterprise?.role?.isAdmin >= 1 && users()
+    }, [user])
+
 
 
 
@@ -41,6 +45,8 @@ export default function EnterpriseUsers() {
             </Head>
             <NewTemplate>
                 {!user ? <Redirect /> :
+                user?.userEnterprise?.role?.isAdmin >= 1 ?
+                    
                     <div>
                         <OrbitronTitle className="text-center !font-normal">{user?.userEnterprise?.enterprise?.name}</OrbitronTitle>
                         <BackTitle>Liste des utilisateurs</BackTitle>
@@ -69,6 +75,7 @@ export default function EnterpriseUsers() {
                             </tbody>
                         </table>
                     </div>
+                    : <AdminRedirect/>
                 }
             </NewTemplate>
         </>

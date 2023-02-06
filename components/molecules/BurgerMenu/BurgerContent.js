@@ -17,8 +17,8 @@ export function BurgerContent({ className = "" }) {
                 <>
                     <BurgerItem href="/comptheures" icon="comptheures">Comptheures</BurgerItem>
                     <BurgerSeparator />
-                    {(user?.userEnterprise?.role?.isAdmin === 1 || user?.userEnterprise?.role?.isAdmin === 2) && <> <BurgerItem href="/enterprise">Entreprise</BurgerItem>
-                        <BurgerSeparator /></>}
+                    {user?.userEnterprise?.role?.isAdmin > 0 ? <BurgerItem href="/enterprise">Entreprise</BurgerItem> : <BurgerItem href="/enterprise/info">Entreprise</BurgerItem>}
+                    <BurgerSeparator />
                     <BurgerItem href="/profile" icon="profile">Profil</BurgerItem>
                     <BurgerSeparator />
                     <BurgerItem href="/logout" icon="logout">Se deconnecter</BurgerItem>

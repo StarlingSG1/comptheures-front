@@ -2,7 +2,7 @@ import Head from "next/head";
 import { useEffect, useState } from "react";
 import { OrbitronTitle } from "../../../components/atoms";
 import { BackTitle } from "../../../components/molecules";
-import { Infos, NewTemplate, Redirect } from "../../../components/organisms";
+import { AdminRedirect, Infos, NewTemplate, Redirect } from "../../../components/organisms";
 import { useUserContext } from "../../../context";
 
 export default function EnterpriseData() {
@@ -50,6 +50,7 @@ export default function EnterpriseData() {
             </Head>
             <NewTemplate>
             {!user ? <Redirect/> : 
+            user?.userEnterprise?.role?.isAdmin > 0 ?
                 <div>
                 <OrbitronTitle className="text-center !font-normal">{user?.userEnterprise?.enterprise?.name}</OrbitronTitle>
                 <BackTitle>Récapulatif / Données</BackTitle>
@@ -74,6 +75,7 @@ export default function EnterpriseData() {
                     </tbody>
                 </table>
             </div>
+            : <AdminRedirect/>
                 }
             </NewTemplate>
         </>

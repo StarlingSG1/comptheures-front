@@ -17,6 +17,7 @@ export { Profile } from "./Profile/Profile";
 
 // REDICRECT
 export { Redirect } from "./Redirect/Redirect";
+export { AdminRedirect } from "./Redirect/AdminRedirect";
 
 // TEMPLATE
 export { Template } from "./Template/Template";

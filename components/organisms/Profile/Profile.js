@@ -70,7 +70,7 @@ export function Profile() {
                 <OpenInput onChange={(e) => setCurrentUser({ ...currentUser, firstName: e.target.value })} defaultValue={user?.firstName} placeholder="Prénom" />
                 <OpenInput onChange={(e) => setCurrentUser({ ...currentUser, lastName: e.target.value })} defaultValue={user?.lastName} placeholder="Nom" />
                 <OpenInput editable={false} defaultValue={user?.userEnterprise?.enterprise?.name} placeholder="Entreprise" />
-                <OpenInput editable={false} onChange={(e) => setCurrentUser({ ...currentUser, email: e.target.value })} defaultValue={user?.email} placeholder="Adresse email" />
+                <OpenInput onChange={(e) => setCurrentUser({ ...currentUser, email: e.target.value })} defaultValue={user?.email} placeholder="Adresse email" />
                 <OpenInputPassword currentUser={currentUser} setCurrentUser={setCurrentUser} />
             </div>
             <Button type="submit" className="mt-60 md:mb-0 mb-60">Enregistrer</Button>
