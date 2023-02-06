@@ -37,3 +37,12 @@ export async function deleteStat(payload){
     );
     return response.data
 }
+
+export async function validateStatStatus(payload){
+    const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_LOCAL_BACK_URL}/time/status/update`,
+        payload,
+        getFormattedToken()
+    );
+    return response.data
+}
