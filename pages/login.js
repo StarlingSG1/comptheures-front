@@ -29,30 +29,16 @@ export default function Login() {
                 />
             </Head>
             <NewTemplate>
-                <form onSubmit={(e) => { login(e, credentials) }} className="w-full h-full mt-20 md:hidden">
-                    <BigLogo theme={theme} />
-                    <div className="flex flex-col gap-[15px] mt-60">
+                <form className="md:w-auto md:h-auto md:mt-0 w-full h-full" onSubmit={(e) => { login(e, credentials) }}>
+                    <StraightLogo className={"!mt-0 justify-center hidden md:flex"} />
+                    <BigLogo className={"md:hidden "}/>
+                    <div className="flex flex-col gap-[15px] mt-60 md:mt-10">
                         <Input onChange={(e) => { setCredentials({ ...credentials, email: e.target.value }) }} type="email" placeholder={"Adresse email"} />
                         <Input onChange={(e) => { setCredentials({ ...credentials, password: e.target.value }) }} type="password" placeholder={"Mot de passe"} />
                     </div>
                     <ParagraphLink className="text-right block mt-[15px]">mot de passe oublié</ParagraphLink>
-                    <Button className="mt-60" type="submit">Se connecter</Button>
-                    <div className="flex items-center justify-center gap-1.5 mb-[100px] mt-[15px]">
-                        <Paragraph>Pas de compte ?</Paragraph>
-                        <ParagraphLink href="/register">S'inscrire</ParagraphLink>
-                    </div>
-                </form>
-
-
-                <form className="hidden md:block" onSubmit={(e) => { login(e, credentials) }}>
-                    <StraightLogo className={"!mt-0 justify-center"} theme={theme} />
-                    <div className="flex flex-col gap-[15px] mt-10">
-                        <Input onChange={(e) => { setCredentials({ ...credentials, email: e.target.value }) }} type="email" placeholder={"Adresse email"} />
-                        <Input onChange={(e) => { setCredentials({ ...credentials, password: e.target.value }) }} type="password" placeholder={"Mot de passe"} />
-                    </div>
-                    <ParagraphLink className="text-right block mt-[15px]">mot de passe oublié</ParagraphLink>
-                    <Button className="mt-[30px]" type="submit">Se connecter</Button>
-                    <div className="flex items-center justify-center gap-1.5 mt-[15px]">
+                    <Button className="md:mt-[30px] mt-60" type="submit">Se connecter</Button>
+                    <div className="flex items-center justify-center gap-1.5 md:mb-0 mb-[100px] mt-[15px]">
                         <Paragraph>Pas de compte ?</Paragraph>
                         <ParagraphLink href="/register">S'inscrire</ParagraphLink>
                     </div>

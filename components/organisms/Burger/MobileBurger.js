@@ -70,7 +70,7 @@ export function MobileBurger({className = ""}) {
                     <div className='w-full h-10 flex items-center'>
                         <ThemePicker item={selectTheme} setTheTheme={setTheTheme} />
                     </div>
-                    <StraightLogo theme={theme} />
+                    <StraightLogo />
                     <div className='mt-60'>
                         <BurgerContent/>
                     </div>

@@ -1,8 +1,11 @@
 import Link from "next/link";
+import { useUserContext } from "../../../context";
 import joinClasses from "../../../helpers/joinClasses";
 import { DarkLogo, Logo, OrbitronSubTitle, Paragraph, SubTitle } from "../../atoms";
 
-export function BigLogo({ className, theme }) {
+export function BigLogo({ className }) {
+
+    const { theme } = useUserContext()
 
     return (
         <div className={joinClasses(className, 'duration-200 w-full flex flex-col items-center gap-5')}>

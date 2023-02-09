@@ -1,8 +1,12 @@
 import Link from "next/link";
+import { useUserContext } from "../../../context";
 import joinClasses from "../../../helpers/joinClasses";
 import { DarkLogo, Logo, OrbitronSubTitle, Paragraph, SubTitle } from "../../atoms";
 
-export function StraightLogo({ className, theme }) {
+export function StraightLogo({ className }) {
+
+    const { theme } = useUserContext()
+
     return (
         <div className={joinClasses(className, "w-full mt-10 flex items-center gap-3")}>
             <Link href="/">

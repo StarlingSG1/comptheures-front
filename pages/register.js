@@ -45,35 +45,19 @@ export default function Register() {
                 />
             </Head>
             <NewTemplate>
-                <form onSubmit={register} className="w-full h-full mt-20 md:hidden">
-                    <BigLogo theme={theme} />
-                    <div className="flex flex-col gap-[15px] mt-60">
+                <form onSubmit={register} className="w-full h-full mt-20 md:mt-0">
+                    <StraightLogo className={"!mt-0 justify-center hidden md:flex"} />
+                    <BigLogo className={"md:hidden "}/>
+                    <div className="flex flex-col gap-[15px] mt-60 md:mt-10">
                         <Input defaultValue={credentials?.firstName} onChange={(e) => setCredentials({ ...credentials, firstName: e.target.value })} placeholder={"Prénom"} />
                         <Input defaultValue={credentials?.lastName} onChange={(e) => setCredentials({ ...credentials, lastName: e.target.value })} placeholder={"Nom"} />
                         <Input defaultValue={credentials?.email} onChange={(e) => setCredentials({ ...credentials, email: e.target.value })} type="email" placeholder={"Adresse email"} />
                         <Input defaultValue={credentials?.password} onChange={(e) => setCredentials({ ...credentials, password: e.target.value })} type="password" placeholder={"Mot de passe"} />
                         <Input defaultValue={credentials?.confirmPassword} onChange={(e) => setCredentials({ ...credentials, confirmPassword: e.target.value })} type="password" placeholder={"Confirmer mot de passe"} />
                     </div>
-                    <Paragraph className="mt-[15px] mb-[60px]">En m’inscrivant, je consens à la <ParagraphLink>politique de confidentialité</ParagraphLink>. Vos informations ne seront pas partagés à un tiers.</Paragraph>
+                    <Paragraph className="mt-[15px] mb-[60px] md:mb-10">En m’inscrivant, je consens à la <ParagraphLink>politique de confidentialité</ParagraphLink>. Vos informations ne seront pas partagés à un tiers.</Paragraph>
                     <Button type="submit">S'inscrire</Button>
-                    <div className="flex items-center justify-center gap-1.5 mb-[100px] mt-[15px]">
-                        <Paragraph>Déjà un compte ?</Paragraph>
-                        <ParagraphLink href="/login">Se connecter</ParagraphLink>
-                    </div>
-                </form>
-
-                <form onSubmit={register} className="hidden md:block">
-                    <StraightLogo className={"!mt-0 justify-center"} theme={theme} />
-                    <div className="flex flex-col gap-[15px] mt-10">
-                        <Input defaultValue={credentials?.firstName} onChange={(e) => setCredentials({ ...credentials, firstName: e.target.value })} placeholder={"Prénom"} />
-                        <Input defaultValue={credentials?.lastName} onChange={(e) => setCredentials({ ...credentials, lastName: e.target.value })} placeholder={"Nom"} />
-                        <Input defaultValue={credentials?.email} onChange={(e) => setCredentials({ ...credentials, email: e.target.value })} type="email" placeholder={"Adresse email"} />
-                        <Input defaultValue={credentials?.password} onChange={(e) => setCredentials({ ...credentials, password: e.target.value })} type="password" placeholder={"Mot de passe"} />
-                        <Input defaultValue={credentials?.confirmPassword} onChange={(e) => setCredentials({ ...credentials, confirmPassword: e.target.value })} type="password" placeholder={"Confirmer mot de passe"} />
-                    </div>
-                    <Paragraph className="mt-[15px] mb-10">En m’inscrivant, je consens à la <ParagraphLink>politique de confidentialité</ParagraphLink>. Vos informations ne seront pas partagés à un tiers.</Paragraph>
-                    <Button type="submit">S'inscrire</Button>
-                    <div className="flex items-center justify-center gap-1.5 mt-[15px]">
+                    <div className="flex items-center justify-center gap-1.5 mb-[100px] md:mb-0 mt-[15px]">
                         <Paragraph>Déjà un compte ?</Paragraph>
                         <ParagraphLink href="/login">Se connecter</ParagraphLink>
                     </div>

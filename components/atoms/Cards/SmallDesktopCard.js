@@ -8,9 +8,7 @@ import { ParagraphLink } from "../Texts/ParagraphLink";
 
 export function SmallDesktopCard({ children }) {
 
-    const { burgerOpen, theme, setTheme, getLogo, user } = useUserContext()
-
-
+    const { burgerOpen, setTheme, getLogo, user } = useUserContext()
 
     const [selectTheme, setSelectTheme] = useState("system");
 
@@ -61,7 +59,7 @@ export function SmallDesktopCard({ children }) {
 
     return <div className="hidden md:block col-span-4 relative shadow dark:bg-blue bg-white rounded-2xl py-5 px-[15px]">
         <ThemePicker item={selectTheme} setTheTheme={setTheTheme} className="absolute justify-end right-0 -translate-y-[65px]" />
-        <SmallStraightLogo theme={theme} />
+        <SmallStraightLogo />
         {children}
         <div className='my-5'>
             <BurgerContent />
