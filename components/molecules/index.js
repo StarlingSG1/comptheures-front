@@ -10,6 +10,9 @@ export { BigLogo } from './Logo/BigLogo';
 export { SmallStraightLogo } from './Logo/SmallStraightLogo';
 export { StraightLogo } from './Logo/StraightLogo';
 
+// MODAL
+export { ConfirmModal } from './Modal/ConfirmModal';
+
 // THEME
 export { ThemePicker } from "./Theme/ThemePicker";
 

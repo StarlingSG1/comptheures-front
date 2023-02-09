@@ -9,7 +9,7 @@ export async function getClocks() {
     return response.data
 }
 
-export async function addClocks(data) {
+export async function addTimes(data) {
     const response = await axios.post(
         `${process.env.NEXT_PUBLIC_LOCAL_BACK_URL}/clock`,
         data,

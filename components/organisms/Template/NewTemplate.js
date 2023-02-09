@@ -11,7 +11,6 @@ export function NewTemplate({ children, comptheures = false, className = "" }) {
 
     const { times, currentDay } = useCalendarContext()
     const { user } = useUserContext()
-    const [todayTime, setTodayTime] = useState(null)
     const [todayStatus, setTodayStatus] = useState(null)
 
     const isComptheures = () => {
@@ -32,10 +31,8 @@ export function NewTemplate({ children, comptheures = false, className = "" }) {
                     setTodayStatus("Refusé par l'administateur")
                     break;
                 default:
-                    setTodayTime(today)
             }
         } else {
-            setTodayTime(null)
             setTodayStatus(null)
         }
     }

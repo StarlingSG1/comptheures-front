@@ -19,3 +19,12 @@ export async function getSpecialDays() {
     );
     return response.data
 }
+
+export async function deleteUsersFromEnterprise(payload){
+    const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_LOCAL_BACK_URL}/enterprise/users/delete`,
+        payload,
+        getFormattedToken()
+    );
+    return response.data
+}

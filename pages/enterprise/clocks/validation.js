@@ -137,6 +137,23 @@ export default function enterpriseValidation() {
         }
     }
 
+    const onHoverTimeCustom = (index) => {
+        const modal = document.querySelector(`#time-modal-${index}`)
+        if(modal){
+            modal.classList.add("!block")
+        }
+        // return list
+    }
+
+    const onLeaveTimeCustom = (index) => {
+        const modal = document.querySelector(`#time-modal-${index}`)
+        if(modal){
+            modal.classList.remove("!block")
+        }
+    }
+
+
+
     useEffect(() => {
         setBurgerOpen(false);
     }, [])
@@ -228,7 +245,21 @@ export default function enterpriseValidation() {
                                     {userTimes?.map((item, index) => (
                                         <tr key={index} className="dark:hover:text-white dark:even:bg-blue-dark even:bg-blue odd:bg-transparent even:text-white dark:odd:text-white h-10 ">
                                             <td className="pl-2.5">{item.day}/{item.month + 1}/{item.year}</td>
-                                            <td className="pl-2.5">{item.work}</td>
+                                            <td className="pl-2.5 relative" onMouseLeave={() => {onLeaveTimeCustom(index)}} onMouseEnter={() => {onHoverTimeCustom(index)}} >{item.work}
+                                            {item?.CustomTime?.length > 0 && <div className="hidden z-10 shadow w-full bg-white absolute top-full" id={`time-modal-${index}`}>
+                                                {item?.CustomTime?.map((time, index) => (
+                                                    <div key={index} className="bg-white flex flex-col last:mb-1 first:mt-1 mt-2 items-center">
+                                                        <Paragraph>{time.name}</Paragraph>
+                                                        <div className="flex items-center gap-3">
+                                                        <Paragraph>{time.start}</Paragraph>
+                                                        <Paragraph>à</Paragraph>
+                                                        <Paragraph>{time.end}</Paragraph>
+                                                        </div>
+
+                                                    </div>
+                                                ))}
+                                                </div>}
+                                            </td>
                                             <td className="pl-2.5">{item?.CustomTime?.length > 0 ? "Personnalisé" : item?.specialTime?.name ? item?.specialTime?.name : "Automatique"}</td>
                                             <td className="pl-2.5 pr-2.5 flex items-center h-10 justify-center"><input type="checkbox" defaultChecked={allChecked} checked={item.checked} value={item.checked} onChange={() => { checkOneTime(item, index) }} className="w-4 h-4 dark:bg-white accent-blue-selected bg-blue" /></td>
                                         </tr>

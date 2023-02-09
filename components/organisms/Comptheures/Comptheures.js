@@ -1,11 +1,11 @@
 import { use, useEffect, useState } from "react"
 import { useUserContext } from "../../../context"
 import { Arrow, BorderedButton, Button, Card, CoffeeIcon, ComptheuresSwitch, Cross, CrossIcon, OrbitronTitle, Paragraph, Plus, RealArrow, ReverseParagraph, SpecialDayButton, SubTitle, Title, WorkIcon } from "../../atoms"
-import { SmallStraightLogo, TimeInput } from "../../molecules"
+import { ConfirmModal, SmallStraightLogo, TimeInput } from "../../molecules"
 import { Calendar } from "../Calendar/Calendar"
 import { TimeBlock } from "../../organisms";
 import { useCalendarContext } from "../../../context/calendar"
-import { addClocks, getClocks } from "../../../api/clock/clock";
+import { addTimes, getClocks } from "../../../api/clock/clock";
 import { toast } from "react-toastify"
 import { Recapitulatif } from "../../organisms"
 import { Notations } from "./Notations"
@@ -13,14 +13,13 @@ import { createTime, deleteStat, recapList, statsList } from "../../../api/time/
 
 export function Comptheures() {
 
-    const { frenchDays, getMonth, setTheDay, getPrevMonth, getNextMonth, getMonthByIndex, setTimes, getDayByIndex, currentDay, setCurrentDay, refresh, getWeekNumber, currentCustomTimes, setCurrentCustomTimes, clocks, setClocks, workTotal, breakTotal } = useCalendarContext();
+    const { frenchDays, getMonth, setTheDay, getPrevMonth, getNextMonth, getMonthByIndex, setTimes, getDayByIndex, currentDay, setCurrentDay, refresh, getWeekNumber, currentCustomTimes, setCurrentCustomTimes } = useCalendarContext();
     const { setBurgerOpen, user, setUser } = useUserContext()
+
     const [edit, setEdit] = useState(true)
     const [comptheuresSwitchState, setComptheuresSwitchState] = useState(false)
     const [modal, setModal] = useState(false)
     const [modalCheck, setModalCheck] = useState(false)
-
-    // selected item in blue
     const [notationSelected, setNotationSelected] = useState(null)
     const [initialNotation, setInitialNotation] = useState(null)
     const [notationType, setNotationType] = useState(null)
@@ -29,7 +28,6 @@ export function Comptheures() {
     const [recapData, setRecapData] = useState([])
     const [myStats, setMyStats] = useState([])
     const [specialDays, setSpecialDays] = useState([])
-    const [todayTime, setTodayTime] = useState(null)
     const [todayStatus, setTodayStatus] = useState(null)
 
     // when clicking on a day, change the current day
@@ -78,6 +76,7 @@ export function Comptheures() {
         }
     }
 
+    // check the modal to not have it appear every time
     const modalCheckHandler = () => {
         if (localStorage.getItem("timeConfirmation") === null) {
             localStorage.setItem("timeConfirmation", false);
@@ -86,28 +85,8 @@ export function Comptheures() {
         }
     };
 
-    useEffect(() => {
-        setBurgerOpen(false); refresh();
-        setSpecialDays(user?.userEnterprise?.enterprise?.configEnterprise.SpecialDays)
-        getMyStats()
-        modalCheckHandler()
-    }, [])
 
-    useEffect(() => {
-        getTimeOfTheDay(currentDay)
-        getRecapTimes()
-        checkTimeToday()
-    }, [currentDay])
-
-    useEffect(() => {
-        goodActualTimes(currentDay);
-        getRecapTimes()
-        checkTimeToday()
-        currentDay ? getTimeOfTheDay(currentDay) :
-            getTimeOfTheDay(new Date)
-    }, [myStats])
-
-
+    // get the realisation status of the current day
     const checkTimeToday = () => {
         const today = myStats.find(time => time.day === currentDay.getDate() && time.month === currentDay.getMonth() && time.year === currentDay.getFullYear())
         if (today?.realisationStatus) {
@@ -122,10 +101,8 @@ export function Comptheures() {
                     setTodayStatus("Refusé par l'administateur")
                     break;
                 default:
-                    setTodayTime(today)
             }
         } else {
-            setTodayTime(null)
             setTodayStatus(null)
         }
     }
@@ -156,7 +133,7 @@ export function Comptheures() {
         }
     }
 
-    // pas utiliser actuellement
+    // get allTimes of the user
     const getMyStats = async () => {
         const response = await statsList()
         if (response.error === false) {
@@ -165,7 +142,7 @@ export function Comptheures() {
         }
     }
 
-    // cliquer sur le picot d'une heure custom pour changer le type
+    // change the type of the clock
     const changeClockType = (index, type) => {
         const newClocks = [...currentCustomTimes]
         if (type === "WORK") {
@@ -208,7 +185,7 @@ export function Comptheures() {
 
     }
 
-    // afficher le bouton ajouter une heure custom si les précédentes sont remplies
+    // display the add time button if all the previous custom times are filled
     const displayAddOneTimeButton = () => {
         let canAdd = true
         currentCustomTimes.forEach(time => {
@@ -219,8 +196,8 @@ export function Comptheures() {
         return canAdd
     }
 
-    // ajouter une heure custom si les précédentes sont remplies
-    const addClock = () => {
+    // add a new empty custom time if previous are filled
+    const addTime = () => {
         const newClock = [...currentCustomTimes]
         newClock.push({
             name: "Travail supplémentaire",
@@ -232,6 +209,8 @@ export function Comptheures() {
         setCurrentCustomTimes(newClock)
     }
 
+
+    // get recap for the current day/week/month
     const getRecapTimes = async () => {
         const date = {
             day: currentDay.getDate(),
@@ -244,13 +223,11 @@ export function Comptheures() {
         }
     }
 
-    // when clicking on enregistrer ou modifier pour save la value
-    const validateClocks = async (item, type) => {
-
+    // validate time for the day
+    const validateTimes = async (item, type) => {
         if (modalCheck) {
             localStorage.setItem("timeConfirmation", true)
         }
-
         if (edit) {
             if (type === null && item === null && notationSelected === null) {
                 const data = {
@@ -350,23 +327,47 @@ export function Comptheures() {
         }
     }
 
+
+    useEffect(() => {
+        setBurgerOpen(false); refresh();
+        setSpecialDays(user?.userEnterprise?.enterprise?.configEnterprise.SpecialDays)
+        getMyStats()
+        modalCheckHandler()
+    }, [])
+
+    useEffect(() => {
+        getTimeOfTheDay(currentDay)
+        getRecapTimes()
+        checkTimeToday()
+    }, [currentDay])
+
+    useEffect(() => {
+        goodActualTimes(currentDay);
+        getRecapTimes()
+        checkTimeToday()
+        currentDay ? getTimeOfTheDay(currentDay) :
+            getTimeOfTheDay(new Date)
+    }, [myStats])
+
     return (
         <div>
             {modal &&
-                <div className="absolute w-full h-full top-0 left-0 bottom-O right-0 bg-black/[0.3] flex justify-center items-end rounded-2xl z-20">
-                    <div className="h-[240px] w-[70%] bg-white dark:bg-blue mb-80 rounded-xl flex flex-col justify-between p-5">
-                        <Cross width="32" height="32" onClick={() => setModal(false)} />
-                        <Paragraph className="text-center">Vos horaires pour ce jour seront envoyés à un administrateur de l’entreprise pour validation.</Paragraph>
+                <div className="fixed w-full h-full top-0 left-0 bottom-O right-0 bg-black/[0.3] flex justify-center items-end rounded-2xl z-20">
+                    <div className="sm:min-h-[240px] sm:w-[70%] w-[90%] bg-white relative dark:bg-blue mb-80 rounded-xl flex flex-col sm:justify-between sm:gap-0 gap-5 p-5">
+                        <Cross width="32" height="32" className="absolute top-3 sm:left-3 right-3 " onClick={() => setModal(false)} />
+                        <SubTitle className="sm:text-center sm:px-5 sm:mt-0 mt-4 ">Valider un horaire</SubTitle>
+                        <Paragraph className="sm:text-center">Vos horaires pour ce jour seront envoyés à un administrateur de l’entreprise pour validation.</Paragraph>
                         <div className="flex flex-col gap-2.5">
                             <div className="flex gap-2.5 cursor-pointer" onClick={() => setModalCheck(!modalCheck)}>
                                 <input type="checkbox" checked={modalCheck} />
                                 <Paragraph>Ne plus me demander</Paragraph>
                             </div>
-                            <Button onClick={() => validateClocks(notationSelected, notationType)}>Oui, enregistrer</Button>
+                            <Button onClick={() => validateTimes(notationSelected, notationType)}>Oui, enregistrer</Button>
                         </div>
                     </div>
                 </div>
             }
+            <ConfirmModal modal={modal} user={user} crossClick={() => setModal(false)} checkbox={true} checkboxClick={() => setModalCheck(!modalCheck)} checkboxState={modalCheck} />
             <SmallStraightLogo className={"md:hidden"} />
             <OrbitronTitle className="!text-center  md:mt-0 mt-5 md:mb-0 mb-5">{currentDay.getFullYear()}</OrbitronTitle>
             <div className="w-full h-10 flex items-center justify-between px-[5px] md:mt-5">
@@ -427,13 +428,13 @@ export function Comptheures() {
                                     </Card>
                                 </div>
                             ))}
-                            {edit && displayAddOneTimeButton() && <div onClick={addClock} className="dark:bg-white bg-blue cursor-pointer rounded-full flex justify-center items-center w-10 h-10"><Plus /></div>}
-                            <Button className="md:mb-0 mb-10" onClick={() => { validateClocks(currentCustomTimes, notationType) }}>{edit ? "Enregistrer" : "Modifier"}</Button>
+                            {edit && displayAddOneTimeButton() && <div onClick={addTime} className="dark:bg-white bg-blue cursor-pointer rounded-full flex justify-center items-center w-10 h-10"><Plus /></div>}
+                            <Button className="md:mb-0 mb-10" onClick={() => { validateTimes(currentCustomTimes, notationType) }}>{edit ? "Enregistrer" : "Modifier"}</Button>
                         </div>
                     </>
                     :
                     <>
-                        <Notations pickedNotation={pickedNotation} modalCheck={modalCheck} notationSelected={notationSelected} validateClocks={validateClocks} notationType={notationType} initialNotation={initialNotation} setModal={setModal} specialDays={specialDays} />
+                        <Notations pickedNotation={pickedNotation} modalCheck={modalCheck} notationSelected={notationSelected} validateTimes={validateTimes} notationType={notationType} initialNotation={initialNotation} setModal={setModal} specialDays={specialDays} />
                     </>
             }
             <div className="w-screen -ml-[5.5%] md:hidden gap-10 border-y-blue flex flex-col py-10 border-y md:mb-0 mb-[60px]">
