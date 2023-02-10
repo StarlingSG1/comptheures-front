@@ -14,12 +14,13 @@ export default function EnterpriseConfig() {
       start: 1,
       end: 2,
     },
-    specialDays: [],
+    specialDays: ["recup", "maladie", "congé"],
     clocks: {
       hour: 7,
       minute: 0,
     }
   });
+
 
   const stepsName = ["Définir mois", "Jours spéciaux", "Horaires", "Inviter"];
   const enterprise = {
@@ -75,6 +76,23 @@ export default function EnterpriseConfig() {
     }
   }
 
+  const handleSelectClocks = (hour, minute) => {
+    if (Number(hour) > 23) hour = 23;
+    if (Number(hour) < 0) hour = 0;
+    if (Number(minute) > 59) minute = 59;
+    if (Number(minute) < 0) minute = 0;
+
+    console.log(hour, minute);
+
+    setEnterpriseConfig({
+      ...enterpriseConfig,
+      clocks: {
+        hour: Number(hour),
+        minute: Number(minute),
+      }
+    });
+  }
+
   useEffect(() => {
     setBurgerOpen(false);
   }, []);
@@ -84,7 +102,7 @@ export default function EnterpriseConfig() {
       <Head>
         <title>Comptheures.fr - Configurer votre entreprise</title>
       </Head>
-      <NewTemplate>
+      <NewTemplate className="overflow-y-auto">
         <OrbitronTitle className="text-center">{enterprise.name}</OrbitronTitle>
         <Breadcrumb
           steps={stepsName}
@@ -103,8 +121,10 @@ export default function EnterpriseConfig() {
             selectedSpecialDays={enterpriseConfig.specialDays}
             onSelectSpecialDay={handleSelectSpecialDay}
           />
-          < ClocksStep
+          <ClocksStep
             show={step === 2}
+            selectedClocks={enterpriseConfig.clocks}
+            onSelectClocks={handleSelectClocks}
           />
           <InvitationsStep
             show={step === 3}

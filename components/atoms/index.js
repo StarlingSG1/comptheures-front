@@ -29,6 +29,8 @@ export { AlarmIcon } from "./Icons/AlarmIcon";
 export { HospitalCaseIcon } from "./Icons/HospitalCaseIcon";
 export { BedIcon } from "./Icons/BedIcon";
 export { UnknowIcon } from "./Icons/UnknowIcon";
+export { CopyIcon } from "./Icons/CopyIcon";
+export { CheckIcon } from "./Icons/CheckIcon";
 
 // INPUTS
 export { ClockNameInput } from "./Inputs/ClockNameInput";
