@@ -47,7 +47,7 @@ export function NewTemplate({ children, comptheures = false, className = "" }) {
                 <div className="md:w-full md:max-w-[1030px] md:grid md:grid-cols-12 md:gap-[50px] md:items-start md:gap-[50px]">
                     <CrossIcon />
                     <MobileBurger className="md:hidden" />
-                    <div className={`w-screen py-10 flex flex-col justify-between px-[5%] min-h-screen dark:bg-blue bg-white relative   md:w-auto md:block md:col-span-8 md:min-h-[520px] md:h-full md:shadow md:px-[30px] md:rounded-2xl`}>
+                    <div className={`w-screen py-10 flex flex-col justify-between px-[5%] min-h-screen dark:bg-blue bg-white relative   md:w-auto md:block md:col-span-8 md:min-h-[520px] md:h-full md:shadow md:px-[30px] md:rounded-2xl ${className}`}>
                         {children}
                         <Footer className="md:hidden" />
                     </div>

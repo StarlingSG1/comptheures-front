@@ -11,7 +11,7 @@ module.exports = {
         blue: {
           DEFAULT: "#0B3779",
           "dark": "#072249",
-          "selected" : "#4488EE"
+          "selected": "#4488EE"
         },
         gray: {
           DEFAULT: "#CCCCCC",
@@ -34,8 +34,12 @@ module.exports = {
       },
       margin: {
         60: "3.75rem",
-      },  
+      },
     },
+    animatedSettings: {
+      animatedSpeed: 400,
+      classes: ['slideInRight', 'fadeIn']
+    }
   },
-  plugins: [],
+  plugins: [require("tailwindcss-animatecss")],
 }
