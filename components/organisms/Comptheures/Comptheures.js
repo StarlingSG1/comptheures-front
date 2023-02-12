@@ -1,231 +1,399 @@
 import { use, useEffect, useState } from "react"
 import { useUserContext } from "../../../context"
-import { Arrow, BorderedButton, Button, Card, CoffeeIcon, ComptheuresSwitch, OrbitronTitle, Paragraph, Plus, RealArrow, ReverseParagraph, SpecialDayButton, SubTitle, Title, WorkIcon } from "../../atoms"
-import { SmallStraightLogo, TimeInput } from "../../molecules"
+import { Arrow, BorderedButton, Button, Card, CoffeeIcon, ComptheuresSwitch, Cross, CrossIcon, OrbitronTitle, Paragraph, Plus, RealArrow, ReverseParagraph, SpecialDayButton, SubTitle, Title, WorkIcon } from "../../atoms"
+import { ConfirmModal, SmallStraightLogo, TimeInput } from "../../molecules"
 import { Calendar } from "../Calendar/Calendar"
 import { TimeBlock } from "../../organisms";
 import { useCalendarContext } from "../../../context/calendar"
-import { addClocks, getClocks } from "../../../api/clock/clock";
+import { addTimes, getClocks } from "../../../api/clock/clock";
 import { toast } from "react-toastify"
 import { Recapitulatif } from "../../organisms"
 import { Notations } from "./Notations"
+import { createTime, deleteStat, recapList, statsList } from "../../../api/time/time"
 
 export function Comptheures() {
 
-    const { frenchDays, getMonth, setTheDay, getPrevMonth, getNextMonth, getMonthByIndex, getDayByIndex, currentDay, setCurrentDay, refresh, getWeekNumber, currentClocks, setCurrentClocks, clocks, setClocks, workTotal, breakTotal } = useCalendarContext();
-    const { setBurgerOpen } = useUserContext()
+    const { frenchDays, getMonth, setTheDay, getPrevMonth, getNextMonth, getMonthByIndex, setTimes, getDayByIndex, currentDay, setCurrentDay, refresh, getWeekNumber, currentCustomTimes, setCurrentCustomTimes } = useCalendarContext();
+    const { setBurgerOpen, user, setUser } = useUserContext()
+
     const [edit, setEdit] = useState(true)
-    const [test, setTest] = useState(false)
     const [comptheuresSwitchState, setComptheuresSwitchState] = useState(false)
     const [modal, setModal] = useState(false)
-
-    // selected item in blue
-    const [autoSelected, setAutoSelected] = useState(false)
+    const [modalCheck, setModalCheck] = useState(false)
+    const [notationSelected, setNotationSelected] = useState(null)
+    const [initialNotation, setInitialNotation] = useState(null)
+    const [notationType, setNotationType] = useState(null)
     const [customSelected, setCustomSelected] = useState(false)
-    const [specialSelected, setSpecialSelected] = useState(null)
     const [currentNumber, setCurrentNumber] = useState("")
+    const [recapData, setRecapData] = useState([])
+    const [myStats, setMyStats] = useState([])
+    const [specialDays, setSpecialDays] = useState([])
+    const [todayStatus, setTodayStatus] = useState(null)
 
-    const [specialDays, setSpecialDays] = useState([
-        { id: 1, name: "Recup" },
-        { id: 2, name: "Congé" },
-        { id: 3, name: "Maladie" },
-    ])
+    // when clicking on a day, change the current day
     const changeCurrentDay = (day) => {
         setCurrentDay(new Date(day.year, day.month, day.number));
-        goodActualClock(new Date(day.year, day.month, day.number))
+        goodActualTimes(new Date(day.year, day.month, day.number))
     }
 
-    const pickAutoNotation = () => {
-        setAutoSelected(!autoSelected)
-        setCustomSelected(false)
-        setSpecialSelected(null)
-    }
-
-    const pickCustomNotation = () => {
-        setCustomSelected(!customSelected)
-        setAutoSelected(false)
-        setSpecialSelected(null)
-    }
-
-    const pickSpecialNotation = (index) => {
-        specialSelected === index ? setSpecialSelected(null) :
-            setSpecialSelected(index)
-        setAutoSelected(false)
-        setCustomSelected(false)
-    }
-
-    useEffect(() => {
-        setBurgerOpen(false); refresh(); getUserClocks();
-    }, [])
-
-    useEffect(() => {
-        goodActualClock(currentDay);
-    }, [clocks])
-
-    useEffect(() => {
-        goodActualClock(currentDay);
-    }, [currentDay])
-
-    const getUserClocks = async () => {
-        const response = await getClocks()
-        if (response.error === false) {
-            setClocks(response.data)
+    // when clicking on a day, know which type of notation is selected
+    const pickedNotation = (notation, items) => {
+        switch (notation) {
+            case "AUTO":
+                if (notationSelected === "AUTO") {
+                    setNotationSelected(null)
+                    setNotationType(null)
+                } else {
+                    setNotationSelected("AUTO")
+                    setNotationType("AUTO")
+                    setEdit(true)
+                }
+                break;
+            case "CUSTOM":
+                if (items === notationSelected) {
+                    setNotationSelected(null)
+                    setNotationType(null)
+                    setCustomSelected(false)
+                } else {
+                    setNotationSelected(items)
+                    setNotationType("CUSTOM")
+                    setCustomSelected(true)
+                }
+                break;
+            case "SPECIAL":
+                if (items?.id === notationSelected?.id) {
+                    setNotationSelected(null)
+                    setNotationType(null)
+                    setEdit(false)
+                } else {
+                    setNotationSelected(items)
+                    setNotationType("SPECIAL")
+                    setEdit(true)
+                }
+                break;
+            default:
+                break;
         }
     }
 
+    // check the modal to not have it appear every time
+    const modalCheckHandler = () => {
+        if (localStorage.getItem("timeConfirmation") === null) {
+            localStorage.setItem("timeConfirmation", false);
+        } else if (localStorage.getItem("timeConfirmation") === "true") {
+            setModalCheck(true);
+        }
+    };
+
+
+    // get the realisation status of the current day
+    const checkTimeToday = () => {
+        const today = myStats.find(time => time.day === currentDay.getDate() && time.month === currentDay.getMonth() && time.year === currentDay.getFullYear())
+        if (today?.realisationStatus) {
+            switch (today.realisationStatus) {
+                case "IN_VALIDATION":
+                    setTodayStatus("En attente de validation")
+                    break;
+                case "VALIDATED":
+                    setTodayStatus("Validé par l'administateur")
+                    break;
+                case "REFUSED":
+                    setTodayStatus("Refusé par l'administateur")
+                    break;
+                default:
+            }
+        } else {
+            setTodayStatus(null)
+        }
+    }
+
+    // get if there is a stat for the current day and if there is, give what type of notation is selected
+    const getTimeOfTheDay = async (day) => {
+        setNotationSelected(null)
+        setNotationType(null)
+        setInitialNotation(null)
+        setCustomSelected(false)
+        const myStat = myStats?.find(stat => stat.day === day.getDate() && stat.month === day.getMonth() && stat.year === day.getFullYear())
+        if (myStat?.specialTime) {
+            setInitialNotation(myStat?.specialTime?.specialDay)
+            setNotationSelected(myStat?.specialTime?.specialDay)
+            setNotationType("SPECIAL")
+        }
+        if (!myStat?.specialTime && myStat?.CustomTime?.length === 0) {
+            setInitialNotation("AUTO")
+            setNotationSelected("AUTO")
+            setNotationType("AUTO")
+        }
+
+        if (!myStat?.specialTime && myStat?.CustomTime?.length > 0) {
+            setInitialNotation(myStat?.CustomTime)
+            setNotationSelected(myStat?.CustomTime)
+            setCustomSelected(true)
+            setNotationType("CUSTOM")
+        }
+    }
+
+    // get allTimes of the user
+    const getMyStats = async () => {
+        const response = await statsList()
+        if (response.error === false) {
+            setMyStats(response.data.stats)
+            setTimes(response.data.stats)
+        }
+    }
+
+    // change the type of the clock
     const changeClockType = (index, type) => {
-        const newClocks = [...currentClocks]
+        const newClocks = [...currentCustomTimes]
         if (type === "WORK") {
             newClocks[index].type = "BREAK"
-            setCurrentClocks(newClocks)
+            setCurrentCustomTimes(newClocks)
         }
         if (type === "BREAK") {
             newClocks[index].type = "WORK"
-            setCurrentClocks(newClocks)
+            setCurrentCustomTimes(newClocks)
         }
     }
 
-    const goodActualClock = (date) => {
-        const dayClocks = clocks.filter(clock => clock.year === date.getFullYear() && clock.month === date.getMonth() && clock.day === date.getDate())
-        if (dayClocks.length === 1) {
-            // replace first item of currentClocks with dayClocks[0]
-            let newClocks = [...currentClocks]
-            newClocks = []
-            newClocks[0] = dayClocks[0]
-            newClocks[1] = {
-                name: "Pause déjeuner",
-                year: currentDay?.getFullYear(),
-                month: currentDay?.getMonth(),
-                week: getWeekNumber(currentDay),
-                day: currentDay?.getDate(),
-                order: 2,
-                type: "BREAK",
-                start: "",
-                end: "",
-            }
-            setCurrentClocks(newClocks)
-        } else if (dayClocks.length > 1) {
-            setCurrentClocks(dayClocks)
-        } else {
+    // get custom times for custom days if there is one
+    const goodActualTimes = (date) => {
+        // get the unique item where the date is the same as the current day
+        const dayClocks = myStats?.filter(stat => stat.year === date.getFullYear() && stat.month === date.getMonth() && stat.day === date.getDate())
+        if (dayClocks && dayClocks[0]?.CustomTime?.length === 0 || dayClocks?.length === 0) {
             const newClocks = [{
                 name: "Journée de travail",
-                year: currentDay?.getFullYear(),
-                month: currentDay?.getMonth(),
-                week: getWeekNumber(currentDay),
-                day: currentDay?.getDate(),
                 order: 1,
                 type: "WORK",
                 start: "",
                 end: "",
             }, {
                 name: "Pause déjeuner",
-                year: currentDay?.getFullYear(),
-                month: currentDay?.getMonth(),
-                week: getWeekNumber(currentDay),
-                day: currentDay?.getDate(),
                 order: 2,
                 type: "BREAK",
                 start: "",
                 end: "",
             }
             ]
-            setCurrentClocks(newClocks)
+            setCurrentCustomTimes(newClocks)
         }
-        if (dayClocks.length > 0) {
+        if (dayClocks && dayClocks[0]?.CustomTime.length > 0) {
+            setCurrentCustomTimes(dayClocks[0]?.CustomTime)
             setEdit(false)
         } else {
             setEdit(true)
         }
+
     }
 
-    const displayAddOneClockButton = () => {
+    // display the add time button if all the previous custom times are filled
+    const displayAddOneTimeButton = () => {
         let canAdd = true
-        currentClocks.forEach(clock => {
-            if (clock.start === "" || clock.end === "") {
+        currentCustomTimes.forEach(time => {
+            if (time.start === "" || time.end === "") {
                 canAdd = false
             }
         })
         return canAdd
     }
 
-    const addClock = () => {
-        const newClock = [...currentClocks]
+    // add a new empty custom time if previous are filled
+    const addTime = () => {
+        const newClock = [...currentCustomTimes]
         newClock.push({
             name: "Travail supplémentaire",
-            year: currentDay?.getFullYear(),
-            month: currentDay?.getMonth(),
-            week: getWeekNumber(currentDay),
-            day: currentDay?.getDate(),
-            order: currentClocks?.length + 1,
+            order: currentCustomTimes?.length + 1,
             type: "WORK",
             start: "",
             end: "",
         })
-        setCurrentClocks(newClock)
+        setCurrentCustomTimes(newClock)
     }
 
-    const validateClocks = async () => {
+
+    // get recap for the current day/week/month
+    const getRecapTimes = async () => {
+        const date = {
+            day: currentDay.getDate(),
+            month: currentDay.getMonth(),
+            year: currentDay.getFullYear(),
+        }
+        const response = await recapList(date)
+        if (response.error === false) {
+            setRecapData(response.data.recap)
+        }
+    }
+
+    // validate time for the day
+    const validateTimes = async (item, type) => {
+        if (modalCheck) {
+            localStorage.setItem("timeConfirmation", true)
+        }
         if (edit) {
-            const response = await addClocks(currentClocks)
-            if (response.error === false) {
-                getUserClocks()
-                setEdit(false)
-                toast.success(response.message)
+            if (type === null && item === null && notationSelected === null) {
+                const data = {
+                    day: currentDay.getDate(),
+                    month: currentDay.getMonth(),
+                    year: currentDay.getFullYear(),
+
+                }
+                const response = await deleteStat(data)
+                if (response.error === false) {
+                    setInitialNotation(null)
+                    setNotationSelected(null)
+                    setNotationType(null)
+                    setEdit(false)
+                    setModal(false)
+                    setMyStats(response.data)
+                    setTimes(response.data)
+                    setUser({ ...user, userEnterprise: { ...user.userEnterprise, Stats: response.data } })
+                    toast.success(response.message)
+                }
+                else {
+                    toast.error(response.message)
+                }
+            } else {
+
+                let payload = {}
+
+                switch (type) {
+                    case "CUSTOM":
+                        payload = {
+                            type: type,
+                            data: {
+                                times: item,
+                                day: currentDay.getDate(),
+                                month: currentDay.getMonth(),
+                                year: currentDay.getFullYear(),
+                                week: getWeekNumber(currentDay),
+                            }
+                        }
+                        break;
+                    case "SPECIAL":
+                        payload = {
+                            type: type,
+                            data: {
+                                ...item,
+                                day: currentDay.getDate(),
+                                month: currentDay.getMonth(),
+                                year: currentDay.getFullYear(),
+                                week: getWeekNumber(currentDay),
+                            }
+                        }
+                        break;
+                    case "AUTO":
+                        payload = {
+                            type: type,
+                            data: {
+                                day: currentDay.getDate(),
+                                month: currentDay.getMonth(),
+                                year: currentDay.getFullYear(),
+                                week: getWeekNumber(currentDay),
+                            }
+                        }
+                }
+
+                const response = await createTime(payload)
+                if (response.error === false) {
+                    setInitialNotation(item)
+                    setNotationSelected(item)
+                    setEdit(false)
+                    setModal(false)
+                    setMyStats(response.data)
+                    setTimes(response.data)
+                    setUser({ ...user, userEnterprise: { ...user.userEnterprise, Stats: response.data } })
+                    toast.success(response.message)
+                } else {
+                    toast.error(response.message)
+                }
             }
         } else {
             setEdit(true)
         }
     }
 
+    const changeMonth = (direction) => {
+        if (direction === "previous") {
+            let newDate = new Date(currentDay.getFullYear(), currentDay.getMonth() - 1, currentDay.getDate())
+            while (newDate.getMonth() === currentDay.getMonth()) {
+                newDate.setDate(newDate.getDate() - 1)
+            }
+            setCurrentDay(newDate)
+        } else {
+            let newDate = new Date(currentDay.getFullYear(), currentDay.getMonth() + 1, currentDay.getDate())
+            while (newDate.getMonth() - 1 !== currentDay.getMonth()) {
+                newDate.setDate(newDate.getDate() - 1)
+            }
+            setCurrentDay(newDate)
+        }
+    }
 
+
+    useEffect(() => {
+        setBurgerOpen(false); refresh();
+        setSpecialDays(user?.userEnterprise?.enterprise?.configEnterprise.SpecialDays)
+        getMyStats()
+        modalCheckHandler()
+    }, [])
+
+    useEffect(() => {
+        getTimeOfTheDay(currentDay)
+        getRecapTimes()
+        checkTimeToday()
+    }, [currentDay])
+
+    useEffect(() => {
+        goodActualTimes(currentDay);
+        getRecapTimes()
+        checkTimeToday()
+        currentDay ? getTimeOfTheDay(currentDay) :
+            getTimeOfTheDay(new Date)
+    }, [myStats])
 
     return (
-
         <div>
             {modal &&
-                <div className="absolute w-full h-full top-0 left-0 bottom-O right-0 bg-black/[0.3] flex justify-center items-end rounded-2xl z-20">
-                    <div className="h-[240px] w-[70%] bg-white dark:bg-blue mb-80 rounded-xl flex flex-col justify-between p-5">
-                        <Paragraph onClick={() => setModal(false)}>X</Paragraph>
-                        <Paragraph className="text-center">Vos horaires pour ce jour seront envoyés à un administrateur de l’entreprise pour validation.</Paragraph>
+                <div className="fixed w-full h-full top-0 left-0 bottom-O right-0 bg-black/[0.3] flex justify-center items-end rounded-2xl z-20">
+                    <div className="sm:min-h-[240px] sm:w-[70%] w-[90%] bg-white relative dark:bg-blue mb-80 rounded-xl flex flex-col sm:justify-between sm:gap-0 gap-5 p-5">
+                        <Cross width="32" height="32" className="absolute top-3 sm:left-3 right-3 " onClick={() => setModal(false)} />
+                        <SubTitle className="sm:text-center sm:px-5 sm:mt-0 mt-4 ">Valider un horaire</SubTitle>
+                        <Paragraph className="sm:text-center">Vos horaires pour ce jour seront envoyés à un administrateur de l’entreprise pour validation.</Paragraph>
                         <div className="flex flex-col gap-2.5">
-                            <div className="flex gap-2.5">
-                                <input type="checkbox" />
+                            <div className="flex gap-2.5 cursor-pointer" onClick={() => setModalCheck(!modalCheck)}>
+                                <input type="checkbox" checked={modalCheck} />
                                 <Paragraph>Ne plus me demander</Paragraph>
                             </div>
-                            <Button onClick={() => setModal(false)}>Oui, enregistrer</Button>
+                            <Button onClick={() => validateTimes(notationSelected, notationType)}>Oui, enregistrer</Button>
                         </div>
                     </div>
                 </div>
             }
+            <ConfirmModal modal={modal} user={user} crossClick={() => setModal(false)} checkbox={true} checkboxClick={() => setModalCheck(!modalCheck)} checkboxState={modalCheck} />
             <SmallStraightLogo className={"md:hidden"} />
             <OrbitronTitle className="!text-center  md:mt-0 mt-5 md:mb-0 mb-5">{currentDay.getFullYear()}</OrbitronTitle>
             <div className="w-full h-10 flex items-center justify-between px-[5px] md:mt-5">
                 <Arrow onClick={() => {
-                    setTheDay(false); setCurrentDay(
-                        new Date(currentDay.getFullYear(), currentDay.getMonth() - 1, currentDay.getDate()))
+                    setTheDay(false);
+                    changeMonth("previous")
                 }} className="rotate-180" />
                 <div className="flex items-center justify-center gap-6 w-full ">
                     <Paragraph onClick={() => {
-                        setTheDay(false); setCurrentDay(
-                            new Date(currentDay.getFullYear(), currentDay.getMonth() - 1, currentDay.getDate()))
+                        setTheDay(false); changeMonth("previous")
                     }} className={"!text-gray cursor-pointer"}>{getPrevMonth()}</Paragraph>
                     <div className=" dark:bg-white bg-blue rounded">
                         <ReverseParagraph className={"px-4 z-10 py-2 font-bold"}>{getMonth()}</ReverseParagraph>
                     </div>
                     <Paragraph onClick={() => {
-                        setTheDay(true); setCurrentDay(
-                            new Date(currentDay.getFullYear(), currentDay.getMonth() + 1, currentDay.getDate()))
+                        setTheDay(true); changeMonth("next")
                     }} className={"!text-gray cursor-pointer"}>{getNextMonth()}</Paragraph>
                 </div>
                 <Arrow onClick={() => {
-                    setTheDay(true); setCurrentDay(
-                        new Date(currentDay.getFullYear(), currentDay.getMonth() + 1, currentDay.getDate()));
+                    setTheDay(true); changeMonth("next");
                 }} />
             </div>
-            <Calendar frenchDays={frenchDays} setCurrentNumber={setCurrentNumber} day={currentDay} currentNumber={currentNumber} changeCurrentDay={changeCurrentDay} />
-            <ComptheuresSwitch comptheuresSwitchState={comptheuresSwitchState} setComptheuresSwitchState={setComptheuresSwitchState} />
+            <Calendar times={myStats} frenchDays={frenchDays} setCurrentNumber={setCurrentNumber} day={currentDay} currentNumber={currentNumber} changeCurrentDay={changeCurrentDay} />
+            <ComptheuresSwitch getRecapTimes={getRecapTimes} comptheuresSwitchState={comptheuresSwitchState} setComptheuresSwitchState={setComptheuresSwitchState} />
             {comptheuresSwitchState ?
-                <Recapitulatif />
+                <Recapitulatif recapData={recapData} myStats={myStats} />
                 :
                 customSelected ?
                     <>
@@ -235,20 +403,20 @@ export function Comptheures() {
                             <Paragraph className="uppercase font-bold">Retour</Paragraph>
                         </div>
                         <div className="flex flex-col w-full items-center gap-10">
-                            {currentClocks?.sort((a, b) => a.order > b.order ? 1 : -1).map((clock, index) => (
-                                ((!edit && clock?.start.length > 0) || edit) && <div key={index} className={`flex flex-col w-full items-center gap-[15px]`}>
+                            {currentCustomTimes?.sort((a, b) => a.order > b.order ? 1 : -1).map((time, index) => (
+                                ((!edit && time?.start?.length > 0) || edit) && <div key={index} className={`flex flex-col w-full items-center gap-[15px]`}>
                                     <div className="flex w-full items-center justify-center gap-2.5">
-                                        {clock.type === "WORK" ? <WorkIcon className={edit && "cursor-pointer"} onClick={() => edit && changeClockType(index, clock.type)} /> : clock.type === "BREAK" ? <CoffeeIcon className={edit && "cursor-pointer"} onClick={() => edit && changeClockType(index, clock.type)} /> : <WorkIcon onClick={() => changeClockType(key, clock.type)} />}
-                                        {edit ? <input id="txt" type="text" defaultValue={clock.name} className="bg-transparent font-bold outline-none text-center text-blue dark:text-white w-[55px]" onChange={(e) =>
-                                            setCurrentClocks(currentClocks.map((clock, i) =>
-                                                i === index ? { ...clock, name: e.target.value } : clock
+                                        {time.type === "WORK" ? <WorkIcon className={edit && "cursor-pointer"} onClick={() => edit && changeClockType(index, time.type)} /> : time.type === "BREAK" ? <CoffeeIcon className={edit && "cursor-pointer"} onClick={() => edit && changeClockType(index, time.type)} /> : <WorkIcon onClick={() => changeClockType(key, time.type)} />}
+                                        {edit ? <input id="txt" type="text" defaultValue={time.name} className="bg-transparent font-bold outline-none text-center text-blue dark:text-white w-[55px]" onChange={(e) =>
+                                            setCurrentCustomTimes(currentCustomTimes.map((time, i) =>
+                                                i === index ? { ...time, name: e.target.value } : time
                                             ))}
-                                            style={{ width: ((clock.name.length + 3) * 8) + 'px' }}
-                                        /> : <Paragraph className={"font-bold"}>{clock.name}</Paragraph>
+                                            style={{ width: ((time.name.length + 3) * 8) + 'px' }}
+                                        /> : <Paragraph className={"font-bold"}>{time.name}</Paragraph>
                                         }
                                     </div>
                                     <Card edit={edit} className="">
-                                        <TimeInput index={index} defaultValue={clock.start} edit={edit}>{clock.start}</TimeInput>
+                                        <TimeInput index={index} defaultValue={time.start} edit={edit}>{time.start}</TimeInput>
                                         <div className={`h-full flex-col py-[5px] flex ${edit ? "justify-between" : "justify-center"} items-center`}>
                                             {edit && <span className="w-[2px] rounded-full bg-white dark:bg-blue h-full ">
                                             </span>}
@@ -256,27 +424,24 @@ export function Comptheures() {
                                             {edit && <span className="w-[2px] rounded-full bg-white dark:bg-blue h-full ">
                                             </span>}
                                         </div>
-                                        <TimeInput index={index} defaultValue={clock.end} edit={edit} end={true}>{clock.end}</TimeInput>
+                                        <TimeInput index={index} defaultValue={time.end} edit={edit} end={true}>{time.end}</TimeInput>
                                     </Card>
                                 </div>
                             ))}
-                            {edit && displayAddOneClockButton() && <div onClick={addClock} className="dark:bg-white bg-blue cursor-pointer rounded-full flex justify-center items-center w-10 h-10"><Plus /></div>}
-                            <Button className="md:mb-0 mb-10" onClick={() => { validateClocks() }}>{edit ? "Enregistrer" : "Modifier"}</Button>
+                            {edit && displayAddOneTimeButton() && <div onClick={addTime} className="dark:bg-white bg-blue cursor-pointer rounded-full flex justify-center items-center w-10 h-10"><Plus /></div>}
+                            <Button className="md:mb-0 mb-10" onClick={() => { validateTimes(currentCustomTimes, notationType) }}>{edit ? "Enregistrer" : "Modifier"}</Button>
                         </div>
-                        {(workTotal || breakTotal) && <div className="w-screen -ml-[5.5%] md:hidden gap-10 border-y-blue flex flex-col py-10 border-y md:mb-0 mb-[60px]">
-                            {workTotal && workTotal !== "0h00" && <div className="flex flex-col items-center">
-                                <Title>{workTotal}</Title>
-                                <Paragraph>de travail</Paragraph>
-                            </div>}
-                            {breakTotal && breakTotal !== "0h00" && <div className="flex flex-col items-center">
-                                <Title>{breakTotal}</Title>
-                                <Paragraph>de pause</Paragraph>
-                            </div>}
-                        </div>}
                     </>
                     :
-                    <Notations pickAutoNotation={pickAutoNotation} pickCustomNotation={pickCustomNotation} autoSelected={autoSelected} customSelected={customSelected} specialSelected={specialSelected} setModal={setModal} specialDays={specialDays} pickSpecialNotation={pickSpecialNotation} />
+                    <>
+                        <Notations pickedNotation={pickedNotation} modalCheck={modalCheck} notationSelected={notationSelected} validateTimes={validateTimes} notationType={notationType} initialNotation={initialNotation} setModal={setModal} specialDays={specialDays} />
+                    </>
             }
+            <div className="w-screen -ml-[5.5%] md:hidden gap-10 border-y-blue flex flex-col py-10 border-y md:mb-0 mb-[60px]">
+                <Paragraph className="text-center"><strong>Automatique : </strong>{user?.userEnterprise?.enterprise?.configEnterprise?.workHourADay}</Paragraph>
+                {todayStatus && <Paragraph className="text-center"><strong>Statut : </strong>{todayStatus}</Paragraph>
+                }
+            </div>
         </div>
     )
 }

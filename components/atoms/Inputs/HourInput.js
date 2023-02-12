@@ -1,3 +1,3 @@
 export function HourInput({ placeholder = "10h00", type = "text", defaultValue = "", onChange = () => {} }) {
-    return <input type={type} defaultValue={defaultValue} onChange={onChange} className="bg-transparent outline-none text-center text-white dark:text-blue w-[55px]" placeholder={placeholder} />
+    return <input type="time" id="session-date" name="session-date"  defaultValue={defaultValue} onChange={onChange} className="inline-block outline-none relative h-6 w-[55px] text-center bg-transparent text-white dark:text-blue"/>
 }

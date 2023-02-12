@@ -1,7 +1,7 @@
 import { useCalendarContext } from "../../../context/calendar";
 import { BorderedButton, Button, Paragraph, SpecialDayButton, SubTitle } from "../../atoms"
 
-export function Notations({pickAutoNotation, pickCustomNotation, autoSelected, customSelected, specialSelected, setModal = () => {}, specialDays, pickSpecialNotation}) {
+export function Notations({pickAutoNotation, pickCustomNotation, notationSelected, initialNotation, autoSelected, customSelected, modalCheck, specialSelected, notationType, validateTimes,  pickedNotation, setModal = () => {}, specialDays, pickSpecialNotation}) {
 
     const { getMonthByIndex, getDayByIndex, currentDay } = useCalendarContext();
 
@@ -13,19 +13,19 @@ export function Notations({pickAutoNotation, pickCustomNotation, autoSelected, c
                 <Paragraph className="font-bold uppercase">
                     Choisir une notation
                 </Paragraph>
-                <Button className={autoSelected && "!bg-blue-selected !text-white"} onClick={() => { pickAutoNotation() }}>Automatique</Button>
-                <BorderedButton className={customSelected && "!bg-blue-selected"} onClick={() => { pickCustomNotation() }}>Personnalisé</BorderedButton>
+                <Button className={ notationSelected === "AUTO" && "!bg-blue-selected !text-white"} onClick={() => { pickedNotation("AUTO", {type: "AUTO"}) }}>Automatique</Button>
+                <BorderedButton className={customSelected && "!bg-blue-selected"} onClick={() => { pickedNotation("CUSTOM", []); }}>Personnalisé</BorderedButton>
                 <Paragraph className="font-bold uppercase">
                     Ou
                 </Paragraph>
                 <div className="flex w-full justify-center ">
                     <div className="grid grid-cols-3 gap-[75px]">
                         {specialDays.map((day, index) => (
-                            <SpecialDayButton key={index} pickSpecialNotation={pickSpecialNotation} day={day} specialSelected={specialSelected} >{day.name}</SpecialDayButton>
+                            <SpecialDayButton notationSelected={notationSelected} onClick={() => pickedNotation("SPECIAL", day)} key={index} day={day} >{day.name}</SpecialDayButton>
                         ))}
                     </div>
                 </div>
-                {(autoSelected || customSelected || specialSelected) && <Button onClick={() => setModal(true)}>Enregistrer</Button>}
+                {(initialNotation !== notationSelected || initialNotation?.name !== notationSelected?.name)  &&  <Button onClick={() => modalCheck ? validateTimes(notationSelected, notationType) :  setModal(true)}>Enregistrer</Button>}
             </div>
         </>
     )

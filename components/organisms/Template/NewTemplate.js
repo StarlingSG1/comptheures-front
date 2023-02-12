@@ -1,5 +1,6 @@
 import Head from "next/head";
 import { useEffect, useState } from "react";
+import { useUserContext } from "../../../context";
 import { useCalendarContext } from "../../../context/calendar";
 import joinClasses from "../../../helpers/joinClasses";
 import { BigDesktopCard, CrossIcon, Paragraph, SmallDesktopCard, Title } from "../../atoms";
@@ -8,38 +9,40 @@ import { MobileBurger } from "../Burger/MobileBurger";
 
 export function NewTemplate({ children, comptheures = false, className = "" }) {
 
-    const { currentClocks, clocks, currentDay, workTotal, setWorkTotal, breakTotal, setBreakTotal, user } = useCalendarContext()
+    const { times, currentDay } = useCalendarContext()
+    const { user } = useUserContext()
+    const [todayStatus, setTodayStatus] = useState(null)
 
+    const isComptheures = () => {
 
-    const [canUpdate, setCanUpdate] = useState(false)
+    }
 
-    const getClocksTotal = () => {
-        if (currentClocks[0].stats) {
-            setWorkTotal(currentClocks[0].stats[0].work)
-            setBreakTotal(currentClocks[0].stats[0].break)
+    const checkTimeToday = () => {
+        const today = times.find(time => time.day === currentDay.getDate() && time.month === currentDay.getMonth() && time.year === currentDay.getFullYear())
+        if (today?.realisationStatus) {
+            switch (today.realisationStatus) {
+                case "IN_VALIDATION":
+                    setTodayStatus("En attente de validation")
+                    break;
+                case "VALIDATED":
+                    setTodayStatus("Validé par l'administateur")
+                    break;
+                case "REFUSED":
+                    setTodayStatus("Refusé par l'administateur")
+                    break;
+                default:
+            }
         } else {
-            setWorkTotal(null)
-            setBreakTotal(null)
+            setTodayStatus(null)
         }
-        setCanUpdate(false)
     }
 
     useEffect(() => {
-        if (canUpdate) {
-            getClocksTotal()
-        }
-    }, [currentClocks, clocks, currentDay])
-
-
-    useEffect(() => {
-        setCanUpdate(true)
-    }, [clocks, currentDay])
-
-
+        checkTimeToday()
+    }, [times, currentDay])
 
     return (
         <>
-
             <div className="md:py-[150px] md:flex md:dark:bg-blue-dark md:bg-blue md:w-screen md:justify-center md:items-center md:min-h-screen">
                 <div className="md:w-full md:max-w-[1030px] md:grid md:grid-cols-12 md:gap-[50px] md:items-start md:gap-[50px]">
                     <CrossIcon />
@@ -48,19 +51,13 @@ export function NewTemplate({ children, comptheures = false, className = "" }) {
                         {children}
                         <Footer className="md:hidden" />
                     </div>
-
-                    {comptheures && (workTotal || breakTotal) ?
+                    {comptheures
+                        ?
                         <div className="hidden col-span-4 md:flex gap-10 flex-col">
                             <SmallDesktopCard />
                             <div className="shadow dark:bg-blue bg-white rounded-2xl py-5 px-[15px] flex flex-col items-center gap-[15px]" >
-                                {workTotal && workTotal !== "0h00" && <div className="flex flex-col items-center">
-                                    <Title>{workTotal}</Title>
-                                    <Paragraph>de travail</Paragraph>
-                                </div>}
-                                {breakTotal && breakTotal !== "0h00" && <div className="flex flex-col items-center">
-                                    <Title>{breakTotal}</Title>
-                                    <Paragraph>de pause</Paragraph>
-                                </div>}
+                                <Paragraph className="text-center"><strong>Automatique : </strong>{user?.userEnterprise?.enterprise?.configEnterprise?.workHourADay}</Paragraph>
+                                {todayStatus && <Paragraph className="text-center"><strong>Statut : </strong>{todayStatus}</Paragraph>}
                             </div>
                         </div>
                         : <SmallDesktopCard />}

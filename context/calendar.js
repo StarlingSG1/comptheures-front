@@ -35,7 +35,7 @@ const CalendarContextProvider = ({ children }) => {
 
   const [today, setToday] = useState(months.indexOf(months[new Date().getMonth()]))
 
-  const [clocks, setClocks] = useState([])
+  const [times, setTimes] = useState([])
 
   const [currentDay, setCurrentDay] = useState(new Date())
 
@@ -48,22 +48,14 @@ const CalendarContextProvider = ({ children }) => {
     return weekNumber;
   }
 
-  const [currentClocks, setCurrentClocks] = useState([{
+  const [currentCustomTimes, setCurrentCustomTimes] = useState([{
     name: "Journée de travail",
-    year: currentDay?.getFullYear(),
-    week: getWeekNumber(currentDay),
-    day: currentDay?.getDate(),
     order: 1,
     type: "WORK",
     start: "",
     end: "",
   }, {
     name: "Pause déjeuner",
-    year: currentDay?.getFullYear(),
-    month: currentDay?.getMonth(),
-    week: getWeekNumber(currentDay),
-    day: currentDay?.getDate(),
-    hour: currentDay?.getHours(),
     order: 2,
     type: "BREAK",
     start: "",
@@ -113,6 +105,40 @@ const CalendarContextProvider = ({ children }) => {
     return frenchMonths[currentDay.getMonth()].french
   }
 
+  const getFirstMonthRecap = (config,currentDay) => {
+    let month = 0;
+    if(currentDay?.getDate() >= config?.start){
+      month = currentDay.getMonth() 
+    }else{
+      month = currentDay.getMonth() - 1
+    }
+    
+    if(month === -1){
+      month = 11
+    } if(month === 12){
+      month = 0
+    }
+    
+    return frenchMonths[month].french
+  }
+
+  const getSecondMonthRecap = (config, currentDay) => {
+    let month = 0;
+    if(currentDay?.getDate() >= config?.start && config?.start >= config?.end){
+      month = currentDay.getMonth() + 1
+    }else{
+      month = currentDay.getMonth()
+    }
+
+    if(month === -1){
+      month = 11
+    } if(month === 12){
+      month = 0
+    }
+
+    return frenchMonths[month].french
+  }
+
   const getDayByIndex = () => {
     let day = currentDay.getDay() - 1
     if (day === -1) {
@@ -127,7 +153,7 @@ const CalendarContextProvider = ({ children }) => {
   }
 
   const [workTotal, setWorkTotal] = useState(null)
-    const [breakTotal, setBreakTotal] = useState(null)
+  const [breakTotal, setBreakTotal] = useState(null)
 
   const stateValues = useMemo(
     () => ({
@@ -149,17 +175,19 @@ const CalendarContextProvider = ({ children }) => {
       setCurrentDay,
       refresh,
       getWeekNumber,
-      currentClocks,
-      setCurrentClocks,
-      clocks,
-      setClocks,
+      currentCustomTimes,
+      setCurrentCustomTimes,
+      times,
+      setTimes,
       workTotal,
       setWorkTotal,
       breakTotal,
-      setBreakTotal
+      setBreakTotal,
+      getFirstMonthRecap,
+      getSecondMonthRecap
     }),
-    [frenchDays, frenchMonths, setFrenchDays, setFrenchMonths, months, setMonths, today, setToday, getPrevMonth, getMonth, getNextMonth, setTheDay, getMonthByIndex, getDayByIndex, currentDay, setCurrentDay, refresh,
-      getWeekNumber, currentClocks, setCurrentClocks, clocks, setClocks, workTotal, setWorkTotal, breakTotal, setBreakTotal]
+    [frenchDays, frenchMonths, setFrenchDays, getFirstMonthRecap, getSecondMonthRecap, setFrenchMonths, months, setMonths, today, setToday, getPrevMonth, getMonth, getNextMonth, setTheDay, getMonthByIndex, getDayByIndex, currentDay, setCurrentDay, refresh,
+      getWeekNumber, currentCustomTimes, setCurrentCustomTimes, times, setTimes, workTotal, setWorkTotal, breakTotal, setBreakTotal]
   );
 
   return (

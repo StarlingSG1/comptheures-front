@@ -1,34 +1,117 @@
 import Head from "next/head";
-import { useEffect, useState } from "react";
-import { OrbitronTitle } from "../../components/atoms";
-import { BackTitle } from "../../components/molecules";
-import { Infos, NewTemplate, Profile, Redirect } from "../../components/organisms";
+import { use, useEffect, useState } from "react";
+import { Button, Cross, OrbitronTitle, Paragraph, SubTitle } from "../../components/atoms";
+import { BackTitle, ConfirmModal } from "../../components/molecules";
+import { AdminRedirect, Infos, NewTemplate, Profile, Redirect } from "../../components/organisms";
 import { useUserContext } from "../../context";
 import { usersList } from "../../api/enterprise/users";
 import { toast } from "react-toastify";
+import { deleteUsersFromEnterprise } from "../../api/enterprise/enterprise";
 
 export default function EnterpriseUsers() {
 
     const { setBurgerOpen, theme, user } = useUserContext()
 
+    const [usersData, setUsersData] = useState([])
+    const [allChecked, setAllChecked] = useState(false)
+    const [enterpriseId, setEnterpriseId] = useState("")
+    const [modal, setModal] = useState(false)
+
     const users = async () => {
-        const response = await usersList("09a7b31f-2445-47b1-bda3-54674772b3ec")
-        if(response.error === false){
-            console.log(response.data)
+        const response = await usersList(enterpriseId)
+        if (response.error === false) {
+            response.data.forEach((item, index) => {
+                item.checked = false
+            })
             setUsersData(response.data)
-        }else{
+        } else {
             toast.error(response.message)
         }
     }
 
     useEffect(() => {
+        setEnterpriseId(user?.userEnterprise?.enterprise?.id)
+    }, [user])
+
+    const checkAllUsers = () => {
+        let list = usersData
+        const isChecked = allChecked
+        if (isChecked === false) {
+            list.forEach((item, index) => {
+                item.checked = true
+            })
+            setUsersData(list)
+            setAllChecked(true)
+        } else {
+            list?.forEach((item, index) => {
+                item.checked = false
+            })
+            setUsersData(list)
+            setAllChecked(false)
+        }
+    }
+
+    const checkOneUser = (item, index) => {
+        const items = { ...usersData, [index]: { ...usersData[index], checked: !item.checked } }
+        let array = []
+        Object.keys(items).forEach((key) => {
+            array.push(items[key])
+        })
+        setUsersData(array)
+    }
+
+    const verifyAllIsChecked = () => {
+        let total = 0
+        usersData?.forEach((item, index) => {
+            if (item.checked === true) {
+                total += 1
+            }
+        }
+        )
+        if (total === usersData?.length) {
+            setAllChecked(true)
+        }
+        if (total !== usersData?.length) {
+            setAllChecked(false)
+        }
+    }
+
+    const deleteSelectedUsers = async () => {
+        let list = usersData
+        let selectedUsers = []
+        list.forEach((item, index) => {
+            if (item.checked === true) {
+                selectedUsers.push(item.id)
+            }
+        })
+
+        const response = await deleteUsersFromEnterprise({ usersIds: selectedUsers, enterpriseId: enterpriseId })
+        if (response.error === false) {
+            toast.success(response.message)
+            setModal(false)
+            users()
+        } else {
+            toast.error(response.message)
+        }
+    }
+
+
+    useEffect(() => {
         setBurgerOpen(false);
-        users()
     }, [])
 
+    useEffect(() => {
+        setEnterpriseId(user?.userEnterprise?.enterprise?.id)
+    }, [user])
 
+    useEffect(() => {
+        enterpriseId !== "" && users()
+    }, [enterpriseId])
 
-    const [usersData, setUsersData] = useState([])
+    useEffect(() => {
+        verifyAllIsChecked()
+    }, [checkOneUser])
+
 
     return (
         <>
@@ -40,35 +123,45 @@ export default function EnterpriseUsers() {
                 />
             </Head>
             <NewTemplate>
+                <ConfirmModal modal={modal} user={user} crossClick={() => {setModal(false)}} onClick={deleteSelectedUsers}/>
                 {!user ? <Redirect /> :
-                    <div>
-                        <OrbitronTitle className="text-center !font-normal">{"Maison de la Barbe à Papa"}</OrbitronTitle>
-                        <BackTitle>Liste des utilisateurs</BackTitle>
-                        <table className="w-full border border-blue dark:border-white border-2">
-                            <thead className="w-full text-left bg-blue dark:bg-blue-dark text-white">
-                                <tr className="h-10">
-                                    <th className="pl-2.5">Nom</th>
-                                    <th className="pl-2.5">Prénom</th>
-                                    <th className="pl-2.5">Email</th>
-                                    <th className="pl-2.5">Rôle</th>
-                                    <th className="pl-2.5">Date d'arrivée</th>
-                                    {/* <th>Comptheures</th> */}
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {usersData.map((item, index) => (
-                                    <tr className="dark:even:bg-blue-dark even:bg-blue odd:bg-transparent even:text-white dark:odd:text-white h-10 ">
-                                         <td className="pl-2.5">{item?.user?.lastName}</td>
-                                        <td className="pl-2.5">{item?.user?.firstName}</td>
-                                        <td className="pl-2.5">{item?.user?.email}</td>
-                                        <td className="pl-2.5">{item?.role?.label}</td>
-                                        <td className="pl-2.5">{item?.createdAt.split("T")[0].split("-").reverse().join("/")}</td>
-                                        {/* <td>{user.comptheuresLink}</td> */}
+                    user?.userEnterprise?.role?.isAdmin >= 1 ?
+                        <div>
+                            <OrbitronTitle className="text-center !font-normal">{user?.userEnterprise?.enterprise?.name}</OrbitronTitle>
+                            <BackTitle>Liste des utilisateurs</BackTitle>
+
+                            {user?.userEnterprise?.role?.isAdmin === 2 && <div className="flex items-center gap-5 mb-5 flex-wrap">
+                                <Paragraph>Actions sur les éléments sélectionnés :</Paragraph>
+                                <div className="flex items-center gap-5 ">
+                                    <button className="py-1 rounded-full dark:text-white font-noto capitalize font-bold outline dark:outline-white outline-blue bg-transparent px-4 text-blue" onClick={() => setModal(true)}>Supprimer</button>
+                                </div>
+                            </div>}
+                            <table className="w-full border border-blue dark:border-white border-2">
+                                <thead className="w-full text-left bg-blue dark:bg-blue-dark text-white">
+                                    <tr className="h-10">
+                                        <th className="pl-2.5">Nom</th>
+                                        <th className="pl-2.5">Prénom</th>
+                                        <th className="pl-2.5">Email</th>
+                                        <th className="pl-2.5">Rôle</th>
+                                        <th className="pl-2.5">Date d'arrivée</th>
+                                        {user?.userEnterprise?.role?.isAdmin === 2 && <th className="pl-2.5 pr-2.5 text-center flex items-center justify-center h-10"><input type="checkbox" defaultChecked={allChecked} checked={allChecked} onChange={checkAllUsers} className="w-4 h-4 dark:bg-white accent-blue-selected bg-blue" /></th>}
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
+                                </thead>
+                                <tbody>
+                                    {usersData.map((item, index) => (
+                                        <tr className="dark:even:bg-blue-dark even:bg-blue odd:bg-transparent even:text-white dark:odd:text-white h-10 ">
+                                            <td className="pl-2.5">{item?.user?.lastName}</td>
+                                            <td className="pl-2.5">{item?.user?.firstName}</td>
+                                            <td className="pl-2.5">{item?.user?.email}</td>
+                                            <td className="pl-2.5">{item?.role?.label}</td>
+                                            <td className="pl-2.5">{item?.createdAt.split("T")[0].split("-").reverse().join("/")}</td>
+                                            {user?.userEnterprise?.role?.isAdmin === 2 && <td className="pl-2.5 pr-2.5 flex items-center h-10 justify-center"><input type="checkbox" defaultChecked={allChecked} checked={item?.checked} value={item?.checked} onChange={() => { checkOneUser(item, index) }} className="w-4 h-4 dark:bg-white accent-blue-selected bg-blue" /></td>}
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                        : <AdminRedirect />
                 }
             </NewTemplate>
         </>

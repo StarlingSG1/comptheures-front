@@ -9,10 +9,12 @@ export { Card } from "./Cards/Card";
 export { SmallDesktopCard } from "./Cards/SmallDesktopCard";
 
 // ICONS
-export { Arrow } from "./Icons/Arrow";
-export { CoffeeIcon } from "./Icons/CoffeeIcon";
-export { ComptheuresIcon } from "./Icons/ComptheuresIcon";
-export { CrossIcon } from "./Icons/CrossIcon";
+
+export { Arrow } from "./Icons/Arrow";
+export { CoffeeIcon } from "./Icons/CoffeeIcon";
+export { ComptheuresIcon } from "./Icons/ComptheuresIcon";
+export { Cross } from "./Icons/Cross";
+export { CrossIcon } from "./Icons/CrossIcon";
 export { House } from "./Icons/House";
 export { LoginIcon } from "./Icons/LoginIcon";
 export { LogoutIcon } from "./Icons/LogoutIcon";
@@ -31,6 +33,7 @@ export { BedIcon } from "./Icons/BedIcon";
 export { UnknowIcon } from "./Icons/UnknowIcon";
 export { CopyIcon } from "./Icons/CopyIcon";
 export { CheckIcon } from "./Icons/CheckIcon";
+
 
 // INPUTS
 export { ClockNameInput } from "./Inputs/ClockNameInput";
