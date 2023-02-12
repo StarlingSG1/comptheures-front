@@ -1,6 +1,6 @@
 const DEFAULT_ROLES = [
-    { name: "collaborateur", type: "user", selected: true },
-    { name: "admin", type: "admin", selected: false }
+    { name: "Collaborateur", type: "user", selected: true },
+    { name: "Admin", type: "admin", selected: false }
 ]
 
 export default DEFAULT_ROLES

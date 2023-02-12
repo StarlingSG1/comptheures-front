@@ -1,27 +1,16 @@
 import joinClasses from "../../../../helpers/joinClasses";
-import { SubTitle } from "../../../atoms";
+import { HourInput, SubTitle } from "../../../atoms";
+import { TimeInput } from "../../../molecules";
 
-export function ClocksStep({ show = false, selectedClocks = { hour: 0, minute: 0 }, onSelectClocks = () => { } }) {
+export function ClocksStep({ show = false, onSelectTime = () => { } }) {
     return (
-        <div className={joinClasses("flex flex-col gap-5 animate__animated animate__slideInRight mt-10 mb-20", show ? "block" : "hidden")}>
+        <div className={joinClasses("flex flex-col  animate__animated animate__slideInRight mt-[30px] mb-[135px]", show ? "block" : "hidden")}>
             <SubTitle>Donner la durée d’une journée de travail classique</SubTitle>
-            <p className="flex gap-3 items-center mt-10 dark:text-white">
+            <p className="flex gap-3 items-center mt-[30px] dark:text-white">
                 Une journée de travail classique dure :
-                <input
-                    type="number"
-                    min="0" max="23"
-                    className="bg-blue w-[75px] py-1 px-5 rounded-md text-white dark:bg-white dark:text-black"
-                    value={selectedClocks.hour}
-                    onChange={(e) => onSelectClocks(e.target.value, selectedClocks.minute)}
-                />
-                H
-                <input
-                    type="number"
-                    min="0" max="59"
-                    className="bg-blue w-[75px] py-1 px-5 rounded-md text-white dark:bg-white dark:text-black"
-                    value={selectedClocks.minute}
-                    onChange={(e) => onSelectClocks(selectedClocks.hour, e.target.value)}
-                />
+                <div className="bg-blue dark:bg-white rounded-md py-1.5 px-4">
+                    <input type="time" id="session-date" name="session-date" onChange={(e) => onSelectTime(e.target.value)} className="inline-block outline-none relative h-6 w-[55px] text-center bg-blue dark:bg-white text-white dark:text-blue" />
+                </div>
             </p>
         </div>
     )

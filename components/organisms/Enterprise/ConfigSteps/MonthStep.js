@@ -1,9 +1,10 @@
 import joinClasses from "../../../../helpers/joinClasses";
-import { Button } from "../../../atoms";
+import { Button, Paragraph, SubTitle } from "../../../atoms";
 
 export function MonthStep({ show = false, onSelectedMonths = () => { }, months = { start: 0, end: 0 } }) {
     return (
-        <div className={joinClasses("flex flex-col gap-10 animate__animated animate__fadeIn", show ? "block" : "hidden")}>
+        <div className={joinClasses("flex flex-col gap-[30px] animate__animated animate__fadeIn", show ? "block" : "hidden")}>
+            <SubTitle>Donner la date de début et de fin d'un mois</SubTitle>
             <div className="flex items-center gap-2 dark:text-white">
                 <p>Les mois <strong>commence</strong> le :</p>
                 <input
@@ -25,7 +26,7 @@ export function MonthStep({ show = false, onSelectedMonths = () => { }, months =
                 />
             </div>
 
-            <p className="dark:text-white">Les données pour un mois seront calculés du {months.start} au {months.end}.</p>
+            <p className="dark:text-white">Les données pour un mois seront calculés du <strong>{months.start}</strong> au <strong>{months.end}</strong>.</p>
 
         </div>
     )

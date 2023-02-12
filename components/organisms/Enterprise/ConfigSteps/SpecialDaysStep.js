@@ -1,10 +1,12 @@
 import joinClasses from "../../../../helpers/joinClasses";
 import SPECIAL_DAYS from "../../../../utils/specialsDaysList";
+import { SubTitle } from "../../../atoms";
 
 export function SpecialDaysStep({ show = false, selectedSpecialDays = [], onSelectSpecialDay = () => { } }) {
     return (
         <div className={joinClasses("animate__animated animate__slideInRight", show ? "block" : "hidden")}>
-            <ul className="grid grid-cols-4 gap-5">
+            <SubTitle className="text-center">Choisir les jours spéciaux qui seront sélectionnable</SubTitle>
+            <ul className="grid mt-[30px] grid-cols-4 gap-5">
                 {SPECIAL_DAYS.map((specialDay, index) => (
                     <li
                         key={index}
@@ -17,7 +19,7 @@ export function SpecialDaysStep({ show = false, selectedSpecialDays = [], onSele
                         )}>
                             {specialDay.icon}
                         </div>
-                        <p className="uppercase dark:text-white">{specialDay.name}</p>
+                        <p className={`uppercase dark:text-white`}>{specialDay.name}</p>
                     </li>
                 ))}
             </ul>

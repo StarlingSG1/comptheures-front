@@ -352,22 +352,8 @@ export function Comptheures() {
     return (
         <div>
             {modal &&
-                <div className="fixed w-full h-full top-0 left-0 bottom-O right-0 bg-black/[0.3] flex justify-center items-end rounded-2xl z-20">
-                    <div className="sm:min-h-[240px] sm:w-[70%] w-[90%] bg-white relative dark:bg-blue mb-80 rounded-xl flex flex-col sm:justify-between sm:gap-0 gap-5 p-5">
-                        <Cross width="32" height="32" className="absolute top-3 sm:left-3 right-3 " onClick={() => setModal(false)} />
-                        <SubTitle className="sm:text-center sm:px-5 sm:mt-0 mt-4 ">Valider un horaire</SubTitle>
-                        <Paragraph className="sm:text-center">Vos horaires pour ce jour seront envoyés à un administrateur de l’entreprise pour validation.</Paragraph>
-                        <div className="flex flex-col gap-2.5">
-                            <div className="flex gap-2.5 cursor-pointer" onClick={() => setModalCheck(!modalCheck)}>
-                                <input type="checkbox" checked={modalCheck} />
-                                <Paragraph>Ne plus me demander</Paragraph>
-                            </div>
-                            <Button onClick={() => validateTimes(notationSelected, notationType)}>Oui, enregistrer</Button>
-                        </div>
-                    </div>
-                </div>
+                <ConfirmModal modal={modal} onClick={() => validateTimes(notationSelected, notationType)} type="time" user={user} crossClick={() => setModal(false)} checkbox={true} checkboxClick={() => setModalCheck(!modalCheck)} checkboxState={modalCheck} />
             }
-            <ConfirmModal modal={modal} user={user} crossClick={() => setModal(false)} checkbox={true} checkboxClick={() => setModalCheck(!modalCheck)} checkboxState={modalCheck} />
             <SmallStraightLogo className={"md:hidden"} />
             <OrbitronTitle className="!text-center  md:mt-0 mt-5 md:mb-0 mb-5">{currentDay.getFullYear()}</OrbitronTitle>
             <div className="w-full h-10 flex items-center justify-between px-[5px] md:mt-5">

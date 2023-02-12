@@ -11,7 +11,7 @@ export function Breadcrumb({
   };
 
   return (
-    <div className="mb-10">
+    <div className="mb-[30px]">
       <div className="flex items-center w-full justify-between mt-8">
         {steps.map((step, index) => {
           return (

@@ -123,7 +123,7 @@ export default function EnterpriseUsers() {
                 />
             </Head>
             <NewTemplate>
-                <ConfirmModal modal={modal} user={user} crossClick={() => {setModal(false)}} onClick={deleteSelectedUsers}/>
+                <ConfirmModal modal={modal} type="deleteUser" user={user} crossClick={() => {setModal(false)}} onClick={deleteSelectedUsers}/>
                 {!user ? <Redirect /> :
                     user?.userEnterprise?.role?.isAdmin >= 1 ?
                         <div>

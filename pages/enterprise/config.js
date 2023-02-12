@@ -9,16 +9,14 @@ import { useUserContext } from "../../context";
 export default function EnterpriseConfig() {
   const { theme, setBurgerOpen, user } = useUserContext();
   const [step, setStep] = useState(0);
+  const [showCustomRole, setShowCustomRole] = useState(false);
   const [enterpriseConfig, setEnterpriseConfig] = useState({
     months: {
       start: 1,
-      end: 2,
+      end: 31,
     },
     specialDays: ["recup", "maladie", "congé"],
-    clocks: {
-      hour: 7,
-      minute: 0,
-    }
+    time: "07:00"
   });
 
 
@@ -46,9 +44,9 @@ export default function EnterpriseConfig() {
   const handleSelectMonth = (start, end) => {
     if (!Number(start) || !Number(end)) return;
 
-    if (Number(start) > 12) start = 12;
+    if (Number(start) > 31) start = 31;
     if (Number(start) < 1) start = 1;
-    if (Number(end) > 12) end = 12;
+    if (Number(end) > 31) end = 31;
     if (Number(end) < 1) end = 1;
 
     setEnterpriseConfig({
@@ -76,20 +74,10 @@ export default function EnterpriseConfig() {
     }
   }
 
-  const handleSelectClocks = (hour, minute) => {
-    if (Number(hour) > 23) hour = 23;
-    if (Number(hour) < 0) hour = 0;
-    if (Number(minute) > 59) minute = 59;
-    if (Number(minute) < 0) minute = 0;
-
-    console.log(hour, minute);
-
+  const handleSelectClocks = (time) => {
     setEnterpriseConfig({
       ...enterpriseConfig,
-      clocks: {
-        hour: Number(hour),
-        minute: Number(minute),
-      }
+      time: time
     });
   }
 
@@ -127,13 +115,15 @@ export default function EnterpriseConfig() {
             onSelectClocks={handleSelectClocks}
           />
           <InvitationsStep
+          showCustomRole={showCustomRole}
+          setShowCustomRole={setShowCustomRole}
             show={step === 3}
           />
-          <div className="mt-10 flex items-center gap-5">
+          {!showCustomRole && <div className="mt-10 flex items-center gap-5">
             {step > 0 && <BorderedButton onClick={handlePreviousStep} className="!w-max min-w-fit px-5 dark:bg-transparent">étape précédente</BorderedButton>}
             {step < stepsName.length - 1 && <Button onClick={handleNextStep}>étape suivante</Button>}
             {step === stepsName.length - 1 && <Button onClick={handleSubmit}>terminer</Button>}
-          </div>
+          </div>}
         </div>
       </NewTemplate>
     </>
