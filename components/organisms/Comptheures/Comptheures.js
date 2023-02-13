@@ -14,7 +14,7 @@ import { createTime, deleteStat, recapList, statsList } from "../../../api/time/
 export function Comptheures() {
 
     const { frenchDays, getMonth, setTheDay, getPrevMonth, getNextMonth, getMonthByIndex, setTimes, getDayByIndex, currentDay, setCurrentDay, refresh, getWeekNumber, currentCustomTimes, setCurrentCustomTimes } = useCalendarContext();
-    const { setBurgerOpen, user, setUser } = useUserContext()
+    const { setBurgerOpen, user, setUser, enterprise } = useUserContext()
 
     const [edit, setEdit] = useState(true)
     const [comptheuresSwitchState, setComptheuresSwitchState] = useState(false)
@@ -330,7 +330,6 @@ export function Comptheures() {
 
     useEffect(() => {
         setBurgerOpen(false); refresh();
-        setSpecialDays(user?.userEnterprise?.enterprise?.configEnterprise.SpecialDays)
         getMyStats()
         modalCheckHandler()
     }, [])
@@ -348,6 +347,11 @@ export function Comptheures() {
         currentDay ? getTimeOfTheDay(currentDay) :
             getTimeOfTheDay(new Date)
     }, [myStats])
+
+    useEffect(() => {
+        setSpecialDays(enterprise?.configEnterprise?.SpecialDays)
+    } , [enterprise])
+
 
     return (
         <div>

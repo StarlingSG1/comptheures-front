@@ -109,32 +109,34 @@ export default function EnterpriseConfig() {
       </Head>
       <NewTemplate className="overflow-y-auto">
         <OrbitronTitle className="text-center">{enterprise?.name}</OrbitronTitle>
+        <div>
+
         <Breadcrumb
           steps={stepsName}
           currentStep={step}
           onChooseStep={setStep}
-        />
+          />
         {/* steps container */}
         <div>
           <MonthStep
             show={step === 0}
             onSelectedMonths={handleSelectMonth}
             months={enterpriseConfig.months}
-          />
+            />
           <SpecialDaysStep
             show={step === 1}
             selectedSpecialDays={enterpriseConfig?.specialDays}
             onSelectSpecialDay={handleSelectSpecialDay}
-          />
+            />
           <ClocksStep
             show={step === 2}
             selectedTime={enterpriseConfig.time}
             onSelectTime={handleSelectClocks}
-          />
+            />
           <InvitationsStep
           showCustomRole={showCustomRole}
           setShowCustomRole={setShowCustomRole}
-            show={step === 3}
+          show={step === 3}
           />
           {!showCustomRole && <div className="mt-10 flex items-center gap-5">
             {step > 0 && <BorderedButton onClick={handlePreviousStep} className="!w-max min-w-fit px-5 dark:bg-transparent">étape précédente</BorderedButton>}
@@ -142,6 +144,7 @@ export default function EnterpriseConfig() {
             {step === stepsName.length - 1 && <Button onClick={handleSubmit}>terminer</Button>}
           </div>}
         </div>
+          </div>
       </NewTemplate>
     </>
   );

@@ -198,20 +198,20 @@ export default function enterpriseValidation() {
                             {checkUsersData() ? <table className="w-full border border-blue dark:border-white border-2">
                                 <thead className="w-full text-left bg-blue dark:bg-blue-dark text-white">
                                     <tr className="h-10">
-                                        <th className="pl-2.5">Nom</th>
-                                        <th className="pl-2.5">Prénom</th>
-                                        <th className="pl-2.5">Rôle</th>
-                                        <th className="pl-2.5">Horaires à valider</th>
+                                        <th className="pl-2.5 text-sm sm:text-base">Nom</th>
+                                        <th className="pl-2.5 text-sm sm:text-base">Prénom</th>
+                                        <th className="pl-2.5 text-sm sm:text-base">Rôle</th>
+                                        <th className="pl-2.5 text-sm sm:text-base">Horaires à valider</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {usersData?.map((item, index) => (
                                         item.total > 0 &&
                                         <tr key={index} onClick={() => handleDetails(item)} className="cursor-pointer dark:hover:bg-blue-selected hover:bg-blue-selected hover:text-white dark:hover:text-white dark:even:bg-blue-dark even:bg-blue odd:bg-transparent even:text-white dark:odd:text-white h-10 ">
-                                            <td className="pl-2.5">{item.user.lastName}</td>
-                                            <td className="pl-2.5">{item.user.firstName}</td>
-                                            <td className="pl-2.5">{item.role.label}</td>
-                                            <td className="pl-2.5">{item.total}</td>
+                                            <td className="pl-2.5 text-sm sm:text-base">{item.user.lastName}</td>
+                                            <td className="pl-2.5 text-sm sm:text-base">{item.user.firstName}</td>
+                                            <td className="pl-2.5 text-sm sm:text-base">{item.role.label}</td>
+                                            <td className="pl-2.5 text-sm sm:text-base">{item.total}</td>
                                         </tr>
                                     ))}
                                 </tbody>
@@ -235,22 +235,22 @@ export default function enterpriseValidation() {
                             <table className="w-full border border-blue dark:border-white border-2">
                                 <thead className="w-full text-left bg-blue dark:bg-blue-dark text-white">
                                     <tr className="h-10">
-                                        <th className="pl-2.5">Date</th>
-                                        <th className="pl-2.5">Nombre d'heures</th>
-                                        <th className="pl-2.5">Type de journée</th>
+                                        <th className="pl-2.5 text-sm sm:text-base">Date</th>
+                                        <th className="pl-2.5 text-sm sm:text-base">Nombre d'heures</th>
+                                        <th className="pl-2.5 text-sm sm:text-base">Type de journée</th>
                                         <th className="pl-2.5 pr-2.5 text-center flex items-center justify-center h-10"><input type="checkbox" defaultChecked={allChecked} checked={allChecked} onChange={checkAllTimes} className="w-4 h-4 dark:bg-white accent-blue-selected bg-blue" /></th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {userTimes?.map((item, index) => (
                                         <tr key={index} className="dark:hover:text-white dark:even:bg-blue-dark even:bg-blue odd:bg-transparent even:text-white dark:odd:text-white h-10 ">
-                                            <td className="pl-2.5">{item.day}/{item.month + 1}/{item.year}</td>
-                                            <td className="pl-2.5 relative" onMouseLeave={() => {onLeaveTimeCustom(index)}} onMouseEnter={() => {onHoverTimeCustom(index)}} >{item.work}
+                                            <td className="pl-2.5 text-sm sm:text-base">{item.day}/{item.month + 1}/{item.year}</td>
+                                            <td className="pl-2.5 text-sm sm:text-base relative" onMouseLeave={() => {onLeaveTimeCustom(index)}} onMouseEnter={() => {onHoverTimeCustom(index)}} >{item.work}
                                             {item?.CustomTime?.length > 0 && <div className="hidden z-10 shadow w-full bg-white absolute top-full" id={`time-modal-${index}`}>
                                                 {item?.CustomTime?.map((time, index) => (
                                                     <div key={index} className="bg-white flex flex-col last:mb-1 first:mt-1 mt-2 items-center">
-                                                        <Paragraph>{time.name}</Paragraph>
-                                                        <div className="flex items-center gap-3">
+                                                        <Paragraph className="text-center">{time.name}</Paragraph>
+                                                        <div className="flex items-center sm:flex-row flex-col gap-1 sm:mt-0 mt-1 sm:gap-3">
                                                         <Paragraph>{time.start}</Paragraph>
                                                         <Paragraph>à</Paragraph>
                                                         <Paragraph>{time.end}</Paragraph>
@@ -260,7 +260,7 @@ export default function enterpriseValidation() {
                                                 ))}
                                                 </div>}
                                             </td>
-                                            <td className="pl-2.5">{item?.CustomTime?.length > 0 ? "Personnalisé" : item?.specialTime?.name ? item?.specialTime?.name : "Automatique"}</td>
+                                            <td className="pl-2.5 text-sm sm:text-base">{item?.CustomTime?.length > 0 ? "Personnalisé" : item?.specialTime?.name ? item?.specialTime?.name : "Automatique"}</td>
                                             <td className="pl-2.5 pr-2.5 flex items-center h-10 justify-center"><input type="checkbox" defaultChecked={allChecked} checked={item.checked} value={item.checked} onChange={() => { checkOneTime(item, index) }} className="w-4 h-4 dark:bg-white accent-blue-selected bg-blue" /></td>
                                         </tr>
                                     ))}

@@ -130,22 +130,22 @@ export default function EnterpriseUsers() {
                             <table className="w-full border border-blue dark:border-white border-2">
                                 <thead className="w-full text-left bg-blue dark:bg-blue-dark text-white">
                                     <tr className="h-10">
-                                        <th className="pl-2.5">Nom</th>
-                                        <th className="pl-2.5">Prénom</th>
-                                        <th className="pl-2.5">Email</th>
-                                        <th className="pl-2.5">Rôle</th>
-                                        <th className="pl-2.5">Date d'arrivée</th>
+                                        <th className="pl-2.5 text-sm sm:text-base">Nom</th>
+                                        <th className="pl-2.5 text-sm sm:text-base  hidden md:table-cell">Prénom</th>
+                                        <th className="pl-2.5 text-sm sm:text-base">Email</th>
+                                        <th className="pl-2.5 text-sm sm:text-base">Rôle</th>
+                                        <th className="pl-2.5 hidden md:table-cell">Date d'arrivée</th>
                                         {user?.userEnterprise?.role?.isAdmin === 2 && <th className="pl-2.5 pr-2.5 text-center flex items-center justify-center h-10"><input type="checkbox" defaultChecked={allChecked} checked={allChecked} onChange={checkAllUsers} className="w-4 h-4 dark:bg-white accent-blue-selected bg-blue" /></th>}
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {usersData.map((item, index) => (
                                         <tr className="dark:even:bg-blue-dark even:bg-blue odd:bg-transparent even:text-white dark:odd:text-white h-10 ">
-                                            <td className="pl-2.5">{item?.user?.lastName}</td>
-                                            <td className="pl-2.5">{item?.user?.firstName}</td>
-                                            <td className="pl-2.5">{item?.user?.email}</td>
-                                            <td className="pl-2.5">{item?.role?.label}</td>
-                                            <td className="pl-2.5">{item?.createdAt.split("T")[0].split("-").reverse().join("/")}</td>
+                                            <td className="pl-2.5 text-sm sm:text-base">{item?.user?.lastName}</td>
+                                            <td className="pl-2.5 text-sm sm:text-base  hidden md:table-cell">{item?.user?.firstName}</td>
+                                            <td className="pl-2.5 text-sm sm:text-base">{item?.user?.email}</td>
+                                            <td className="pl-2.5 text-sm sm:text-base">{item?.role?.label}</td>
+                                            <td className="pl-2.5 hidden md:table-cell">{item?.createdAt.split("T")[0].split("-").reverse().join("/")}</td>
                                             {user?.userEnterprise?.role?.isAdmin === 2 && <td className="pl-2.5 pr-2.5 flex items-center h-10 justify-center"><input type="checkbox" defaultChecked={allChecked} checked={item?.checked} value={item?.checked} onChange={() => { checkOneUser(item, index) }} className="w-4 h-4 dark:bg-white accent-blue-selected bg-blue" /></td>}
                                         </tr>
                                     ))}

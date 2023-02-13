@@ -11,7 +11,7 @@ import { Calendar } from "../Calendar/Calendar"
 
 export function Infos({ }) {
 
-    const { setBurgerOpen, user, setUser, enterprise } = useUserContext()
+    const { setBurgerOpen, user, setUser, enterprise, setEnterprise } = useUserContext()
 
     const [edit, setEdit] = useState(true)
     const [createdBy, setCreatedBy] = useState("")
@@ -26,7 +26,7 @@ export function Infos({ }) {
         const response = await updateEnterprise(enterpriseInfo)
         if (response.error === false) {
             toast.success(response.message)
-            setUser(response.data)
+            setEnterprise(response.data)
         } else {
             toast.error(response.message)
         }

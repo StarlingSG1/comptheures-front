@@ -19,8 +19,8 @@ export function Notations({pickAutoNotation, pickCustomNotation, notationSelecte
                     Ou
                 </Paragraph>
                 <div className="flex w-full justify-center ">
-                    <div className="grid grid-cols-3 gap-[75px]">
-                        {specialDays.map((day, index) => (
+                    <div className="grid grid-cols-3 gap-x-[75px] gap-y-5">
+                        {specialDays?.map((day, index) => (
                             <SpecialDayButton notationSelected={notationSelected} onClick={() => pickedNotation("SPECIAL", day)} key={index} day={day} >{day.name}</SpecialDayButton>
                         ))}
                     </div>
