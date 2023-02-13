@@ -1,7 +1,7 @@
 import { useCalendarContext } from "../../../context/calendar";
 import { BorderedButton, Button, Paragraph, SpecialDayButton, SubTitle } from "../../atoms"
 
-export function Notations({pickAutoNotation, pickCustomNotation, notationSelected, initialNotation, autoSelected, customSelected, modalCheck, specialSelected, notationType, validateTimes,  pickedNotation, setModal = () => {}, specialDays, pickSpecialNotation}) {
+export function Notations({ pickAutoNotation, pickCustomNotation, notationSelected, initialNotation, autoSelected, customSelected, modalCheck, specialSelected, notationType, validateTimes, pickedNotation, setModal = () => { }, specialDays, pickSpecialNotation }) {
 
     const { getMonthByIndex, getDayByIndex, currentDay } = useCalendarContext();
 
@@ -12,7 +12,7 @@ export function Notations({pickAutoNotation, pickCustomNotation, notationSelecte
                 <Paragraph className="font-bold uppercase">
                     Choisir une notation
                 </Paragraph>
-                <Button className={ notationSelected === "AUTO" && "!bg-blue-selected !text-white"} onClick={() => { pickedNotation("AUTO", {type: "AUTO"}) }}>Automatique</Button>
+                <Button className={notationSelected === "AUTO" && "!bg-blue-selected !text-white"} onClick={() => { pickedNotation("AUTO", { type: "AUTO" }) }}>Automatique</Button>
                 <BorderedButton className={customSelected && "!bg-blue-selected"} onClick={() => { pickedNotation("CUSTOM", []); }}>Personnalisé</BorderedButton>
                 <Paragraph className="font-bold uppercase">
                     Ou
@@ -24,7 +24,9 @@ export function Notations({pickAutoNotation, pickCustomNotation, notationSelecte
                         ))}
                     </div>
                 </div>
-                {(initialNotation?.name !== notationSelected?.name ) ?  <Button onClick={() => modalCheck ? validateTimes(notationSelected, notationType) :  setModal(true)}>Enregistrer</Button> : (initialNotation !== notationSelected)  && <Button onClick={() => modalCheck ? validateTimes(notationSelected, notationType) :  setModal(true)}>Enregistrer</Button>}
+                {console.log(initialNotation?.name === notationSelected?.name)}
+                {initialNotation?.name !== notationSelected?.name ? <Button onClick={() => modalCheck ? validateTimes(notationSelected, notationType) : setModal(true)}>Enregistrer</Button> : (initialNotation === "AUTO" && notationSelected !== "AUTO") ? <Button onClick={() => modalCheck ? validateTimes(notationSelected, notationType) : setModal(true)}>Enregistrer</Button> :
+                    (initialNotation?.length !== notationSelected?.length) && <Button onClick={() => modalCheck ? validateTimes(notationSelected, notationType) : setModal(true)}>Enregistrer</Button>}
             </div>
         </>
     )

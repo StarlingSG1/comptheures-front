@@ -38,8 +38,6 @@ export function Comptheures() {
 
     // when clicking on a day, know which type of notation is selected
     const pickedNotation = (notation, items) => {
-        console.log(initialNotation)
-        console.log(notation, items)
         switch (notation) {
             case "AUTO":
                 if (notationSelected === "AUTO") {

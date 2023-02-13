@@ -2,6 +2,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { createSpecialDay } from "../../api/admin/specialDay";
 import { sendConfig } from "../../api/enterprise/enterprise";
 import { BorderedButton, Button, OrbitronTitle } from "../../components/atoms";
 import { Breadcrumb, ClocksStep, InvitationsStep, MonthStep, NewTemplate, SpecialDaysStep } from "../../components/organisms";
@@ -11,6 +12,7 @@ export default function EnterpriseConfig() {
   const { theme, setBurgerOpen, user, enterprise, setEnterprise } = useUserContext();
   const [step, setStep] = useState(0);
   const [showCustomRole, setShowCustomRole] = useState(false);
+  const [showCreateDay, setShowCreateDay] = useState(false)
   const [enterpriseConfig, setEnterpriseConfig] = useState({
     months: {
       start: 1,
@@ -86,11 +88,21 @@ export default function EnterpriseConfig() {
     });
   }
 
+  const createTheSpecialDays = async (payload) => {
+    const response = await createSpecialDay(payload);
+    if (response.error === false) {
+      toast.success(response.message);
+      setShowCreateDay(false)
+      setEnterprise(response.data);
+    }
+  }
+
   useEffect(() => {
     setBurgerOpen(false);
   }, []);
 
   useEffect(() => {
+    console.log(enterprise?.configEnterprise)
     setEnterpriseConfig({
       ...enterpriseConfig, 
       specialDays : enterprise?.configEnterprise?.SpecialDays,
@@ -126,7 +138,10 @@ export default function EnterpriseConfig() {
           <SpecialDaysStep
             show={step === 1}
             selectedSpecialDays={enterpriseConfig?.specialDays}
+            showCreateDay={showCreateDay}
+            setShowCreateDay={setShowCreateDay}
             onSelectSpecialDay={handleSelectSpecialDay}
+            createTheSpecialDays={createTheSpecialDays}
             />
           <ClocksStep
             show={step === 2}
@@ -138,7 +153,7 @@ export default function EnterpriseConfig() {
           setShowCustomRole={setShowCustomRole}
           show={step === 3}
           />
-          {!showCustomRole && <div className="mt-10 flex items-center gap-5">
+          {!showCustomRole && !showCreateDay && <div className="mt-10 flex items-center gap-5">
             {step > 0 && <BorderedButton onClick={handlePreviousStep} className="!w-max min-w-fit px-5 dark:bg-transparent">étape précédente</BorderedButton>}
             {step < stepsName.length - 1 && <Button onClick={handleNextStep}>étape suivante</Button>}
             {step === stepsName.length - 1 && <Button onClick={handleSubmit}>terminer</Button>}

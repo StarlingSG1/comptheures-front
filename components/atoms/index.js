@@ -26,6 +26,7 @@ export { RealArrow } from "./Icons/RealArrow";
 export { RegisterIcon } from "./Icons/RegisterIcon";
 export { SunIcon } from "./Icons/SunIcon";
 export { SystemIcon } from "./Icons/SystemIcon";
+export { CreateCustomIcon  } from "./Icons/CreateCustomIcon";
 export { WorkIcon } from "./Icons/WorkIcon";
 export { RecupIcon } from "./Icons/Recupcon";
 export { MaladieIcon } from "./Icons/MaladieIcon";
