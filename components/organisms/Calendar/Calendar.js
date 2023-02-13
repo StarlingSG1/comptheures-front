@@ -35,8 +35,22 @@ export function Calendar(props) {
 
     }
 
+    // add a dot under the day number if there are times for that day
     const dayHasTimes = (day) => {
         return props?.times?.filter(stat => stat.year === day.year && stat.month === day.month && stat.day === day.number).length > 0
+    }
+
+    // ajust style of the day number depending on if it's selected or not and if it's a single digit or not
+    const dayStyle = (day, selected) => {
+        if (selected && day.number < 10) {
+            return `dark:bg-white bg-blue ${!dayHasTimes(day) && "items-center"}  rounded-full text-white dark:text-blue`
+        } else if (selected && day.number > 9) {
+            return `dark:bg-white bg-blue ${!dayHasTimes(day) && "items-center"}  rounded-full text-white dark:text-blue`
+        } else if (!selected && day.number < 10) {
+            return `items-center text-blue dark:text-white`
+        } else if (!selected && day.number > 9) {
+            return `items-center text-blue dark:text-white`
+        }
     }
 
     return (
@@ -52,8 +66,10 @@ export function Calendar(props) {
                     currentDays.map((day, index) => (
                         day.currentMonth && <tr style={{ "gridColumnStart": `${day.number === 1 ? props?.currentNumber : "auto"}` }} key={index} className={`col-span-1 flex justify-center calendar-day w-auto` + (day.currentMonth ? " current" : "") + (day.selected ? " " : "")}
                             onClick={() => props.changeCurrentDay(day)}>
-                            <td className={`relative ${day.selected && " dark:bg-white bg-blue rounded-full !text-white dark:!text-blue"} ${day.number > 9 ? "pt-0.5 pb-1.5 px-2" : "pt-0.5 pb-1.5 px-3"} cursor-pointer text-blue dark:text-white`} >{day.number}
-                            {dayHasTimes(day) && <span className={`absolute bottom-[3px] w-1 h-1 ${day.selected ? "dark:bg-blue bg-white" : "dark:bg-white bg-blue"} left-1/2 -translate-x-1/2 rounded-full`}></span>}
+                            <td className={`relative h-8 aspect-square flex justify-center cursor-pointer ${dayStyle(day, day.selected)} ${day.selected && "translate-y-0.5"}`}>{day.number}
+                                {dayHasTimes(day) &&
+                                    <span className={`absolute ${day.selected ? `bottom-1.5 bg-white dark:bg-blue` : "bottom-0 bg-blue dark:bg-white"} translate-y-1/2  h-1 w-1 rounded-full`}>
+                                    </span>}
                             </td>
                         </tr>
                     ))
