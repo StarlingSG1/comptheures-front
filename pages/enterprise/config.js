@@ -130,7 +130,7 @@ export default function EnterpriseConfig() {
             />
           <ClocksStep
             show={step === 2}
-            selectedTime={enterpriseConfig.time}
+            selectedTime={enterprise?.configEnterprise?.workHourADay}
             onSelectTime={handleSelectClocks}
             />
           <InvitationsStep

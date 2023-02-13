@@ -5,7 +5,6 @@ export function Notations({pickAutoNotation, pickCustomNotation, notationSelecte
 
     const { getMonthByIndex, getDayByIndex, currentDay } = useCalendarContext();
 
-
     return (
         <>
             <SubTitle className={`text-center font-orbitron underline capitalize  ${customSelected ? "mt-10 mb-5" : "my-10"}`}>{getDayByIndex() + " " + currentDay.getDate() + " " + getMonthByIndex()}</SubTitle>

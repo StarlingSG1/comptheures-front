@@ -350,7 +350,7 @@ export function Comptheures() {
 
     useEffect(() => {
         setSpecialDays(enterprise?.configEnterprise?.SpecialDays)
-    } , [enterprise])
+    }, [enterprise])
 
 
     return (
@@ -427,10 +427,9 @@ export function Comptheures() {
                         <Notations pickedNotation={pickedNotation} modalCheck={modalCheck} notationSelected={notationSelected} validateTimes={validateTimes} notationType={notationType} initialNotation={initialNotation} setModal={setModal} specialDays={specialDays} />
                     </>
             }
-            <div className="w-screen -ml-[5.5%] md:hidden gap-10 border-y-blue flex flex-col py-10 border-y md:mb-0 mb-[60px]">
+            <div className="w-screen -ml-[5.5%] md:hidden gap-10 dark:border-y-white border-y-blue flex flex-col py-10 border-y md:mb-0 mb-[60px]">
                 <Paragraph className="text-center"><strong>Automatique : </strong>{user?.userEnterprise?.enterprise?.configEnterprise?.workHourADay}</Paragraph>
-                {todayStatus && <Paragraph className="text-center"><strong>Statut : </strong>{todayStatus}</Paragraph>
-                }
+                {todayStatus && <Paragraph className="text-center"><strong>Statut : </strong>{todayStatus}</Paragraph>}
             </div>
         </div>
     )

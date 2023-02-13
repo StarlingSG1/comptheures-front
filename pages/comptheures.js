@@ -7,6 +7,7 @@ import { BigLogo, StraightLogo } from "../components/molecules";
 import { Comptheures, MobileTemplate, NewTemplate, Template } from "../components/organisms";
 import { useUserContext } from "../context";
 import { useCalendarContext } from "../context/calendar";
+import Page404 from "./404";
 
 export default function ComptheuresPage() {
 
@@ -29,7 +30,7 @@ export default function ComptheuresPage() {
                 />
             </Head>
             <NewTemplate comptheures={true}>
-                {!user ? "" : <Comptheures />}
+                {!user ? <Page404/> : <Comptheures />}
             </NewTemplate>
         </>
     )
