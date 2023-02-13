@@ -7,7 +7,7 @@ import { useUserContext } from "../context";
 
 
 export default function Enterprise() {
-    const { theme, setBurgerOpen, user } = useUserContext();
+    const { theme, setBurgerOpen, user, enterprise } = useUserContext();
 
     const [pages, setPages] = useState([
         { name: "Configuration de l’entreprise", link: "/enterprise/config", role: 2 },
@@ -29,7 +29,7 @@ export default function Enterprise() {
             <NewTemplate>
                 {user?.userEnterprise?.role?.isAdmin >= 1 ?
                     <>
-                        <OrbitronTitle className="text-center">{user?.userEnterprise?.enterprise?.name}</OrbitronTitle>
+                        <OrbitronTitle className="text-center">{enterprise?.name}</OrbitronTitle>
                         <ul className="flex flex-col md:items-start items-center gap-[58px] w-full md:mt-10">
                             {pages.map((page, index) => (
                                 user?.userEnterprise?.role?.isAdmin >= page.role && <li key={index}>

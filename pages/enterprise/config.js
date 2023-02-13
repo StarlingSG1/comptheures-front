@@ -1,13 +1,14 @@
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { sendConfig } from "../../api/enterprise/enterprise";
 import { BorderedButton, Button, OrbitronTitle } from "../../components/atoms";
-
 import { Breadcrumb, ClocksStep, InvitationsStep, MonthStep, NewTemplate, SpecialDaysStep } from "../../components/organisms";
 import { useUserContext } from "../../context";
 
 export default function EnterpriseConfig() {
-  const { theme, setBurgerOpen, user } = useUserContext();
+  const { theme, setBurgerOpen, user, enterprise, setEnterprise } = useUserContext();
   const [step, setStep] = useState(0);
   const [showCustomRole, setShowCustomRole] = useState(false);
   const [enterpriseConfig, setEnterpriseConfig] = useState({
@@ -15,15 +16,12 @@ export default function EnterpriseConfig() {
       start: 1,
       end: 31,
     },
-    specialDays: ["recup", "maladie", "congé"],
-    time: "07:00"
+    specialDays: [],
+    time: "07:00",
+    id: enterprise?.id,
   });
 
-
   const stepsName = ["Définir mois", "Jours spéciaux", "Horaires", "Inviter"];
-  const enterprise = {
-    name: "Maison de la Barbe à Papa",
-  };
 
   const router = useRouter();
 
@@ -37,8 +35,15 @@ export default function EnterpriseConfig() {
     setStep(step - 1);
   }
 
-  const handleSubmit = () => {
-    console.log("submit");
+  const handleSubmit = async () => {
+    const response = await sendConfig(enterpriseConfig);
+    if (response.error === false) {
+      toast.success(response.message);
+      setEnterprise(response.data)
+      router.push("/enterprise");
+    } else {
+      toast.error(response.message);
+    }
   }
 
   const handleSelectMonth = (start, end) => {
@@ -59,14 +64,14 @@ export default function EnterpriseConfig() {
   }
 
   const handleSelectSpecialDay = (specialDay) => {
-    const findSelectedSpecialDay = enterpriseConfig.specialDays.find((day) => day === specialDay);
+    const findSelectedSpecialDay = enterpriseConfig.specialDays.find((day) => day.name === specialDay.name);
     if (findSelectedSpecialDay) {
       setEnterpriseConfig({
         ...enterpriseConfig,
-        specialDays: enterpriseConfig.specialDays.filter((day) => day !== specialDay),
+        specialDays: enterpriseConfig.specialDays.filter((day) => day.name !== specialDay.name),
       });
-    }
-    else {
+  }
+  else {
       setEnterpriseConfig({
         ...enterpriseConfig,
         specialDays: [...enterpriseConfig.specialDays, specialDay],
@@ -85,13 +90,25 @@ export default function EnterpriseConfig() {
     setBurgerOpen(false);
   }, []);
 
+  useEffect(() => {
+    setEnterpriseConfig({
+      ...enterpriseConfig, 
+      specialDays : enterprise?.configEnterprise?.SpecialDays,
+      time: enterprise?.configEnterprise?.workHourADay,
+      months: {
+        start: enterprise?.configEnterprise?.monthDayStart,
+        end: enterprise?.configEnterprise?.monthDayEnd,
+      }
+    })
+  }, [enterprise]);
+
   return (
     <>
       <Head>
         <title>Comptheures.fr - Configurer votre entreprise</title>
       </Head>
       <NewTemplate className="overflow-y-auto">
-        <OrbitronTitle className="text-center">{enterprise.name}</OrbitronTitle>
+        <OrbitronTitle className="text-center">{enterprise?.name}</OrbitronTitle>
         <Breadcrumb
           steps={stepsName}
           currentStep={step}
@@ -106,13 +123,13 @@ export default function EnterpriseConfig() {
           />
           <SpecialDaysStep
             show={step === 1}
-            selectedSpecialDays={enterpriseConfig.specialDays}
+            selectedSpecialDays={enterpriseConfig?.specialDays}
             onSelectSpecialDay={handleSelectSpecialDay}
           />
           <ClocksStep
             show={step === 2}
-            selectedClocks={enterpriseConfig.clocks}
-            onSelectClocks={handleSelectClocks}
+            selectedTime={enterpriseConfig.time}
+            onSelectTime={handleSelectClocks}
           />
           <InvitationsStep
           showCustomRole={showCustomRole}

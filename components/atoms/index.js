@@ -27,12 +27,16 @@ export { RegisterIcon } from "./Icons/RegisterIcon";
 export { SunIcon } from "./Icons/SunIcon";
 export { SystemIcon } from "./Icons/SystemIcon";
 export { WorkIcon } from "./Icons/WorkIcon";
-export { AlarmIcon } from "./Icons/AlarmIcon";
-export { HospitalCaseIcon } from "./Icons/HospitalCaseIcon";
-export { BedIcon } from "./Icons/BedIcon";
+export { RecupIcon } from "./Icons/Recupcon";
+export { MaladieIcon } from "./Icons/MaladieIcon";
+export { CongeIcon } from "./Icons/CongeIcon";
 export { UnknowIcon } from "./Icons/UnknowIcon";
 export { CopyIcon } from "./Icons/CopyIcon";
 export { CheckIcon } from "./Icons/CheckIcon";
+export { SansSoldeIcon } from "./Icons/SansSoldeIcon";
+export { SchoolIcon } from "./Icons/SchoolIcon";
+export { EventIcon } from "./Icons/EventIcon";
+export { CustomIcon } from "./Icons/CustomIcon";
 
 
 // INPUTS

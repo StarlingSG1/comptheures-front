@@ -12,6 +12,7 @@ const UserContextProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [burgerOpen, setBurgerOpen] = useState(false);
   const [theme, setTheme] = useState(false);
+  const [enterprise, setEnterprise] = useState(null);
 
   const navigate = useRouter();
 
@@ -74,6 +75,10 @@ const UserContextProvider = ({ children }) => {
     verifyTheToken();
   }, []);
 
+  useEffect(() => {
+    setEnterprise(user?.userEnterprise?.enterprise)
+  }, [user]);
+
   const stateValues = useMemo(
     () => ({
       user,
@@ -90,8 +95,10 @@ const UserContextProvider = ({ children }) => {
       setBurgerOpen,
       getLogo,
       logoutTheUser,
+      enterprise,
+      setEnterprise
     }),
-    [user, setUser, burgerOpen, getLogo, theme, setTheme, setBurgerOpen, loading, setLoading, loginTheUser, status, verifyTheToken, setStatus, logoutTheUser]
+    [user, setUser, burgerOpen, enterprise, setEnterprise, getLogo, theme, setTheme, setBurgerOpen, loading, setLoading, loginTheUser, status, verifyTheToken, setStatus, logoutTheUser]
   );
 
   return (

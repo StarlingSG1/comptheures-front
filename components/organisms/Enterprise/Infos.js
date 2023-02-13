@@ -11,10 +11,9 @@ import { Calendar } from "../Calendar/Calendar"
 
 export function Infos({ }) {
 
-    const { setBurgerOpen, user, setUser } = useUserContext()
+    const { setBurgerOpen, user, setUser, enterprise } = useUserContext()
 
     const [edit, setEdit] = useState(true)
-    const [enterprise, setEnterprise] = useState({})
     const [createdBy, setCreatedBy] = useState("")
     const [userRole, setUserRole] = useState(0)
 
@@ -35,7 +34,6 @@ export function Infos({ }) {
 
     useEffect(() => {
         setBurgerOpen(false);
-        setEnterprise(user?.userEnterprise?.enterprise)
         setCreatedBy(user?.userEnterprise?.enterprise?.createdBy?.firstName + " " + user?.userEnterprise?.enterprise?.createdBy?.lastName)
         setUserRole(user?.userEnterprise?.role?.isAdmin)
     }, [user])

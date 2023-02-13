@@ -10,15 +10,14 @@ import { deleteUsersFromEnterprise } from "../../api/enterprise/enterprise";
 
 export default function EnterpriseUsers() {
 
-    const { setBurgerOpen, theme, user } = useUserContext()
+    const { setBurgerOpen, theme, user, enterprise } = useUserContext()
 
     const [usersData, setUsersData] = useState([])
     const [allChecked, setAllChecked] = useState(false)
-    const [enterpriseId, setEnterpriseId] = useState("")
     const [modal, setModal] = useState(false)
 
     const users = async () => {
-        const response = await usersList(enterpriseId)
+        const response = await usersList(enterprise?.id)
         if (response.error === false) {
             response.data.forEach((item, index) => {
                 item.checked = false
@@ -28,10 +27,6 @@ export default function EnterpriseUsers() {
             toast.error(response.message)
         }
     }
-
-    useEffect(() => {
-        setEnterpriseId(user?.userEnterprise?.enterprise?.id)
-    }, [user])
 
     const checkAllUsers = () => {
         let list = usersData
@@ -101,12 +96,8 @@ export default function EnterpriseUsers() {
     }, [])
 
     useEffect(() => {
-        setEnterpriseId(user?.userEnterprise?.enterprise?.id)
-    }, [user])
-
-    useEffect(() => {
-        enterpriseId !== "" && users()
-    }, [enterpriseId])
+        enterprise?.id !== "" && users()
+    }, [enterprise])
 
     useEffect(() => {
         verifyAllIsChecked()
@@ -127,7 +118,7 @@ export default function EnterpriseUsers() {
                 {!user ? <Redirect /> :
                     user?.userEnterprise?.role?.isAdmin >= 1 ?
                         <div>
-                            <OrbitronTitle className="text-center !font-normal">{user?.userEnterprise?.enterprise?.name}</OrbitronTitle>
+                            <OrbitronTitle className="text-center !font-normal">{enterprise?.name}</OrbitronTitle>
                             <BackTitle>Liste des utilisateurs</BackTitle>
 
                             {user?.userEnterprise?.role?.isAdmin === 2 && <div className="flex items-center gap-5 mb-5 flex-wrap">

@@ -28,3 +28,20 @@ export async function deleteUsersFromEnterprise(payload){
     );
     return response.data
 }
+
+export async function getDefaultSpecialDays() {
+    const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_LOCAL_BACK_URL}/enterprise/specialDays/default`,
+        getFormattedToken()
+    );
+    return response.data
+}
+
+export async function sendConfig(payload) {
+    const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_LOCAL_BACK_URL}/enterprise/config`,
+        payload,
+        getFormattedToken()
+    );
+    return response.data
+}

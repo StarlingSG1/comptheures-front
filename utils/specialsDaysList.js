@@ -1,17 +1,17 @@
-import { BedIcon, HospitalCaseIcon, AlarmIcon, UnknowIcon } from "../components/atoms";
+import { CongeIcon, MaladieIcon, RecupIcon, UnknowIcon } from "../components/atoms";
 
 const SPECIAL_DAYS = [
     {
         name: "recup",
-        icon: <AlarmIcon />
+        icon: <RecupIcon />
     },
     {
         name: "maladie",
-        icon: <HospitalCaseIcon />
+        icon: <MaladieIcon />
     },
     {
         name: "congé",
-        icon: <BedIcon />
+        icon: <CongeIcon />
     },
     {
         name: "event",

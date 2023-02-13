@@ -45,7 +45,7 @@ export function InvitationsStep({ show = false, showCustomRole, setShowCustomRol
                 <div>
                     <SubTitle className="mb-[30px]">Choisir un rôle pour une invitation</SubTitle>
                     <div className="flex justify-between items-center">
-                        <label htmlFor="role" className="flex gap-3 items-center">Rôle : 
+                        <label htmlFor="role" className="flex gap-3 items-center dark:text-white">Rôle : 
                             <select className="bg-blue py-1.5 px-4 rounded-md text-white dark:bg-white dark:text-black"
                                 onChange={handleSelectRole}
                                 value={roles.find((role) => role.selected).name}
@@ -60,9 +60,9 @@ export function InvitationsStep({ show = false, showCustomRole, setShowCustomRol
                         </button>
                     </div>
                     <Paragraph className="mt-5 mb-2">Copier l'invitation </Paragraph>
-                    <div className="flex items-center justify-between bg-white px-4 py-2 rounded-md">
-                        <p>https://comptheures.fr/invite/{roles.find((role) => role.selected).name}?token=123456789</p>
-                        <button className="text-blue"
+                    <div className="flex items-center justify-between bg-blue dark:bg-white px-4 py-2 rounded-md">
+                        <p className="text-white dark:text-black">https://comptheures.fr/invite/{roles.find((role) => role.selected).name}?token=123456789</p>
+                        <button className="text-white dark:text-blue"
                             onClick={handlecopyInvitation}
                         >{!copy ? <CopyIcon /> : <CheckIcon />}</button>
                     </div>
