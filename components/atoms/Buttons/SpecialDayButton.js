@@ -30,11 +30,11 @@ export function SpecialDayButton({ children, onClick = () => { }, className = ""
     }
 
     return (
-        <div onClick={onClick} className="grid-span-1 flex flex-col cursor-pointer items-center gap-2.5">
+        <button onClick={onClick} className="grid-span-1 flex flex-col cursor-pointer items-center gap-2.5">
             <div className={` ${day.id === notationSelected?.id ? "bg-blue-selected text-white" : "dark:bg-white bg-blue text-white dark:text-blue"} w-[65px] aspect-square rounded-full flex items-center justify-center`}>
                 {handleIcon(day)}
             </div>
             <Paragraph className="font-bold text-center uppercase">{children}</Paragraph>
-        </div>
+        </button>
     )
 }

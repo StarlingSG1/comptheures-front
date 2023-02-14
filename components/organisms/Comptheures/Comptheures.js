@@ -234,7 +234,6 @@ export function Comptheures() {
                     day: currentDay.getDate(),
                     month: currentDay.getMonth(),
                     year: currentDay.getFullYear(),
-
                 }
                 const response = await deleteStat(data)
                 if (response.error === false) {
@@ -254,7 +253,6 @@ export function Comptheures() {
             } else {
 
                 let payload = {}
-
                 switch (type) {
                     case "CUSTOM":
                         payload = {
@@ -302,6 +300,7 @@ export function Comptheures() {
                     setTimes(response.data)
                     setUser({ ...user, userEnterprise: { ...user.userEnterprise, Stats: response.data } })
                     toast.success(response.message)
+                    console.log(user)
                 } else {
                     toast.error(response.message)
                 }
@@ -313,12 +312,14 @@ export function Comptheures() {
 
     const changeMonth = (direction) => {
         if (direction === "previous") {
+            setTheDay(false)
             let newDate = new Date(currentDay.getFullYear(), currentDay.getMonth() - 1, currentDay.getDate())
             while (newDate.getMonth() === currentDay.getMonth()) {
                 newDate.setDate(newDate.getDate() - 1)
             }
             setCurrentDay(newDate)
         } else {
+            setTheDay(true)
             let newDate = new Date(currentDay.getFullYear(), currentDay.getMonth() + 1, currentDay.getDate())
             while (newDate.getMonth() - 1 !== currentDay.getMonth()) {
                 newDate.setDate(newDate.getDate() - 1)
@@ -336,9 +337,13 @@ export function Comptheures() {
 
     useEffect(() => {
         getTimeOfTheDay(currentDay)
-        getRecapTimes()
+        // getRecapTimes()
         checkTimeToday()
     }, [currentDay])
+
+    useEffect(() => {
+        getRecapTimes()
+    }, [currentDay.getMonth()])
 
     useEffect(() => {
         goodActualTimes(currentDay);
@@ -362,26 +367,25 @@ export function Comptheures() {
             <OrbitronTitle className="!text-center  md:mt-0 mt-5 md:mb-0 mb-5">{currentDay.getFullYear()}</OrbitronTitle>
             <div className="w-full h-10 flex items-center justify-between px-[5px] md:mt-5">
                 <Arrow onClick={() => {
-                    setTheDay(false);
-                    changeMonth("previous")
+                 changeMonth("previous")
                 }} className="rotate-180" />
                 <div className="flex items-center justify-center gap-6 w-full ">
                     <Paragraph onClick={() => {
-                        setTheDay(false); changeMonth("previous")
+                        changeMonth("previous")
                     }} className={"!text-gray cursor-pointer"}>{getPrevMonth()}</Paragraph>
                     <div className=" dark:bg-white bg-blue rounded">
                         <ReverseParagraph className={"px-4 z-10 py-2 font-bold"}>{getMonth()}</ReverseParagraph>
                     </div>
                     <Paragraph onClick={() => {
-                        setTheDay(true); changeMonth("next")
+                         changeMonth("next")
                     }} className={"!text-gray cursor-pointer"}>{getNextMonth()}</Paragraph>
                 </div>
                 <Arrow onClick={() => {
-                    setTheDay(true); changeMonth("next");
+                     changeMonth("next");
                 }} />
             </div>
             <Calendar times={myStats} frenchDays={frenchDays} setCurrentNumber={setCurrentNumber} day={currentDay} currentNumber={currentNumber} changeCurrentDay={changeCurrentDay} />
-            <ComptheuresSwitch getRecapTimes={getRecapTimes} comptheuresSwitchState={comptheuresSwitchState} setComptheuresSwitchState={setComptheuresSwitchState} />
+            <ComptheuresSwitch comptheuresSwitchState={comptheuresSwitchState} setComptheuresSwitchState={setComptheuresSwitchState} />
             {comptheuresSwitchState ?
                 <Recapitulatif recapData={recapData} myStats={myStats} />
                 :

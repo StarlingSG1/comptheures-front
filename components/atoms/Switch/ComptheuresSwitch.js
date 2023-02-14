@@ -1,7 +1,7 @@
 import { useState } from "react"
 import joinClasses from "../../../helpers/joinClasses"
 
-export function ComptheuresSwitch({ children, className="",getRecapTimes, comptheuresSwitchState, setComptheuresSwitchState }) {
+export function ComptheuresSwitch({ children, className="", comptheuresSwitchState, setComptheuresSwitchState }) {
 
 
     return (

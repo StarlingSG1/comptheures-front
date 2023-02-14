@@ -9,7 +9,7 @@ import { Breadcrumb, ClocksStep, InvitationsStep, MonthStep, NewTemplate, Specia
 import { useUserContext } from "../../context";
 
 export default function EnterpriseConfig() {
-  const { theme, setBurgerOpen, user, enterprise, setEnterprise } = useUserContext();
+  const { theme, setBurgerOpen, user, enterprise, setEnterprise, setUser } = useUserContext();
   const [step, setStep] = useState(0);
   const [showCustomRole, setShowCustomRole] = useState(false);
   const [showCreateDay, setShowCreateDay] = useState(false)
@@ -42,6 +42,12 @@ export default function EnterpriseConfig() {
     if (response.error === false) {
       toast.success(response.message);
       setEnterprise(response.data)
+      // change enterprise in user.userEnterprise in state user
+      setUser({
+        ...user,
+        userEnterprise: {...user.userEnterprise, enterprise: response.data}
+      })
+
       router.push("/enterprise");
     } else {
       toast.error(response.message);
@@ -72,8 +78,8 @@ export default function EnterpriseConfig() {
         ...enterpriseConfig,
         specialDays: enterpriseConfig.specialDays.filter((day) => day.name !== specialDay.name),
       });
-  }
-  else {
+    }
+    else {
       setEnterpriseConfig({
         ...enterpriseConfig,
         specialDays: [...enterpriseConfig.specialDays, specialDay],
@@ -102,10 +108,9 @@ export default function EnterpriseConfig() {
   }, []);
 
   useEffect(() => {
-    console.log(enterprise?.configEnterprise)
     setEnterpriseConfig({
-      ...enterpriseConfig, 
-      specialDays : enterprise?.configEnterprise?.SpecialDays,
+      ...enterpriseConfig,
+      specialDays: enterprise?.configEnterprise?.SpecialDays,
       time: enterprise?.configEnterprise?.workHourADay,
       months: {
         start: enterprise?.configEnterprise?.monthDayStart,
@@ -123,43 +128,43 @@ export default function EnterpriseConfig() {
         <OrbitronTitle className="text-center">{enterprise?.name}</OrbitronTitle>
         <div>
 
-        <Breadcrumb
-          steps={stepsName}
-          currentStep={step}
-          onChooseStep={setStep}
+          <Breadcrumb
+            steps={stepsName}
+            currentStep={step}
+            onChooseStep={setStep}
           />
-        {/* steps container */}
-        <div>
-          <MonthStep
-            show={step === 0}
-            onSelectedMonths={handleSelectMonth}
-            months={enterpriseConfig.months}
+          {/* steps container */}
+          <div>
+            <MonthStep
+              show={step === 0}
+              onSelectedMonths={handleSelectMonth}
+              months={enterpriseConfig.months}
             />
-          <SpecialDaysStep
-            show={step === 1}
-            selectedSpecialDays={enterpriseConfig?.specialDays}
-            showCreateDay={showCreateDay}
-            setShowCreateDay={setShowCreateDay}
-            onSelectSpecialDay={handleSelectSpecialDay}
-            createTheSpecialDays={createTheSpecialDays}
+            <SpecialDaysStep
+              show={step === 1}
+              selectedSpecialDays={enterpriseConfig?.specialDays}
+              showCreateDay={showCreateDay}
+              setShowCreateDay={setShowCreateDay}
+              onSelectSpecialDay={handleSelectSpecialDay}
+              createTheSpecialDays={createTheSpecialDays}
             />
-          <ClocksStep
-            show={step === 2}
-            selectedTime={enterprise?.configEnterprise?.workHourADay}
-            onSelectTime={handleSelectClocks}
+            <ClocksStep
+              show={step === 2}
+              selectedTime={enterprise?.configEnterprise?.workHourADay}
+              onSelectTime={handleSelectClocks}
             />
-          <InvitationsStep
-          showCustomRole={showCustomRole}
-          setShowCustomRole={setShowCustomRole}
-          show={step === 3}
-          />
-          {!showCustomRole && !showCreateDay && <div className="mt-10 flex items-center gap-5">
-            {step > 0 && <BorderedButton onClick={handlePreviousStep} className="!w-max min-w-fit px-5 dark:bg-transparent">étape précédente</BorderedButton>}
-            {step < stepsName.length - 1 && <Button onClick={handleNextStep}>étape suivante</Button>}
-            {step === stepsName.length - 1 && <Button onClick={handleSubmit}>terminer</Button>}
-          </div>}
-        </div>
+            <InvitationsStep
+              showCustomRole={showCustomRole}
+              setShowCustomRole={setShowCustomRole}
+              show={step === 3}
+            />
+            {!showCustomRole && !showCreateDay && <div className="mt-10 flex items-center gap-5">
+              {step > 0 && <BorderedButton onClick={handlePreviousStep} className="!w-max min-w-fit px-5 dark:bg-transparent">étape précédente</BorderedButton>}
+              {step < stepsName.length - 1 && <Button onClick={handleNextStep}>étape suivante</Button>}
+              {step === stepsName.length - 1 && <Button onClick={handleSubmit}>terminer</Button>}
+            </div>}
           </div>
+        </div>
       </NewTemplate>
     </>
   );

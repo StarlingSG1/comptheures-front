@@ -60,7 +60,6 @@ export function Profile() {
 
     useEffect(() => {
         setBurgerOpen(false);
-        console.log(user)
     }, [user])
 
     return (

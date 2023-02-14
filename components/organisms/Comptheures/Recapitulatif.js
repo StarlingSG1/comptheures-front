@@ -46,17 +46,17 @@ export function Recapitulatif({ myStats, recapData }) {
 
         // get the last day of the month
         const lastDay = new Date(currentDay.getFullYear(), month + 1, 0);
-        console.log(lastDay.getDate())
         // if lastDay.getDate() < config.start, make the difference then make config.start - difference
         if (lastDay.getDate() < config.start) {
             recapData.month.start = 1
+            return recapData.month.start
         } 
         return recapData.month.start
     }
 
     const handleNextMonthState = (config, currentDay) => {
         let month = 0;
-        if (currentDay?.getDate() >= config?.start) {
+        if (currentDay?.getDate() < config?.end) {
             month = currentDay.getMonth()
         } else {
             month = currentDay.getMonth() + 1
@@ -67,14 +67,12 @@ export function Recapitulatif({ myStats, recapData }) {
         } if (month === 12) {
             month = 0
         }
-
-        // get the last day of the month
         const lastDay = new Date(currentDay.getFullYear(), month + 1, 0);
-        console.log(lastDay.getDate())
         // if lastDay.getDate() < config.start, make the difference then make config.start - difference
         if (lastDay.getDate() < config.end) {
             const item = config.end - lastDay.getDate()
             recapData.month.end = config.end - item
+            return recapData.month.end
         } 
         return recapData.month.end
     }
