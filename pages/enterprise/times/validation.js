@@ -110,13 +110,15 @@ export default function enterpriseValidation() {
 
         const response = await validateStatStatus({ data: checkedItems, option: option })
         if (response.error === false) {
-            setUserTimes(response.data)
-            toast.success(response.message)
             await users()
-            if (response.data.length === 0) {
+            console.log(response.data, response.data.length)
+            if (response.data.filter((item) => item.userEnterpriseId === selectedUser.id).length === 0) {
                 setDetails(false)
                 setSelectedUser({})
+            }else{
+                setUserTimes(response.data)
             }
+            toast.success(response.message)
         } else {
             toast.error(response.message)
         }

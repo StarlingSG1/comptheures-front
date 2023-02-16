@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { createInvitation } from "../../../../api/admin/invitation";
 import { createRole } from "../../../../api/admin/role";
 import { useUserContext } from "../../../../context";
 import joinClasses from "../../../../helpers/joinClasses";
@@ -12,6 +13,8 @@ export function InvitationsStep({ show = false, showCustomRole, setShowCustomRol
     const { enterprise, setEnterprise } = useUserContext();
 
     const [roles, setRoles] = useState([]);
+    const [tokenGenerated, setTokenGenerated] = useState(false);
+    const [url, setUrl] = useState("");
     const [customRoles, setCustomRoles] = useState({
         name: "",
         type: "",
@@ -32,7 +35,7 @@ export function InvitationsStep({ show = false, showCustomRole, setShowCustomRol
             toast.error("Un rôle avec le même nom existe déjà");
             return;
         }
-        setCustomRoles({ ...customRoles, name: customRoles.name.charAt(0).toUpperCase() + customRoles.name.slice(1)});
+        setCustomRoles({ ...customRoles, name: customRoles.name.charAt(0).toUpperCase() + customRoles.name.slice(1) });
 
         const response = await createRole({ name: customRoles.name, adminLevel: customRoles.type });
         if (response.error) {
@@ -46,13 +49,13 @@ export function InvitationsStep({ show = false, showCustomRole, setShowCustomRol
                 const selected = role.label === customRoles?.name ? true : role.label === "Collaborateur" ? true : false;
                 return { ...role, selected };
             });
-            setEnterprise({ ...enterprise, RoleEnterprise: newRoles});
+            setEnterprise({ ...enterprise, RoleEnterprise: newRoles });
             roles?.forEach((role) => role.selected = false);
         }
     }
 
     const handlecopyInvitation = () => {
-        navigator.clipboard.writeText("https://comptheures.fr/invite/admin?token=123456789");
+        navigator.clipboard.writeText(url);
         setCopy(true);
         setTimeout(() => setCopy(false), 2000);
     }
@@ -69,6 +72,19 @@ export function InvitationsStep({ show = false, showCustomRole, setShowCustomRol
             name: "",
             type: "",
         })
+    }
+
+    const generateInvitation = async () => {
+        const response = await createInvitation({ name: roles?.find((role) => role.selected)?.label });
+        if (response.error) {
+            toast.error(response.message);
+            return;
+        }
+        else {
+            setTokenGenerated(true);
+            // setUrl(`https://comptheures.fr/invite?token=${response.data}`)
+            setUrl(`http://localhost:3000/invite?token=${response.data}`)
+        }
     }
 
     useEffect(() => {
@@ -96,13 +112,25 @@ export function InvitationsStep({ show = false, showCustomRole, setShowCustomRol
                             Créer un rôle personnalisé
                         </button>
                     </div>
-                    <Paragraph className="mt-5 mb-2">Copier l'invitation </Paragraph>
-                    <div className="flex items-center justify-between bg-blue dark:bg-white px-4 py-2 rounded-md">
-                        <p className="text-white dark:text-black lowercase">https://comptheures.fr/invite/{roles?.find((role) => role.selected)?.label}?token=123456789</p>
-                        <button className="text-white dark:text-blue"
-                            onClick={handlecopyInvitation}
-                        >{!copy ? <CopyIcon /> : <CheckIcon />}</button>
-                    </div>
+                    {tokenGenerated ? <>
+                        <Paragraph className="mt-5 mb-2">Copier l'invitation </Paragraph>
+                        <div className="flex items-center justify-between bg-blue dark:bg-white px-4 py-2 rounded-md">
+                            <p className="text-white dark:text-black lowercase  truncate">{url}</p>
+                            <button className="text-white dark:text-blue"
+                                onClick={handlecopyInvitation}
+                            >{!copy ? <CopyIcon /> : <CheckIcon />}</button>
+                        </div>
+                        <div className="w-full flex justify-end  mt-3">
+                            <button onClick={() => generateInvitation()} className="underline dark:text-white">
+                                Générer un nouveau lien d'invitation
+                            </button>
+                        </div>
+                    </> :
+                        <div className="w-full flex justify-end mb-[75px] mt-9">
+                        <button onClick={() => generateInvitation()} className="underline  dark:text-white">
+                            Générer un lien d'invitation
+                        </button>
+                    </div>}
                 </div>
             ) : (
                 <div className="">

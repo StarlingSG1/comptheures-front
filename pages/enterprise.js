@@ -12,8 +12,8 @@ export default function Enterprise() {
     const [pages, setPages] = useState([
         { name: "Configuration de l’entreprise", link: "/enterprise/config", role: 2 },
         { name: "Info entreprise", link: "/enterprise/info", role: 1 },
-        { name: "Horaires à valider", link: "/enterprise/clocks/validation", role: 1 },
-        { name: "Statistiques / Export des données", link: "/enterprise/clocks/data", role: 2 },
+        { name: "Horaires à valider", link: "/enterprise/times/validation", role: 1 },
+        { name: "Statistiques / Export des données", link: "/enterprise/times/data", role: 2 },
         { name: "Liste des utilisateurs", link: "/enterprise/users", role: 1 },
     ]);
 

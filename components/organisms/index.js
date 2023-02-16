@@ -12,6 +12,9 @@ export { Infos } from "./Enterprise/Infos";
 export { Notations } from './Comptheures/Notations';
 export { Recapitulatif } from './Comptheures/Recapitulatif';
 
+// INVITATION 
+export { InvitationRegister } from "./Invitation/InvitationRegister";
+
 // PROFILE
 export { Profile } from "./Profile/Profile";
 

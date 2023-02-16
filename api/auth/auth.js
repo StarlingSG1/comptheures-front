@@ -29,3 +29,11 @@ export async function registerUser(payload){
     );
     return response.data;
 }
+
+export async function invitationRegisterUser(payload){
+    const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_LOCAL_BACK_URL}/invitation/register`,
+        payload
+    );
+    return response.data;
+}
