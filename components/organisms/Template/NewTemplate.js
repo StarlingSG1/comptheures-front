@@ -1,25 +1,20 @@
-import Head from "next/head";
 import { useEffect, useState } from "react";
 import { useUserContext } from "../../../context";
 import { useCalendarContext } from "../../../context/calendar";
-import joinClasses from "../../../helpers/joinClasses";
-import { BigDesktopCard, CrossIcon, Paragraph, SmallDesktopCard, Title } from "../../atoms";
+import { CrossIcon, Paragraph, SmallDesktopCard, Title } from "../../atoms";
 import { Footer } from "../../molecules";
 import { MobileBurger } from "../Burger/MobileBurger";
 
 export function NewTemplate({ children, comptheures = false, className = "" }) {
 
-    const { times, currentDay, enterprise } = useCalendarContext()
-    const { user } = useUserContext()
+    const { times, currentDay } = useCalendarContext()
     const [todayStatus, setTodayStatus] = useState(null)
-
-    const isComptheures = () => {
-
-    }
+    const [work, setWork] = useState(null)
 
     const checkTimeToday = () => {
         const today = times.find(time => time.day === currentDay.getDate() && time.month === currentDay.getMonth() && time.year === currentDay.getFullYear())
         if (today?.realisationStatus) {
+            setWork(today.work)
             switch (today.realisationStatus) {
                 case "IN_VALIDATION":
                     setTodayStatus("En attente de validation")
@@ -55,10 +50,10 @@ export function NewTemplate({ children, comptheures = false, className = "" }) {
                         ?
                         <div className="hidden col-span-4 md:flex gap-10 flex-col">
                             <SmallDesktopCard />
-                            <div className="shadow dark:bg-blue bg-white rounded-2xl py-5 px-[15px] flex flex-col items-center gap-[15px]" >
-                                <Paragraph className="text-center"><strong>Automatique : </strong>{enterprise?.configEnterprise?.workHourADay}</Paragraph>
-                                {todayStatus && <Paragraph className="text-center"><strong>Statut : </strong>{todayStatus}</Paragraph>}
-                            </div>
+                            {todayStatus && <div className="shadow dark:bg-blue bg-white rounded-2xl py-5 px-[15px] flex flex-col items-center gap-[15px]" >
+                                <Paragraph className="text-center"><strong>Temps travaillé : </strong>{work}</Paragraph>
+                                <Paragraph className="text-center"><strong>Statut : </strong>{todayStatus}</Paragraph>
+                            </div>}
                         </div>
                         : <SmallDesktopCard />}
                 </div>

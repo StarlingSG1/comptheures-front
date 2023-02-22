@@ -10,6 +10,7 @@ const UserContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [status, setStatus] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [contentLoading, setContentLoading] = useState(true);
   const [burgerOpen, setBurgerOpen] = useState(false);
   const [theme, setTheme] = useState(false);
   const [enterprise, setEnterprise] = useState(null);
@@ -20,15 +21,19 @@ const UserContextProvider = ({ children }) => {
     setLoading(true);
     setStatus("pending");
     // payload.captcha = token
-    const user = await loginUser(payload);
-    if (!user.error) {
-      localStorage.setItem("comptheures-token", user.token);
-      setUser(user);
+    const response = await loginUser(payload);
+    if (!response.error) {
+      localStorage.setItem("comptheures-token", response.user.token);
+      setUser(response.user);
       setStatus("connected");
       setLoading(false);
-      navigate.push("/comptheures");
+      if(response.toConfig === true){
+        navigate.push("/register/config");
+      }else{
+        navigate.push("/comptheures");
+      }
     } else {
-      toast.error(user.message);
+      toast.error(response.message);
       setStatus("error");
       setLoading(false);
     }
@@ -40,10 +45,17 @@ const UserContextProvider = ({ children }) => {
     if(userToken.error === true){
       localStorage.removeItem("comptheures-token");
       setLoading(false);
-      navigate.push("/login");
+      if(userToken.toConfig === true){
+        navigate.push("/register/config");
+      }else{
+        navigate.push("/login");
+      }
     }
     else {
       setUser(userToken.user);
+      if(userToken.toConfig === true){
+        navigate.push("/register/config");
+      }
       setStatus("connected");
       setLoading(false);
     }
@@ -96,9 +108,11 @@ const UserContextProvider = ({ children }) => {
       getLogo,
       logoutTheUser,
       enterprise,
-      setEnterprise
+      setEnterprise,
+      contentLoading,
+      setContentLoading
     }),
-    [user, setUser, burgerOpen, enterprise, setEnterprise, getLogo, theme, setTheme, setBurgerOpen, loading, setLoading, loginTheUser, status, verifyTheToken, setStatus, logoutTheUser]
+    [user, setUser, burgerOpen, enterprise, setEnterprise, getLogo, theme, setTheme, setBurgerOpen, loading, setLoading, loginTheUser, status, verifyTheToken, setStatus, logoutTheUser, contentLoading, setContentLoading]
   );
 
   return (

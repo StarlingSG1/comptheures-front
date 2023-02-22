@@ -2,6 +2,10 @@
 export { BurgerContent } from './BurgerMenu/BurgerContent';
 export { BurgerItem } from './BurgerMenu/BurgerItem';
 
+// Feature > Register
+export { UserRegister } from './Feature/Register/UserRegister';
+export { EnterpriseRegister } from './Feature/Register/EnterpriseRegister';
+
 // FOOTER
 export { Footer } from "./Footer/Footer";
 

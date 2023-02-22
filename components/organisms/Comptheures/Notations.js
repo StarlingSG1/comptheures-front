@@ -1,10 +1,11 @@
+import { useUserContext } from "../../../context";
 import { useCalendarContext } from "../../../context/calendar";
 import { BorderedButton, Button, Paragraph, SpecialDayButton, SubTitle } from "../../atoms"
 
-export function Notations({ pickAutoNotation, pickCustomNotation, notationSelected, initialNotation, autoSelected, customSelected, modalCheck, specialSelected, notationType, validateTimes, pickedNotation, setModal = () => { }, specialDays, pickSpecialNotation }) {
+export function Notations({ notationSelected, initialNotation, customSelected, modalCheck, notationType, validateTimes, pickedNotation, setModal = () => { }, specialDays }) {
 
     const { getMonthByIndex, getDayByIndex, currentDay } = useCalendarContext();
-
+    const { enterprise } = useUserContext();
     return (
         <>
             <SubTitle className={`text-center font-orbitron underline capitalize  ${customSelected ? "mt-10 mb-5" : "my-10"}`}>{getDayByIndex() + " " + currentDay.getDate() + " " + getMonthByIndex()}</SubTitle>
@@ -12,7 +13,7 @@ export function Notations({ pickAutoNotation, pickCustomNotation, notationSelect
                 <Paragraph className="font-bold uppercase">
                     Choisir une notation
                 </Paragraph>
-                <Button className={notationSelected === "AUTO" && "!bg-blue-selected !text-white"} onClick={() => { pickedNotation("AUTO", { type: "AUTO" }) }}>Automatique</Button>
+                <Button className={notationSelected === "AUTO" && "!bg-blue-selected !text-white"} onClick={() => { pickedNotation("AUTO", { type: "AUTO" }) }}>Automatique{enterprise?.configEnterprise?.workHourADay && " - " + enterprise?.configEnterprise?.workHourADay}</Button>
                 <BorderedButton className={customSelected && "!bg-blue-selected"} onClick={() => { pickedNotation("CUSTOM", []); }}>Personnalisé</BorderedButton>
                 <Paragraph className="font-bold uppercase">
                     Ou

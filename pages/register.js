@@ -3,26 +3,48 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { registerUser } from "../api/auth/auth";
-import { Button, Input, Paragraph, ParagraphLink } from "../components/atoms";
-import { BigLogo, StraightLogo } from "../components/molecules";
-import { MobileTemplate, NewTemplate, Template } from "../components/organisms";
+import { BigLogo, EnterpriseRegister, StraightLogo, UserRegister } from "../components/molecules";
+import { Breadcrumb, NewTemplate } from "../components/organisms";
 import { useUserContext } from "../context";
 
 export default function Register() {
 
     const { setBurgerOpen, theme } = useUserContext()
+    const router = useRouter()
 
-    useEffect(() => { setBurgerOpen(false) }, [])
-
+    const stepsName = ["Informations personnelles", "Informations entreprise"];
+    const [step, setStep] = useState(0);
     const [credentials, setCredentials] = useState({
-        firstName: "",
-        lastName: "",
-        email: "",
-        password: "",
-        confirmPassword: ""
+        user: {
+            firstName: "",
+            lastName: "",
+            email: "",
+            password: "",
+            confirmPassword: "",
+        },
+        enterprise: {
+            name: "",
+            address: "",
+            postalCode: "",
+            city: "",
+            email: "",
+            phone: "",
+            website: "",
+        }
     })
 
-    const router = useRouter()
+
+    const handleNextStep = (e) => {
+        e.preventDefault();
+        if (step >= 1) return;
+        setStep(step + 1);
+    }
+
+    const handlePreviousStep = (e) => {
+        e.preventDefault();
+        if (step <= 0) return;
+        setStep(step - 1);
+    }
 
     const register = async (e) => {
         e.preventDefault();
@@ -35,6 +57,9 @@ export default function Register() {
         }
     }
 
+    useEffect(() => { setBurgerOpen(false) }, [])
+
+
     return (
         <>
             <Head>
@@ -45,23 +70,27 @@ export default function Register() {
                 />
             </Head>
             <NewTemplate>
-                <form onSubmit={register} className="w-full h-full mt-20 md:mt-0">
-                    <StraightLogo className={"!mt-0 justify-center hidden md:flex"} />
-                    <BigLogo className={"md:hidden "}/>
-                    <div className="flex flex-col gap-[15px] mt-60 md:mt-10">
-                        <Input defaultValue={credentials?.firstName} onChange={(e) => setCredentials({ ...credentials, firstName: e.target.value })} placeholder={"Prénom"} />
-                        <Input defaultValue={credentials?.lastName} onChange={(e) => setCredentials({ ...credentials, lastName: e.target.value })} placeholder={"Nom"} />
-                        <Input defaultValue={credentials?.email} onChange={(e) => setCredentials({ ...credentials, email: e.target.value })} type="email" placeholder={"Adresse email"} />
-                        <Input defaultValue={credentials?.password} onChange={(e) => setCredentials({ ...credentials, password: e.target.value })} type="password" placeholder={"Mot de passe"} />
-                        <Input defaultValue={credentials?.confirmPassword} onChange={(e) => setCredentials({ ...credentials, confirmPassword: e.target.value })} type="password" placeholder={"Confirmer mot de passe"} />
-                    </div>
-                    <Paragraph className="mt-[15px] mb-[60px] md:mb-10">En m’inscrivant, je consens à la <ParagraphLink href="mentions-legales">politique de confidentialité</ParagraphLink>. Vos informations ne seront pas partagés à un tiers.</Paragraph>
-                    <Button type="submit">S'inscrire</Button>
-                    <div className="flex items-center justify-center gap-1.5 mb-[100px] md:mb-0 mt-[15px]">
-                        <Paragraph>Déjà un compte ?</Paragraph>
-                        <ParagraphLink href="/login">Se connecter</ParagraphLink>
-                    </div>
-                </form>
+                <StraightLogo className={"!mt-0 justify-center hidden md:flex"} />
+                <BigLogo className={"md:hidden "} />
+                <Breadcrumb
+                    steps={stepsName}
+                    currentStep={step}
+                    onChooseStep={setStep}
+                    className="mt-10 md:mt-0"
+                    />
+                <UserRegister
+                    show={step === 0}
+                    credentials={credentials}
+                    setCredentials={setCredentials}
+                    onSubmit={handleNextStep}
+                    />
+                <EnterpriseRegister
+                    show={step === 1}
+                    credentials={credentials}
+                    setCredentials={setCredentials}
+                    onSubmit={register}
+                    handlePreviousStep={handlePreviousStep}
+                    />
             </NewTemplate>
         </>
     )

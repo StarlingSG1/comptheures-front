@@ -49,7 +49,8 @@ export function InvitationsStep({ show = false, showCustomRole, setShowCustomRol
                 const selected = role.label === customRoles?.name ? true : role.label === "Collaborateur" ? true : false;
                 return { ...role, selected };
             });
-            setEnterprise({ ...enterprise, RoleEnterprise: newRoles });
+            console.log(newRoles)
+            setEnterprise({ ...enterprise, EnterpriseRoleLink: newRoles });
             roles?.forEach((role) => role.selected = false);
         }
     }
@@ -63,9 +64,9 @@ export function InvitationsStep({ show = false, showCustomRole, setShowCustomRol
     const getRoles = () => {
         if (!enterprise) return;
         // for each in enterprise?.roleEnterprise, add selected: false (and true if name = Collaborateur)
-        const newRoles = enterprise?.RoleEnterprise?.map((role) => {
-            const selected = role.label === customRoles?.name ? true : role.label === "Collaborateur" ? true : false;
-            return { ...role, selected };
+        const newRoles = enterprise?.EnterpriseRoleLink?.map((role) => {
+            const selected = role.Role.label === customRoles?.name ? true : role.Role.label === "Collaborateur" ? true : false;
+            return { ...role.Role, selected };
         });
         setRoles(newRoles);
         setCustomRoles({
@@ -89,7 +90,7 @@ export function InvitationsStep({ show = false, showCustomRole, setShowCustomRol
 
     useEffect(() => {
         getRoles();
-    }, [enterprise, enterprise?.RoleEnterprise])
+    }, [enterprise])
 
     return (
         <div className={joinClasses("animate__animated animate__slideInRight", show ? "block" : "hidden")}>

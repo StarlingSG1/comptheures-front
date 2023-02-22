@@ -14,7 +14,7 @@ import { createTime, deleteStat, recapList, statsList } from "../../../api/time/
 export function Comptheures() {
 
     const { frenchDays, getMonth, setTheDay, getPrevMonth, getNextMonth, getMonthByIndex, setTimes, getDayByIndex, currentDay, setCurrentDay, refresh, getWeekNumber, currentCustomTimes, setCurrentCustomTimes } = useCalendarContext();
-    const { setBurgerOpen, user, setUser, enterprise } = useUserContext()
+    const { setBurgerOpen, user, setUser, enterprise, contentLoading, setContentLoading } = useUserContext()
 
     const [edit, setEdit] = useState(true)
     const [comptheuresSwitchState, setComptheuresSwitchState] = useState(false)
@@ -328,7 +328,6 @@ export function Comptheures() {
         }
     }
 
-
     useEffect(() => {
         setBurgerOpen(false); refresh();
         getMyStats()
@@ -342,8 +341,16 @@ export function Comptheures() {
     }, [currentDay])
 
     useEffect(() => {
+        console.log(user?.userEnterprise?.enterprise?.configEnterprise?.workHourADay)
+    }, [user])
+
+    useEffect(() => {
         getRecapTimes()
-    }, [currentDay.getMonth()])
+    }, [getWeekNumber(currentDay)])
+
+    // useEffect(() => {
+    //     getRecapTimes()
+    // }, [currentDay.getMonth()])
 
     useEffect(() => {
         goodActualTimes(currentDay);

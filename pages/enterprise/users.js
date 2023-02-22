@@ -75,12 +75,14 @@ export default function EnterpriseUsers() {
         let list = usersData
         let selectedUsers = []
         list.forEach((item, index) => {
-            if (item.checked === true) {
+            if (item.checked === true && (item.userId !== user.id && item.userId !== enterprise.createdById)) {
                 selectedUsers.push(item.id)
             }
         })
 
-        const response = await deleteUsersFromEnterprise({ usersIds: selectedUsers, enterpriseId: enterpriseId })
+
+
+        const response = await deleteUsersFromEnterprise({ usersIds: selectedUsers, enterpriseId: enterprise.id })
         if (response.error === false) {
             toast.success(response.message)
             setModal(false)
@@ -146,7 +148,7 @@ export default function EnterpriseUsers() {
                                             <td className="pl-2.5 text-sm sm:text-base">{item?.user?.email}</td>
                                             <td className="pl-2.5 text-sm sm:text-base">{item?.role?.label}</td>
                                             <td className="pl-2.5 hidden md:table-cell">{item?.createdAt.split("T")[0].split("-").reverse().join("/")}</td>
-                                            {user?.userEnterprise?.role?.isAdmin === 2 && <td className="pl-2.5 pr-2.5 flex items-center h-10 justify-center"><input type="checkbox" defaultChecked={allChecked} checked={item?.checked} value={item?.checked} onChange={() => { checkOneUser(item, index) }} className="w-4 h-4 dark:bg-white accent-blue-selected bg-blue" /></td>}
+                                            {user?.userEnterprise?.role?.isAdmin === 2 && <td className="pl-2.5 pr-2.5 flex items-center h-10 justify-center">{ (user.id !== item.userId  && item.userId !== enterprise.createdById) && <input type="checkbox" defaultChecked={allChecked} checked={item?.checked} value={item?.checked} onChange={() => { checkOneUser(item, index) }} className="w-4 h-4 dark:bg-white accent-blue-selected bg-blue" />}</td>}
                                         </tr>
                                     ))}
                                 </tbody>

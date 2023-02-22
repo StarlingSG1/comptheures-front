@@ -24,7 +24,6 @@ export default function Page404() {
                     content="Page introuvable."
                 />
             </Head>
-            <NewTemplate>
             <div className='h-full flex flex-col justify-between md:py-0 py-10'>
                 <div className="w-full h-full flex flex-col items-center md:justify-between md:gap-0 gap-20">
                     <BigLogo  />
@@ -32,7 +31,6 @@ export default function Page404() {
                     <Button onClick={() => { user ? goToComptheures() : router.push("/") }}>Retourner en lieu sûr</Button>
                 </div>
             </div>
-            </NewTemplate>
         </>
     )
 }

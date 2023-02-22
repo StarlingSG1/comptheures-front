@@ -3,10 +3,10 @@ import { getDefaultSpecialDays } from "../../../../api/enterprise/enterprise";
 import { useUserContext } from "../../../../context";
 import joinClasses from "../../../../helpers/joinClasses";
 import SPECIAL_DAYS from "../../../../utils/specialsDaysList";
-import { Button, CongeIcon, CreateCustomIcon, CustomIcon, EventIcon, Input, MaladieIcon, RecupIcon, SansSoldeIcon, SchoolIcon, SubTitle } from "../../../atoms";
+import { Button, CongeIcon, CreateCustomIcon, CustomIcon, EventIcon, Input, MaladieIcon, Paragraph, RecupIcon, SansSoldeIcon, SchoolIcon, SubTitle } from "../../../atoms";
 import { BackTitle } from "../../../molecules";
 
-export function SpecialDaysStep({ show = false, showCreateDay, setShowCreateDay, selectedSpecialDays = [], onSelectSpecialDay = () => { }, createTheSpecialDays = () => { } }) {
+export function SpecialDaysStep({ show = false, config = false,showCreateDay, setShowCreateDay, selectedSpecialDays = [], onSelectSpecialDay = () => { }, createTheSpecialDays = () => { } }) {
 
     const { enterprise } = useUserContext()
 
@@ -69,7 +69,7 @@ export function SpecialDaysStep({ show = false, showCreateDay, setShowCreateDay,
                             <p className={`uppercase dark:text-white`}>{specialDay.name}</p>
                         </li>
                     ))}
-                    <li
+                    {!config && <li
                         className="flex flex-col items-center gap-2 cursor-pointer active:opacity-50"
                         onClick={() => setShowCreateDay(true)}
                     >
@@ -79,8 +79,9 @@ export function SpecialDaysStep({ show = false, showCreateDay, setShowCreateDay,
                             {handleIcon({ name: "Personnalisé" })}
                         </div>
                         <p className={`uppercase dark:text-white`}>Personnalisé</p>
-                    </li>
-                </ul> </> :
+                    </li>}
+                </ul> 
+                {config && <Paragraph className="text-center mt-[30px]">Vous pourrez créer des jours spéciaux personnalisés dans le menu entreprise une fois la configuration terminé. </Paragraph>}</> :
                 <div className="">
                     <BackTitle className="!mb-[30px]" state={true} onClick={() => setShowCreateDay(false)}>Créer un jour spécial</BackTitle>
                     <Input placeholder="Nom du jour spécial" onChange={(e) => setCustomDay({ ...customDay, name: e.target.value })} />

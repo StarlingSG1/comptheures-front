@@ -12,13 +12,16 @@ import Page404 from "./404";
 export default function ComptheuresPage() {
 
     const { setCurrentDay } = useCalendarContext();
-    const { setBurgerOpen, user } = useUserContext()
+    const { setBurgerOpen, user, contentLoading, setContentLoading } = useUserContext()
 
     useEffect(() => {
         setBurgerOpen(false);
         setCurrentDay(new Date());
-
     }, [])
+
+    useEffect(() => {
+        setContentLoading(false)
+    }, [user])
 
     return (
         <>
@@ -30,7 +33,7 @@ export default function ComptheuresPage() {
                 />
             </Head>
             <NewTemplate comptheures={true}>
-                {!user ? <Page404/> : <Comptheures />}
+                {contentLoading ? "loading" : !user ? <Page404/> : <Comptheures />}
             </NewTemplate>
         </>
     )

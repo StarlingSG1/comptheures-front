@@ -1,11 +1,9 @@
 import Head from "next/head";
-import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { verifyInvitation } from "../api/admin/invitation";
-import { Button, CrossIcon, OrbitronTitle, Paragraph, ParagraphLink, SmallDesktopCard, SubTitle, Title } from "../components/atoms";
-import { Footer, SmallStraightLogo, StraightLogo } from "../components/molecules";
-import { AdminRedirect, InvitationRegister, MobileBurger, NewTemplate } from "../components/organisms";
-import { InvitationLogin } from "../components/organisms/Invitation/InvitationLogin";
+import { Button, Paragraph, ParagraphLink, Title } from "../components/atoms";
+import { Footer, StraightLogo } from "../components/molecules";
+import { InvitationRegister } from "../components/organisms";
 import { useUserContext } from "../context";
 
 
@@ -55,7 +53,7 @@ export default function Invite() {
                             <StraightLogo className={"justify-center"} />
                             <div className="flex flex-col justify-between md:justify-start mt-12 gap-10 w-full h-full">
                                 <div className="flex flex-col gap-10">
-                                    <Title className={"text-center"}>DevLoop</Title>
+                                    <Title className={"text-center"}>{invitContent?.enterprise?.name}</Title>
                                     {!tokenValid ? <Paragraph>Vérification</Paragraph> : tokenValid === false ? <Paragraph>Pas bon</Paragraph> : tokenValid &&
                                         <Paragraph className="text-center">
                                             <strong>{invitContent.firstName + " " + invitContent.lastName}</strong>{" vous invite chez "}<strong>{invitContent.enterprise.name + " "}</strong>pour un role de <strong>{" " + invitContent.role.label}. </strong>
