@@ -321,7 +321,7 @@ export function Comptheures() {
         } else {
             setTheDay(true)
             let newDate = new Date(currentDay.getFullYear(), currentDay.getMonth() + 1, currentDay.getDate())
-            while (newDate.getMonth() - 1 !== currentDay.getMonth()) {
+            while (newDate.getMonth() === currentDay.getMonth() + 2) {
                 newDate.setDate(newDate.getDate() - 1)
             }
             setCurrentDay(newDate)
@@ -329,6 +329,7 @@ export function Comptheures() {
     }
 
     useEffect(() => {
+        setContentLoading(true)
         setBurgerOpen(false); refresh();
         getMyStats()
         modalCheckHandler()
@@ -341,11 +342,9 @@ export function Comptheures() {
     }, [currentDay])
 
     useEffect(() => {
-        console.log(user?.userEnterprise?.enterprise?.configEnterprise?.workHourADay)
-    }, [user])
-
-    useEffect(() => {
+        setContentLoading(true)
         getRecapTimes()
+        setContentLoading(false)
     }, [getWeekNumber(currentDay)])
 
     // useEffect(() => {
@@ -353,95 +352,100 @@ export function Comptheures() {
     // }, [currentDay.getMonth()])
 
     useEffect(() => {
+        setContentLoading(true)
         goodActualTimes(currentDay);
         getRecapTimes()
         checkTimeToday()
         currentDay ? getTimeOfTheDay(currentDay) :
-            getTimeOfTheDay(new Date)
+        getTimeOfTheDay(new Date)
+        setContentLoading(false)
     }, [myStats])
 
     useEffect(() => {
+        setContentLoading(true)
         setSpecialDays(enterprise?.configEnterprise?.SpecialDays)
+        setContentLoading(false)
     }, [enterprise])
 
 
     return (
-        <div>
-            {modal &&
-                <ConfirmModal modal={modal} onClick={() => validateTimes(notationSelected, notationType)} type="time" user={user} crossClick={() => setModal(false)} checkbox={true} checkboxClick={() => setModalCheck(!modalCheck)} checkboxState={modalCheck} />
-            }
-            <SmallStraightLogo className={"md:hidden"} />
-            <OrbitronTitle className="!text-center  md:mt-0 mt-5 md:mb-0 mb-5">{currentDay.getFullYear()}</OrbitronTitle>
-            <div className="w-full h-10 flex items-center justify-between px-[5px] md:mt-5">
-                <Arrow onClick={() => {
-                 changeMonth("previous")
-                }} className="rotate-180" />
-                <div className="flex items-center justify-center gap-6 w-full ">
-                    <Paragraph onClick={() => {
+        contentLoading ? <div className="flex items-center justify-center h-full"><div className="loader"></div></div> :
+            <div>
+                {modal &&
+                    <ConfirmModal modal={modal} onClick={() => validateTimes(notationSelected, notationType)} type="time" user={user} crossClick={() => setModal(false)} checkbox={true} checkboxClick={() => setModalCheck(!modalCheck)} checkboxState={modalCheck} />
+                }
+                <SmallStraightLogo className={"md:hidden"} />
+                <OrbitronTitle className="!text-center  md:mt-0 mt-5 md:mb-0 mb-5">{currentDay.getFullYear()}</OrbitronTitle>
+                <div className="w-full h-10 flex items-center justify-between px-[5px] md:mt-5">
+                    <Arrow onClick={() => {
                         changeMonth("previous")
-                    }} className={"!text-gray cursor-pointer"}>{getPrevMonth()}</Paragraph>
-                    <div className=" dark:bg-white bg-blue rounded">
-                        <ReverseParagraph className={"px-4 z-10 py-2 font-bold"}>{getMonth()}</ReverseParagraph>
+                    }} className="rotate-180" />
+                    <div className="flex items-center justify-center gap-6 w-full ">
+                        <Paragraph onClick={() => {
+                            changeMonth("previous")
+                        }} className={"!text-gray cursor-pointer"}>{getPrevMonth()}</Paragraph>
+                        <div className=" dark:bg-white bg-blue rounded">
+                            <ReverseParagraph className={"px-4 z-10 py-2 font-bold"}>{getMonth()}</ReverseParagraph>
+                        </div>
+                        <Paragraph onClick={() => {
+                            changeMonth("next")
+                        }} className={"!text-gray cursor-pointer"}>{getNextMonth()}</Paragraph>
                     </div>
-                    <Paragraph onClick={() => {
-                         changeMonth("next")
-                    }} className={"!text-gray cursor-pointer"}>{getNextMonth()}</Paragraph>
+                    <Arrow onClick={() => {
+                        changeMonth("next");
+                    }} />
                 </div>
-                <Arrow onClick={() => {
-                     changeMonth("next");
-                }} />
-            </div>
-            <Calendar times={myStats} frenchDays={frenchDays} setCurrentNumber={setCurrentNumber} day={currentDay} currentNumber={currentNumber} changeCurrentDay={changeCurrentDay} />
-            <ComptheuresSwitch comptheuresSwitchState={comptheuresSwitchState} setComptheuresSwitchState={setComptheuresSwitchState} />
-            {comptheuresSwitchState ?
-                <Recapitulatif recapData={recapData} myStats={myStats} />
-                :
-                customSelected ?
-                    <>
-                        <SubTitle className={`text-center font-orbitron underline capitalize  ${customSelected ? "mt-10 mb-5" : "my-10"}`}>{getDayByIndex() + " " + currentDay.getDate() + " " + getMonthByIndex()}</SubTitle>
-                        <div onClick={() => { setCustomSelected(false) }} className="flex items-center gap-1.5 mb-5 cursor-pointer">
-                            <RealArrow className="min-w-[30px] rotate-180 min-h-[30px]" card={true} />
-                            <Paragraph className="uppercase font-bold">Retour</Paragraph>
-                        </div>
-                        <div className="flex flex-col w-full items-center gap-10">
-                            {currentCustomTimes?.sort((a, b) => a.order > b.order ? 1 : -1).map((time, index) => (
-                                ((!edit && time?.start?.length > 0) || edit) && <div key={index} className={`flex flex-col w-full items-center gap-[15px]`}>
-                                    <div className="flex w-full items-center justify-center gap-2.5">
-                                        {time.type === "WORK" ? <WorkIcon className={edit && "cursor-pointer"} onClick={() => edit && changeClockType(index, time.type)} /> : time.type === "BREAK" ? <CoffeeIcon className={edit && "cursor-pointer"} onClick={() => edit && changeClockType(index, time.type)} /> : <WorkIcon onClick={() => changeClockType(key, time.type)} />}
-                                        {edit ? <input id="txt" type="text" defaultValue={time.name} className="bg-transparent font-bold outline-none text-center text-blue dark:text-white w-[55px]" onChange={(e) =>
-                                            setCurrentCustomTimes(currentCustomTimes.map((time, i) =>
-                                                i === index ? { ...time, name: e.target.value } : time
-                                            ))}
-                                            style={{ width: ((time.name.length + 3) * 8) + 'px' }}
-                                        /> : <Paragraph className={"font-bold"}>{time.name}</Paragraph>
-                                        }
-                                    </div>
-                                    <Card edit={edit} className="">
-                                        <TimeInput index={index} defaultValue={time.start} edit={edit}>{time.start}</TimeInput>
-                                        <div className={`h-full flex-col py-[5px] flex ${edit ? "justify-between" : "justify-center"} items-center`}>
-                                            {edit && <span className="w-[2px] rounded-full bg-white dark:bg-blue h-full ">
-                                            </span>}
-                                            <RealArrow edit={edit} className="min-w-[22px] min-h-[22px]" card={true} />
-                                            {edit && <span className="w-[2px] rounded-full bg-white dark:bg-blue h-full ">
-                                            </span>}
-                                        </div>
-                                        <TimeInput index={index} defaultValue={time.end} edit={edit} end={true}>{time.end}</TimeInput>
-                                    </Card>
-                                </div>
-                            ))}
-                            {edit && displayAddOneTimeButton() && <div onClick={addTime} className="dark:bg-white bg-blue cursor-pointer rounded-full flex justify-center items-center w-10 h-10"><Plus /></div>}
-                            <Button className="md:mb-0 mb-10" onClick={() => { validateTimes(currentCustomTimes, notationType) }}>{edit ? "Enregistrer" : "Modifier"}</Button>
-                        </div>
-                    </>
+                <Calendar times={myStats} frenchDays={frenchDays} setCurrentNumber={setCurrentNumber} day={currentDay} currentNumber={currentNumber} changeCurrentDay={changeCurrentDay} />
+                <ComptheuresSwitch comptheuresSwitchState={comptheuresSwitchState} setComptheuresSwitchState={setComptheuresSwitchState} />
+                {comptheuresSwitchState ?
+                    <Recapitulatif recapData={recapData} myStats={myStats} />
                     :
-                    <>
-                        <Notations pickedNotation={pickedNotation} modalCheck={modalCheck} notationSelected={notationSelected} validateTimes={validateTimes} notationType={notationType} initialNotation={initialNotation} setModal={setModal} specialDays={specialDays} />
-                    </>
-            }
-            <div className="w-screen -ml-[5.5%] md:hidden gap-10 dark:border-y-white border-y-blue flex flex-col py-10 border-y md:mb-0 mb-[60px]">
-                <Paragraph className="text-center"><strong>Automatique : </strong>{user?.userEnterprise?.enterprise?.configEnterprise?.workHourADay}</Paragraph>
-                {todayStatus && <Paragraph className="text-center"><strong>Statut : </strong>{todayStatus}</Paragraph>}
+                    customSelected ?
+                        <>
+                            <SubTitle className={`text-center font-orbitron underline capitalize  ${customSelected ? "mt-10 mb-5" : "my-10"}`}>{getDayByIndex() + " " + currentDay.getDate() + " " + getMonthByIndex()}</SubTitle>
+                            <div onClick={() => { setCustomSelected(false) }} className="flex items-center gap-1.5 mb-5 cursor-pointer">
+                                <RealArrow className="min-w-[30px] rotate-180 min-h-[30px]" card={true} />
+                                <Paragraph className="uppercase font-bold">Retour</Paragraph>
+                            </div>
+                            <div className="flex flex-col w-full items-center gap-10">
+                                {currentCustomTimes?.sort((a, b) => a.order > b.order ? 1 : -1).map((time, index) => (
+                                    ((!edit && time?.start?.length > 0) || edit) && <div key={index} className={`flex flex-col w-full items-center gap-[15px]`}>
+                                        <div className="flex w-full items-center justify-center gap-2.5">
+                                            {time.type === "WORK" ? <WorkIcon className={edit && "cursor-pointer"} onClick={() => edit && changeClockType(index, time.type)} /> : time.type === "BREAK" ? <CoffeeIcon className={edit && "cursor-pointer"} onClick={() => edit && changeClockType(index, time.type)} /> : <WorkIcon onClick={() => changeClockType(key, time.type)} />}
+                                            {edit ? <input id="txt" type="text" defaultValue={time.name} className="bg-transparent font-bold outline-none text-center text-blue dark:text-white w-[55px]" onChange={(e) =>
+                                                setCurrentCustomTimes(currentCustomTimes.map((time, i) =>
+                                                    i === index ? { ...time, name: e.target.value } : time
+                                                ))}
+                                                style={{ width: ((time.name.length + 3) * 8) + 'px' }}
+                                            /> : <Paragraph className={"font-bold"}>{time.name}</Paragraph>
+                                            }
+                                        </div>
+                                        <Card edit={edit} className="">
+                                            <TimeInput index={index} defaultValue={time.start} edit={edit}>{time.start}</TimeInput>
+                                            <div className={`h-full flex-col py-[5px] flex ${edit ? "justify-between" : "justify-center"} items-center`}>
+                                                {edit && <span className="w-[2px] rounded-full bg-white dark:bg-blue h-full ">
+                                                </span>}
+                                                <RealArrow edit={edit} className="min-w-[22px] min-h-[22px]" card={true} />
+                                                {edit && <span className="w-[2px] rounded-full bg-white dark:bg-blue h-full ">
+                                                </span>}
+                                            </div>
+                                            <TimeInput index={index} defaultValue={time.end} edit={edit} end={true}>{time.end}</TimeInput>
+                                        </Card>
+                                    </div>
+                                ))}
+                                {edit && displayAddOneTimeButton() && <div onClick={addTime} className="dark:bg-white bg-blue cursor-pointer rounded-full flex justify-center items-center w-10 h-10"><Plus /></div>}
+                                <Button className="md:mb-0 mb-10" onClick={() => { validateTimes(currentCustomTimes, notationType) }}>{edit ? "Enregistrer" : "Modifier"}</Button>
+                            </div>
+                        </>
+                        :
+                        <>
+                            <Notations pickedNotation={pickedNotation} modalCheck={modalCheck} notationSelected={notationSelected} validateTimes={validateTimes} notationType={notationType} initialNotation={initialNotation} setModal={setModal} specialDays={specialDays} />
+                        </>
+                }
+                <div className="w-screen -ml-[5.5%] md:hidden gap-10 dark:border-y-white border-y-blue flex flex-col py-10 border-y md:mb-0 mb-[60px]">
+                    <Paragraph className="text-center"><strong>Automatique : </strong>{user?.userEnterprise?.enterprise?.configEnterprise?.workHourADay}</Paragraph>
+                    {todayStatus && <Paragraph className="text-center"><strong>Statut : </strong>{todayStatus}</Paragraph>}
+                </div>
             </div>
-        </div>
     )
 }

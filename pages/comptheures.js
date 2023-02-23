@@ -19,9 +19,6 @@ export default function ComptheuresPage() {
         setCurrentDay(new Date());
     }, [])
 
-    useEffect(() => {
-        setContentLoading(false)
-    }, [user])
 
     return (
         <>
@@ -33,7 +30,7 @@ export default function ComptheuresPage() {
                 />
             </Head>
             <NewTemplate comptheures={true}>
-                {contentLoading ? "loading" : !user ? <Page404/> : <Comptheures />}
+                {!user ? <Page404/> : <Comptheures />}
             </NewTemplate>
         </>
     )
