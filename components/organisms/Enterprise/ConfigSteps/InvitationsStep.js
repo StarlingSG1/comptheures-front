@@ -49,7 +49,6 @@ export function InvitationsStep({ show = false, showCustomRole, setShowCustomRol
                 const selected = role.label === customRoles?.name ? true : role.label === "Collaborateur" ? true : false;
                 return { ...role, selected };
             });
-            console.log(newRoles)
             setEnterprise({ ...enterprise, EnterpriseRoleLink: newRoles });
             roles?.forEach((role) => role.selected = false);
         }

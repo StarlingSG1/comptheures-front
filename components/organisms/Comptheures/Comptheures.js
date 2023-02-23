@@ -300,7 +300,6 @@ export function Comptheures() {
                     setTimes(response.data)
                     setUser({ ...user, userEnterprise: { ...user.userEnterprise, Stats: response.data } })
                     toast.success(response.message)
-                    console.log(user)
                 } else {
                     toast.error(response.message)
                 }

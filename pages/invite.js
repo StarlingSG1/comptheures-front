@@ -28,7 +28,6 @@ export default function Invite() {
         const response = await verifyInvitation({ token: token });
         if (response.error === false) {
             setInvitContent(response.data);
-            console.log(response.data)
             setTokenValid(true);
         }
         else {

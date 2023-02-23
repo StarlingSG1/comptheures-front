@@ -111,7 +111,6 @@ export default function enterpriseValidation() {
         const response = await validateStatStatus({ data: checkedItems, option: option })
         if (response.error === false) {
             await users()
-            console.log(response.data, response.data.length)
             if (response.data.filter((item) => item.userEnterpriseId === selectedUser.id).length === 0) {
                 setDetails(false)
                 setSelectedUser({})
