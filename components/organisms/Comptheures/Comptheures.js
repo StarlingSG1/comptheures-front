@@ -382,13 +382,13 @@ export function Comptheures() {
                     <div className="flex items-center justify-center gap-6 w-full ">
                         <Paragraph onClick={() => {
                             changeMonth("previous")
-                        }} className={"!text-gray cursor-pointer"}>{getPrevMonth()}</Paragraph>
+                        }} className={"!text-gray select-none cursor-pointer"}>{getPrevMonth()}</Paragraph>
                         <div className=" dark:bg-white bg-blue rounded">
-                            <ReverseParagraph className={"px-4 z-10 py-2 font-bold"}>{getMonth()}</ReverseParagraph>
+                            <ReverseParagraph className={"px-4 z-10 select-none py-2 font-bold"}>{getMonth()}</ReverseParagraph>
                         </div>
                         <Paragraph onClick={() => {
                             changeMonth("next")
-                        }} className={"!text-gray cursor-pointer"}>{getNextMonth()}</Paragraph>
+                        }} className={"!text-gray select-none cursor-pointer"}>{getNextMonth()}</Paragraph>
                     </div>
                     <Arrow onClick={() => {
                         changeMonth("next");

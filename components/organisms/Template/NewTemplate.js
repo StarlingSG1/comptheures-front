@@ -51,8 +51,8 @@ export function NewTemplate({ children, comptheures = false, className = "" }) {
                         <div className="hidden col-span-4 md:flex gap-10 flex-col">
                             <SmallDesktopCard />
                             {todayStatus && <div className="shadow dark:bg-blue bg-white rounded-2xl py-5 px-[15px] flex flex-col items-center gap-[15px]" >
-                                <Paragraph className="text-center"><strong>Temps travaillé : </strong>{work}</Paragraph>
-                                <Paragraph className="text-center"><strong>Statut : </strong>{todayStatus}</Paragraph>
+                                <Paragraph className={`text-center  ${todayStatus === "Validé par l'administateur" ? "dark:!text-green-500 !text-green-500" : todayStatus === "Refusé par l'administateur" && "!dark:text-red-500 !text-red-500"}`}><strong>Temps travaillé : </strong>{work}</Paragraph>
+                                <Paragraph className={`text-center  ${todayStatus === "Validé par l'administateur" ? "dark:!text-green-500 !text-green-500" : todayStatus === "Refusé par l'administateur" && "!dark:text-red-500 !text-red-500"}`}><strong>Statut : </strong>{todayStatus}</Paragraph>
                             </div>}
                         </div>
                         : <SmallDesktopCard />}

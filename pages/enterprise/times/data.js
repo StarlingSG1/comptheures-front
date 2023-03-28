@@ -52,28 +52,8 @@ export default function EnterpriseData() {
             {!user ? <Redirect/> : 
             user?.userEnterprise?.role?.isAdmin > 0 ?
                 <div>
-                <OrbitronTitle className="text-center !font-normal">{user?.userEnterprise?.enterprise?.name}</OrbitronTitle>
-                <BackTitle>Récapulatif / Données</BackTitle>
-                <table className="w-full border border-blue border-2">
-                    <thead className="w-full text-left bg-blue dark:bg-blue-dark text-white">
-                        <tr>
-                            <th>Prénom</th>
-                            <th>Nom</th>
-                            <th>Rôle</th>
-                            <th>Nb de jours à valider</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {usersData.map((user, index) => (
-                            <tr className="even:bg-blue odd:bg-transparent dark:even-blue-dark  even:text-white">
-                                <td>{user.firstName}</td>
-                                <td>{user.lastName}</td>
-                                <td>{user.role}</td>
-                                <td>{user.nbToValidate}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+                <OrbitronTitle className="text-center !font-normal">Ça arrive bientot...</OrbitronTitle>
+                
             </div>
             : <AdminRedirect/>
                 }

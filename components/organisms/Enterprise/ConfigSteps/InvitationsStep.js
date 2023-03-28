@@ -82,8 +82,7 @@ export function InvitationsStep({ show = false, showCustomRole, setShowCustomRol
         }
         else {
             setTokenGenerated(true);
-            // setUrl(`https://comptheures.fr/invite?token=${response.data}`)
-            setUrl(`http://localhost:3000/invite?token=${response.data}`)
+            setUrl(`${process.env.NEXT_PUBLIC_LOCAL_INVITATION_URL}/invite?token=${response.data}`)
         }
     }
 

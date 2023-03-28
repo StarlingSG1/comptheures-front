@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { use, useEffect, useState } from "react"
 import { toast } from "react-toastify"
 import { updateUserProfile } from "../../../api/users/user"
 import { useUserContext } from "../../../context"
@@ -21,6 +21,20 @@ export function Profile() {
             confirm: ""
         }
     })
+
+    useEffect(() => {
+        setCurrentUser({
+            firstName: user?.firstName,
+            lastName: user?.lastName,
+            email: user?.email,
+            enterprise: user?.userEnterprise?.enterprise?.name,
+            password: {
+                old: "",
+                new: "",
+                confirm: ""
+            }
+        })
+    }, [user])
 
     const validateUpdateUser = async (e) => {
         e.preventDefault()
@@ -56,7 +70,6 @@ export function Profile() {
             }
         }
     }
-
 
     useEffect(() => {
         setBurgerOpen(false);

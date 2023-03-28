@@ -15,6 +15,7 @@ export default function EnterpriseUsers() {
     const [usersData, setUsersData] = useState([])
     const [allChecked, setAllChecked] = useState(false)
     const [modal, setModal] = useState(false)
+    const [canDelete, setCanDelete] = useState(false)
 
     const users = async () => {
         const response = await usersList(enterprise?.id)
@@ -92,10 +93,29 @@ export default function EnterpriseUsers() {
         }
     }
 
+    const verifyIfOneChecked = () => {
+        let total = 0
+        usersData?.forEach((item, index) => {
+            if (item.checked === true) {
+                total += 1
+            }
+        }
+        )
+        if (total > 0) {
+            setCanDelete(true)
+        } else {
+            setCanDelete(false)
+        }
+    }
+
 
     useEffect(() => {
         setBurgerOpen(false);
     }, [])
+
+    useEffect(() => {
+        verifyIfOneChecked()
+    }, [usersData, allChecked])
 
     useEffect(() => {
         enterprise?.id !== "" && users()
@@ -116,14 +136,14 @@ export default function EnterpriseUsers() {
                 />
             </Head>
             <NewTemplate>
-                <ConfirmModal modal={modal} type="deleteUser" user={user} crossClick={() => {setModal(false)}} onClick={deleteSelectedUsers}/>
+                <ConfirmModal modal={modal} type="deleteUser" user={user} crossClick={() => { setModal(false) }} onClick={deleteSelectedUsers} />
                 {!user ? <Redirect /> :
                     user?.userEnterprise?.role?.isAdmin >= 1 ?
                         <div>
                             <OrbitronTitle className="text-center !font-normal">{enterprise?.name}</OrbitronTitle>
                             <BackTitle>Liste des utilisateurs</BackTitle>
 
-                            {user?.userEnterprise?.role?.isAdmin === 2 && <div className="flex items-center gap-5 mb-5 flex-wrap">
+                            {user?.userEnterprise?.role?.isAdmin === 2 && canDelete && <div className="flex items-center gap-5 mb-5 flex-wrap">
                                 <Paragraph>Actions sur les éléments sélectionnés :</Paragraph>
                                 <div className="flex items-center gap-5 ">
                                     <button className="py-1 rounded-full dark:text-white font-noto capitalize font-bold outline dark:outline-white outline-blue bg-transparent px-4 text-blue" onClick={() => setModal(true)}>Supprimer</button>
@@ -148,7 +168,7 @@ export default function EnterpriseUsers() {
                                             <td className="pl-2.5 text-sm sm:text-base">{item?.user?.email}</td>
                                             <td className="pl-2.5 text-sm sm:text-base">{item?.role?.label}</td>
                                             <td className="pl-2.5 hidden md:table-cell">{item?.createdAt.split("T")[0].split("-").reverse().join("/")}</td>
-                                            {user?.userEnterprise?.role?.isAdmin === 2 && <td className="pl-2.5 pr-2.5 flex items-center h-10 justify-center">{ (user.id !== item.userId  && item.userId !== enterprise.createdById) && <input type="checkbox" defaultChecked={allChecked} checked={item?.checked} value={item?.checked} onChange={() => { checkOneUser(item, index) }} className="w-4 h-4 dark:bg-white accent-blue-selected bg-blue" />}</td>}
+                                            {user?.userEnterprise?.role?.isAdmin === 2 && <td className="pl-2.5 pr-2.5 flex items-center h-10 justify-center">{(user.id !== item.userId && item.userId !== enterprise.createdById) && <input type="checkbox" defaultChecked={allChecked} checked={item?.checked} value={item?.checked} onChange={() => { checkOneUser(item, index) }} className="w-4 h-4 dark:bg-white accent-blue-selected bg-blue" />}</td>}
                                         </tr>
                                     ))}
                                 </tbody>

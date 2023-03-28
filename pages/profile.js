@@ -7,10 +7,11 @@ import { useCalendarContext } from "../context/calendar";
 
 export default function ProfilePage() {
 
-    const { setBurgerOpen, theme, user } = useUserContext()
+    const { setBurgerOpen, theme, user, contentLoading, setContentLoading } = useUserContext()
 
     useEffect(() => {
         setBurgerOpen(false);
+        setContentLoading(false);
     }, [])
 
     return (
@@ -23,7 +24,7 @@ export default function ProfilePage() {
                 />
             </Head>
             <NewTemplate>
-                {!user ? <Redirect/> : <Profile />}
+            {contentLoading ? <div className="flex items-center justify-center h-full"><div className="loader"></div></div> : (user && !user) ? <Page404/>  :<Profile />}
             </NewTemplate>
         </>
 

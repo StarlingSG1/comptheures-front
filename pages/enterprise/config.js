@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { createSpecialDay } from "../../api/admin/specialDay";
 import { sendConfig } from "../../api/enterprise/enterprise";
-import { BorderedButton, Button, OrbitronTitle } from "../../components/atoms";
+import { BorderedButton, Button, OrbitronTitle, RealArrow } from "../../components/atoms";
+import { BackTitle } from "../../components/molecules";
 import { Breadcrumb, ClocksStep, InvitationsStep, MonthStep, NewTemplate, SpecialDaysStep } from "../../components/organisms";
 import { useUserContext } from "../../context";
 
@@ -45,7 +46,7 @@ export default function EnterpriseConfig() {
       // change enterprise in user.userEnterprise in state user
       setUser({
         ...user,
-        userEnterprise: {...user.userEnterprise, enterprise: response.data}
+        userEnterprise: { ...user.userEnterprise, enterprise: response.data }
       })
 
       router.push("/enterprise");
@@ -125,7 +126,11 @@ export default function EnterpriseConfig() {
         <title>Comptheures.fr - Configurer votre entreprise</title>
       </Head>
       <NewTemplate className="overflow-y-auto">
-        <OrbitronTitle className="text-center">{enterprise?.name}</OrbitronTitle>
+        <div className="flex items-center justify-between">
+          <RealArrow onClick={() => router.push("/enterprise")} width={40} height={40} className="cursor-pointer rotate-180" />
+          <OrbitronTitle className="text-center ">{enterprise?.name}</OrbitronTitle>
+          <RealArrow width={40} height={40} className="invisible" />
+        </div>
         <div>
 
           <Breadcrumb

@@ -58,7 +58,7 @@ export function Calendar(props) {
             <thead className="w-full grid grid-cols-7 my-[15px]">
                 {
                     props.frenchDays.map((day, index) => (
-                        <tr key={index} className="flex justify-center"><th className="dark:text-white text-blue font-normal md:hidden">{day.abrev}</th><th className="dark:text-white text-blue font-normal hidden md:block">{day.french}</th></tr>
+                        <tr key={index} className="flex justify-center"><th className="dark:text-white select-none text-blue font-normal md:hidden">{day.abrev}</th><th className="dark:text-white select-none text-blue font-normal hidden md:block">{day.french}</th></tr>
                     ))}
             </thead>
             <tbody className="grid grid-cols-7 gap-y-2.5 w-full">
@@ -66,7 +66,7 @@ export function Calendar(props) {
                     currentDays.map((day, index) => (
                         day.currentMonth && <tr style={{ "gridColumnStart": `${day.number === 1 ? props?.currentNumber : "auto"}` }} key={index} className={`col-span-1 flex justify-center calendar-day w-auto` + (day.currentMonth ? " current" : "") + (day.selected ? " " : "")}
                             onClick={() => props.changeCurrentDay(day)}>
-                            <td className={`relative h-8 aspect-square flex justify-center cursor-pointer ${dayStyle(day, day.selected)} ${day.selected && "translate-y-0.5"}`}>{day.number}
+                            <td className={`relative h-8 aspect-square select-none flex justify-center cursor-pointer ${dayStyle(day, day.selected)} ${day.selected && "translate-y-0.5"}`}>{day.number}
                                 {dayHasTimes(day) &&
                                     <span className={`absolute ${day.selected ? `bottom-1.5 bg-white dark:bg-blue` : "bottom-0 bg-blue dark:bg-white"} translate-y-1/2  h-1 w-1 rounded-full`}>
                                     </span>}
