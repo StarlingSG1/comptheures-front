@@ -15,7 +15,7 @@ export function BurgerContent({ className = "" }) {
                 <BurgerSeparator />
                 <BurgerItem href="/register" icon="register">Inscription</BurgerItem></> :
                 <>
-                    <BurgerItem href="/comptheures" icon="comptheures">Comptheures</BurgerItem>
+                    <BurgerItem href="/calendar" icon="comptheures">Calendrier</BurgerItem>
                     <BurgerSeparator />
                     {user?.userEnterprise?.role?.isAdmin > 0 ? <BurgerItem href="/enterprise">Entreprise</BurgerItem> : <BurgerItem href="/enterprise/info">Entreprise</BurgerItem>}
                     <BurgerSeparator />

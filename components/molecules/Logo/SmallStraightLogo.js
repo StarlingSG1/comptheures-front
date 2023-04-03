@@ -12,7 +12,7 @@ export function SmallStraightLogo({ className }) {
                 {theme ? <DarkLogo height={56} width={56} /> : <Logo height={56} width={56} />}
             </Link>
             <div className='flex flex-col'>
-                <Paragraph className={"font-orbitron"}>Mon Compt'heures</Paragraph>
+                <Paragraph className={"font-orbitron"}>Comptheures</Paragraph>
             </div>
         </div>
     );

@@ -12,7 +12,7 @@ export default function Page404() {
     const router = useRouter();
 
     const goToComptheures = () => {
-        router.push("/comptheures");
+        router.push("/calendar");
       };
       
     return (
@@ -24,9 +24,9 @@ export default function Page404() {
                     content="Page introuvable."
                 />
             </Head>
-            <div className='h-full flex flex-col justify-between md:py-0 py-10'>
-                <div className="w-full h-full flex flex-col items-center md:justify-between md:gap-0 gap-20">
-                    <BigLogo  />
+            <div className='h-screen w-full flex flex-col justify-center items-center py-10'>
+                <div className="w-4/5 md:w-1/2 flex flex-col items-center gap-10">
+                    <BigLogo/>
                     <Title className="text-center">Page 404</Title>
                     <Button onClick={() => { user ? goToComptheures() : router.push("/") }}>Retourner en lieu sûr</Button>
                 </div>

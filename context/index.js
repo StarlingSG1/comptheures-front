@@ -30,7 +30,7 @@ const UserContextProvider = ({ children }) => {
       if(response.toConfig === true){
         navigate.push("/register/config");
       }else{
-        navigate.push("/comptheures");
+        navigate.push("/calendar");
       }
     } else {
       toast.error(response.message);

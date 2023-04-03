@@ -7,7 +7,6 @@ export function Breadcrumb({
   className = "",
 }) {
   const selectStep = (index) => {
-    if (index > currentStep) return;
     onChooseStep(index);
   };
 
@@ -20,11 +19,10 @@ export function Breadcrumb({
               key={index}
               onClick={() => selectStep(index)}
               className={joinClasses(
-                "flex items-center text-center transition-all duration-300 ease-in-out  border-b p-2",
+                "flex items-center text-center transition-all duration-300 ease-in-out cursor-pointer border-b p-2",
                 index === currentStep
                   ? "text-blue border-blue dark:text-white dark:border-white"
-                  : "text-gray-400 border-transparent",
-                index > currentStep ? "cursor-not-allowed" : "cursor-pointer"
+                  : "text-gray-400 border-transparent"
               )}
             >
               {index + 1}. {step}

@@ -24,7 +24,7 @@ export default function ComptheuresPage() {
     return (
         <>
             <Head>
-                <title>Mon comptheures - Comptheures</title>
+                <title>Comptheures - Comptheures</title>
                 <meta
                     name="description"
                     content="Compter ses heures de travail dans un calendrier comptheures en ligne."

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useCalendarContext } from "../../../context/calendar";
 import { Card, ReverseParagraph, SubTitle } from "../../atoms";
 
-export function Recapitulatif({ myStats, recapData }) {
+export function Recapitulatif({ myStats, recapData, recapLoading }) {
 
     const { frenchDays, frenchMonths, getPrevMonth, getMonth, getFirstMonthRecap, getSecondMonthRecap, clocks, getMonthByIndex, getDayByIndex, currentDay, setCurrentDay, refresh, getWeekNumber } = useCalendarContext();
 
@@ -78,6 +78,7 @@ export function Recapitulatif({ myStats, recapData }) {
     }
 
     return (
+        recapLoading ? <div className="flex items-center justify-center h-[440px]"><div className="loader"></div></div> : 
         <div>
             <div className="flex flex-col w-full items-center mt-10 gap-10">
                 <div className="flex flex-col w-full items-center gap-[15px] ">

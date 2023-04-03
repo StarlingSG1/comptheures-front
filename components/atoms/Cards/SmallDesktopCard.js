@@ -66,7 +66,7 @@ export function SmallDesktopCard({ children }) {
         </div>
         <div className="flex items-center gap-1.5 mb-5">
             <Paragraph>Made by</Paragraph>
-            <a  href="https://github.com/StarlingSG1" target="_blank" className={`dark:text-white text-blue underline font-noto`}>Jérémie Barrière</a>
+            <a  href="https://www.linkedin.com/in/j%C3%A9r%C3%A9mie-barri%C3%A8re-b4584a204/" target="_blank" className={`dark:text-white text-blue underline font-noto`}>Jérémie Barrière</a>
         </div>
         <ParagraphLink href="/mentions-legales">Mentions légales</ParagraphLink>
     </div>

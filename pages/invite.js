@@ -60,18 +60,18 @@ export default function Invite() {
                                         </Paragraph>
                                     }
                                 </div>
-                                <Button className="mb-10" onClick={() => {setAccepted(true)}}>Accepter</Button>
+                                <Button className="mb-10" onClick={() => { setAccepted(true) }}>Accepter</Button>
                             </div>
                             <footer className="hidden md:flex items-center gap-4 ">
                                 <div className="flex items-center gap-1.5">
                                     <Paragraph>Made by</Paragraph>
-                                    <a href="https://github.com/StarlingSG1" target="_blank" className="text-center dark:text-white text-blue underline font-noto">Jérémie Barrière</a>
+                                    <a href="https://www.linkedin.com/in/j%C3%A9r%C3%A9mie-barri%C3%A8re-b4584a204/" target="_blank" className="text-center dark:text-white text-blue underline font-noto">Jérémie Barrière</a>
                                 </div>
                                 <div className={`w-[2px] h-4 dark:bg-white bg-blue  rounded-full`}></div>
                                 <ParagraphLink href="/mentions-legales">Mentions légales</ParagraphLink>
                             </footer>
                             <Footer className="md:hidden" />
-                        </div> : step === 0 ? <InvitationRegister enterprise={invitContent.enterprise} role={invitContent.role} setStep={setStep}/> : step === 1 && <InvitationLogin setStep={setStep} enterprise={invitContent?.enterprise.name}/> }
+                        </div> : step === 0 ? <InvitationRegister enterprise={invitContent.enterprise} role={invitContent.role} setStep={setStep} /> : step === 1 && <InvitationLogin setStep={setStep} enterprise={invitContent?.enterprise.name} />}
                     </div>
                 </div>
             </div>

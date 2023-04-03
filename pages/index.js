@@ -25,7 +25,7 @@ export default function Home() {
   }
 
   const goToComptheures = () => {
-    router.push('/comptheures')
+    router.push('/calendar')
   }
 
   useEffect(() => { setHomeOpen(false); setBurgerOpen(false); }, [])

@@ -13,7 +13,7 @@ export function StraightLogo({ className }) {
                 {theme ? <DarkLogo /> : <Logo />}
             </Link>
             <div className='flex flex-col'>
-            <h1 className="dark:text-white text-blue text-bigger font-orbitron">Mon Compt'heures</h1>
+            <h1 className="dark:text-white text-blue text-bigger font-orbitron">Comptheures</h1>
                 <h2 className="dark:text-white text-blue font-noto">Compter ses heures en ligne</h2>
             </div>
         </div>

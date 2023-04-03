@@ -2,7 +2,7 @@ import { useUserContext } from "../../../context";
 import { useCalendarContext } from "../../../context/calendar";
 import { BorderedButton, Button, Paragraph, SpecialDayButton, SubTitle } from "../../atoms"
 
-export function Notations({ notationSelected, initialNotation, customSelected, modalCheck, notationType, validateTimes, pickedNotation, setModal = () => { }, specialDays }) {
+export function Notations({ notationSelected, initialNotation, validateLoading, setValidateLoading, customSelected, modalCheck, notationType, validateTimes, pickedNotation, setModal = () => { }, specialDays }) {
 
     const { getMonthByIndex, getDayByIndex, currentDay } = useCalendarContext();
     const { enterprise } = useUserContext();
@@ -25,8 +25,12 @@ export function Notations({ notationSelected, initialNotation, customSelected, m
                         ))}
                     </div>
                 </div>
-                {initialNotation?.name !== notationSelected?.name ? <Button onClick={() => modalCheck ? validateTimes(notationSelected, notationType) : setModal(true)}>Enregistrer</Button> : (initialNotation === "AUTO" && notationSelected !== "AUTO") ? <Button onClick={() => modalCheck ? validateTimes(notationSelected, notationType) : setModal(true)}>Enregistrer</Button> :
-                    (initialNotation?.length !== notationSelected?.length) && <Button onClick={() => {console.log("click", modalCheck),modalCheck ? validateTimes(notationSelected, notationType) : setModal(true)}}>Enregistrer</Button>}
+                {initialNotation?.name !== notationSelected?.name ?
+                    <Button className="flex items-center justify-center gap-5" onClick={() => modalCheck ? validateTimes(notationSelected, notationType) : setModal(true)}>{validateLoading ? <><div className="flex items-center justify-center h-full"><div className="small-loader"></div></div>Chargement... </> : "Enregistrer"}</Button> :
+                    (initialNotation === "AUTO" && notationSelected !== "AUTO") ?
+                        <Button className="flex items-center justify-center gap-5" onClick={() => modalCheck ? validateTimes(notationSelected, notationType) : setModal(true)}>{validateLoading ? <><div className="flex items-center justify-center h-full"><div className="small-loader"></div></div>Chargement... </> : "Enregistrer"}</Button> :
+                    (initialNotation?.length !== notationSelected?.length) &&
+                        <Button className="flex items-center justify-center gap-5" onClick={() => { console.log("click", modalCheck), modalCheck ? validateTimes(notationSelected, notationType) : setModal(true) }}>{validateLoading ? <><div className="flex items-center justify-center h-full"><div className="small-loader"></div></div>Chargement... </> : "Enregistrer"}</Button>}
             </div>
         </>
     )

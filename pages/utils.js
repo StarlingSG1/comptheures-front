@@ -10,7 +10,7 @@ export default function Utils() {
       <Button>Enregistrer</Button>
       <DarkLogo />
       <Logo />
-      <OrbitronTitle>Mon Compt'heures</OrbitronTitle>
+      <OrbitronTitle>Comptheures</OrbitronTitle>
       <Input placeholder="Prénom" />
       <BurgerSeparator />
     </div>
