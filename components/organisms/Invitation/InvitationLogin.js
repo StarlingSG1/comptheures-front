@@ -5,7 +5,7 @@ import { Button, Input, Paragraph, ParagraphLink } from "../../atoms"
 import { BigLogo, StraightLogo } from "../../molecules"
 import { NewTemplate } from "../Template/NewTemplate"
 
-export function InvitationLogin({setStep}) {
+export function InvitationLogin({setStep, enterprise}) {
 
     const { setBurgerOpen, theme, loginTheUser } = useUserContext()
     const [credentials, setCredentials] = useState({
@@ -29,10 +29,11 @@ export function InvitationLogin({setStep}) {
                         <Input onChange={(e) => { setCredentials({ ...credentials, password: e.target.value }) }} type="password" placeholder={"Mot de passe"} />
                     </div>
                     <ParagraphLink className="text-right block mt-[15px]">mot de passe oublié</ParagraphLink>
+                    <Paragraph className="mt-5">En vous connectant, vous rejoindrez l'enterprise {enterprise}.</Paragraph>
                     <Button className="md:mt-[30px] mt-60" type="submit">Se connecter</Button>
                     <div className="flex items-center justify-center gap-1.5 md:mb-0 mb-[100px] mt-[15px]">
                         <Paragraph>Pas de compte ?</Paragraph>
-                        <p className="dark:text-white text-blue underline font-noto" onClick={() => setStep(0)}>S'inscrire</p>
+                        <Paragraph className="underline cursor-pointer" onClick={() => setStep(0)}>S'inscrire</Paragraph>
                     </div>
                 </form>
     )

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { verifyInvitation } from "../api/admin/invitation";
 import { Button, Paragraph, ParagraphLink, Title } from "../components/atoms";
 import { Footer, StraightLogo } from "../components/molecules";
-import { InvitationRegister } from "../components/organisms";
+import { InvitationRegister, InvitationLogin } from "../components/organisms";
 import { useUserContext } from "../context";
 
 
@@ -71,7 +71,7 @@ export default function Invite() {
                                 <ParagraphLink href="/mentions-legales">Mentions légales</ParagraphLink>
                             </footer>
                             <Footer className="md:hidden" />
-                        </div> : step === 0 && <InvitationRegister enterprise={invitContent.enterprise} role={invitContent.role} setStep={setStep}/> }
+                        </div> : step === 0 ? <InvitationRegister enterprise={invitContent.enterprise} role={invitContent.role} setStep={setStep}/> : step === 1 && <InvitationLogin setStep={setStep} enterprise={invitContent?.enterprise.name}/> }
                     </div>
                 </div>
             </div>

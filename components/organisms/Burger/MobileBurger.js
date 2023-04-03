@@ -7,7 +7,7 @@ import { SunIcon } from "../../atoms/Icons/SunIcon";
 import { BurgerContent, Footer, StraightLogo, ThemePicker } from "../../molecules";
 import { BurgerItem } from "../../molecules/BurgerMenu/BurgerItem";
 
-export function MobileBurger({className = ""}) {
+export function MobileBurger({ className = "" }) {
 
     const { burgerOpen, theme, setTheme, getLogo, user } = useUserContext()
 
@@ -64,7 +64,7 @@ export function MobileBurger({className = ""}) {
 
 
     return (
-        <div className={joinClasses(className,`fixed md:hidden z-20 top-0 left-0 w-screen h-screen md:dark:bg-blue-dark md:bg-blue dark:bg-blue bg-white py-10 px-[30px] duration-200 ${burgerOpen ? "translate-x-0" : "translate-x-full"} `)}>
+        <div className={joinClasses(className, `fixed md:hidden z-20 top-0 left-0 w-screen h-screen md:dark:bg-blue-dark md:bg-blue dark:bg-blue bg-white py-10 px-[30px] duration-200 ${burgerOpen ? "translate-x-0" : "translate-x-full"} `)}>
             <div className='h-full w-full flex flex-col justify-between'>
                 <div>
                     <div className='w-full h-10 flex items-center'>
@@ -72,7 +72,7 @@ export function MobileBurger({className = ""}) {
                     </div>
                     <StraightLogo />
                     <div className='mt-60'>
-                        <BurgerContent/>
+                        <BurgerContent />
                     </div>
                 </div>
                 <Footer />

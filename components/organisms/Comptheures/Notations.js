@@ -26,7 +26,7 @@ export function Notations({ notationSelected, initialNotation, customSelected, m
                     </div>
                 </div>
                 {initialNotation?.name !== notationSelected?.name ? <Button onClick={() => modalCheck ? validateTimes(notationSelected, notationType) : setModal(true)}>Enregistrer</Button> : (initialNotation === "AUTO" && notationSelected !== "AUTO") ? <Button onClick={() => modalCheck ? validateTimes(notationSelected, notationType) : setModal(true)}>Enregistrer</Button> :
-                    (initialNotation?.length !== notationSelected?.length) && <Button onClick={() => modalCheck ? validateTimes(notationSelected, notationType) : setModal(true)}>Enregistrer</Button>}
+                    (initialNotation?.length !== notationSelected?.length) && <Button onClick={() => {console.log("click", modalCheck),modalCheck ? validateTimes(notationSelected, notationType) : setModal(true)}}>Enregistrer</Button>}
             </div>
         </>
     )

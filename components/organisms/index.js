@@ -14,6 +14,7 @@ export { Recapitulatif } from './Comptheures/Recapitulatif';
 
 // INVITATION 
 export { InvitationRegister } from "./Invitation/InvitationRegister";
+export { InvitationLogin } from "./Invitation/InvitationLogin";
 
 // PROFILE
 export { Profile } from "./Profile/Profile";

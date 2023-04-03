@@ -50,6 +50,10 @@ export function InvitationRegister({setStep, role, enterprise}) {
                     </div>
                     <Paragraph className="mt-[15px] mb-[60px] md:mb-10">En m’inscrivant, je consens à la <ParagraphLink href="mentions-legales">politique de confidentialité</ParagraphLink>. Vos informations ne seront pas partagés à un tiers.</Paragraph>
                     <Button type="submit">S'inscrire</Button>
+                    <div className="flex items-center justify-center gap-1.5 mb-[100px] md:mb-0 mt-[15px]">
+                <Paragraph>Déjà un compte ?</Paragraph>
+                <Paragraph className="underline cursor-pointer" onClick={() => setStep(1)}>Se connecter</Paragraph>
+            </div>
                 </form>
     )
 }

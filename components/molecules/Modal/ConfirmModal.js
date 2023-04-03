@@ -32,7 +32,7 @@ export function ConfirmModal({ modal, user, type, crossClick, onClick, checkbox 
 
 
     return (
-        modal && user?.userEnterprise?.role?.isAdmin === 2 &&
+        modal  &&
         <div className="fixed w-full h-full top-0 left-0 bottom-O right-0 bg-black/[0.3] flex justify-center items-center rounded-2xl z-20">
             <div className="sm:min-h-[240px] sm:w-[70%] w-[90%] sm:max-w-[600px] bg-white relative dark:bg-blue rounded-xl flex flex-col sm:justify-between sm:gap-0 gap-5 p-5">
                 <Cross width="32" height="32" className="absolute top-3 sm:left-3 right-3 " onClick={crossClick} />
