@@ -71,7 +71,7 @@ export default function Invite() {
                                 <ParagraphLink href="/mentions-legales">Mentions légales</ParagraphLink>
                             </footer>
                             <Footer className="md:hidden" />
-                        </div> : step === 0 ? <InvitationRegister enterprise={invitContent.enterprise} role={invitContent.role} setStep={setStep} /> : step === 1 && <InvitationLogin setStep={setStep} enterprise={invitContent?.enterprise.name} />}
+                        </div> : step === 0 ? <InvitationRegister enterprise={invitContent.enterprise} role={invitContent.role} setStep={setStep} /> : step === 1 && <InvitationLogin setStep={setStep} enterprise={invitContent.enterprise} role={invitContent.role} />}
                     </div>
                 </div>
             </div>

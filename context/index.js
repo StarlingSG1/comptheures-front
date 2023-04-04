@@ -43,17 +43,16 @@ const UserContextProvider = ({ children }) => {
     setLoading(true);
     const userToken = await verifyToken();
     if(userToken.error === true){
-      localStorage.removeItem("comptheures-token");
       setLoading(false);
-      if(userToken.toConfig === true){
+      if(userToken?.data?.toConfig === true){
         navigate.push("/register/config");
       }else{
         navigate.push("/login");
       }
     }
     else {
-      setUser(userToken.user);
-      if(userToken.toConfig === true){
+      setUser(userToken?.data?.user);
+      if(userToken?.data?.toConfig === true){
         navigate.push("/register/config");
       }
       setStatus("connected");
